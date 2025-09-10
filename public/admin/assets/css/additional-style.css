@@ -1,0 +1,114 @@
+.scrolling-wrapper {
+    overflow-x: auto;
+    white-space: nowrap;
+    scroll-behavior: smooth;
+    /* scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px; */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+.scrolling-wrapper::-webkit-scrollbar {
+    /* height: 8px; */
+    display: none; /* Chrome, Safari */
+}
+
+/* .scrolling-wrapper::-webkit-scrollbar-thumb {
+    background: #dee2e6;
+    border-radius: 10px;
+}
+
+.scrolling-wrapper:hover::-webkit-scrollbar-thumb {
+    background: #adb5bd;
+}
+
+.scrolling-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+} */
+
+.card-shortcut {
+    display: inline-block;
+    min-width: 200px;
+    margin-right: 1rem;
+    scroll-snap-align: start;
+    vertical-align: top;
+    transition: transform 0.3s ease;
+}
+
+.card-shortcut:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-shortcut .card-body {
+    text-align: center;
+}
+
+.card-shortcut i {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.card-payment {
+    transition: transform 0.3s ease;
+}
+
+.card-payment:hover {
+    cursor: pointer;
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(47, 85, 212, 0.2);
+}
+
+@media (min-width: 768px) {
+    .w-md-auto {
+        width: auto !important;
+    }
+}
+
+/* Testimoni Modal */
+/* Komponen rating bintang (tanpa library tambahan) */
+.rating {
+    direction: rtl; /* agar selector saudara (~) bekerja dari kanan ke kiri */
+    unicode-bidi: bidi-override; /* memastikan urutan visual */
+    display: inline-flex;
+    gap: 0.25rem;
+}
+.rating input {
+    display: none; /* sembunyikan input radio */
+}
+.rating label {
+    font-size: 1.75rem;
+    cursor: pointer;
+    line-height: 1;
+    user-select: none;
+}
+.rating label::before {
+    content: "☆"; /* bintang kosong */
+}
+/* Hover: isi bintang yang dihover dan semua di kiri (secara visual) */
+.rating label:hover::before,
+.rating label:hover ~ label::before {
+    content: "★";
+}
+/* Saat dipilih (checked), isi bintang tsb dan semua di kiri (secara visual) */
+.rating input:checked ~ label::before {
+    content: "★";
+}
+
+/* Warna bintang */
+.rating label::before {
+    color: #adb5bd;
+} /* abu untuk kosong */
+.rating label:hover::before,
+.rating label:hover ~ label::before,
+.rating input:checked ~ label::before {
+    color: #ffc107;
+} /* kuning untuk terisi */
+
+/* Bantuan fokus keyboard */
+.rating input:focus-visible + label {
+    outline: 2px solid #0d6efd;
+    outline-offset: 3px;
+    border-radius: 0.25rem;
+}

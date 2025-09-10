@@ -84,8 +84,14 @@
                                                                 case \App\Enum\TahapanSuratKuasaEnum::PerbaikanData->value:
                                                                     $badgeClass = 'bg-soft-warning';
                                                                     break;
+                                                                case \App\Enum\TahapanSuratKuasaEnum::PengajuanPerbaikanData->value:
+                                                                    $badgeClass = 'bg-soft-info';
+                                                                    break;
                                                                 case \App\Enum\TahapanSuratKuasaEnum::PerbaikanPembayaran->value:
                                                                     $badgeClass = 'bg-soft-danger';
+                                                                    break;
+                                                                case \App\Enum\TahapanSuratKuasaEnum::PengajuanPerbaikanPembayaran->value:
+                                                                    $badgeClass = 'bg-soft-info';
                                                                     break;
                                                                 default:
                                                                     $badgeClass = 'bg-soft-secondary';
@@ -93,12 +99,12 @@
                                                         @endphp
                                                         <span class="badge {{ $badgeClass }} fs-6">{{ $suratKuasa->tahapan }}</span>
                                                     </p>
-                                                    @if ($suratKuasa->status == \App\Enum\StatusSuratKuasaEnum::Ditolak)
+                                                    @if ($suratKuasa->status == \App\Enum\StatusSuratKuasaEnum::Ditolak->value)
                                                         <h6>Status</h6>
                                                         <p>
                                                             <span class="badge bg-danger">Ditolak</span> <br>
                                                         </p>
-                                                    @elseif ($suratKuasa->status == \App\Enum\StatusSuratKuasaEnum::Disetujui)
+                                                    @elseif ($suratKuasa->status == \App\Enum\StatusSuratKuasaEnum::Disetujui->value)
                                                         <p>
                                                             <span class="badge bg-success">Disetujui</span> <br>
                                                         </p>
@@ -114,7 +120,12 @@
                                                     </div>
                                                 @endif
 
-                                                @if ($suratKuasa->status == \App\Enum\StatusSuratKuasaEnum::Ditolak)
+                                                @if (
+                                                    $suratKuasa->status == \App\Enum\StatusSuratKuasaEnum::Ditolak->value ||
+                                                        $suratKuasa->tahapan == \App\Enum\TahapanSuratKuasaEnum::PerbaikanData->value ||
+                                                        $suratKuasa->tahapan == \App\Enum\TahapanSuratKuasaEnum::PerbaikanPembayaran->value ||
+                                                        $suratKuasa->tahapan == \App\Enum\TahapanSuratKuasaEnum::PengajuanPerbaikanData->value ||
+                                                        $suratKuasa->tahapan == \App\Enum\TahapanSuratKuasaEnum::PengajuanPerbaikanPembayaran->value)
                                                     <div class="col-md-12 col-sm-12">
                                                         <p class="text-danger">
                                                             Alasan : <br>
@@ -242,12 +253,14 @@
                                 </div>
                                 <div class="tab-pane fade {{ $suratKuasa->pembayaran ? '' : 'show active' }}" id="pills-pembayaran" role="tabpanel" aria-labelledby="pills-pembayaran-tab" tabindex="0">
                                     @if ($suratKuasa->pembayaran)
-                                        <div class="alert bg-soft-warning fw-medium" role="alert">
-                                            <i class="uil uil-info-circle fs-5 align-middle me-1"></i>
-                                            Kamu tidak dapat mengubah bukti pembayaran yang sudah diunggah, Jika ingin
-                                            memperbaiki harap hubungi kami !. Melalui kontak Whatsapp 0812345558.
-                                            Apabila terdapat bukti pembayaran yang tidak valid, maka kami berhak menolak
-                                            pendaftaran surat kuasa yang diajukan !
+                                        <div class="alert bg-soft-danger fw-medium" role="alert">
+                                            <i class="uil uil-info-circle fs-5 align-middle me-1"></i> Informasi
+                                            <p style="text-align:justify;" class="m-0">
+                                                Kamu tidak dapat mengubah bukti pembayaran yang sudah diunggah, Jika ingin
+                                                memperbaiki harap hubungi kami !. Melalui kontak Whatsapp {{ $infoApp->kontak }}.
+                                                Apabila terdapat bukti pembayaran yang tidak valid, maka kami berhak menolak
+                                                pendaftaran surat kuasa yang diajukan !
+                                            </p>
                                         </div>
                                         <div class="row mt-3">
                                             <div class="col-lg-6 col-md-6 col-sm-12">
@@ -294,17 +307,38 @@
                                 </div>
                             @endif
                             <div class="mt-3 border-top pt-3">
-                                <div class="d-flex flex-wrap align-items-center gap-2">
-                                    @if (
-                                        (Auth::user()->role != \App\Enum\RoleEnum::User->value && $suratKuasa->tahapan != \App\Enum\TahapanSuratKuasaEnum::Pendaftaran->value) ||
-                                            $suratKuasa->tahapan != \App\Enum\TahapanSuratKuasaEnum::Verifikasi->value)
-                                        <h6>Verifikasi Pendaftaran</h6>
-                                        <button class="btn  btn-success btn-sm mb-1 d-grid" data-bs-toggle="modal" data-bs-target="#setujui-surat-kuasa">
-                                            Setujui Surat Kuasa
-                                        </button>
-                                        <button class="btn  btn-danger btn-sm mb-1 d-grid" data-bs-toggle="modal" data-bs-target="#tolak-surat-kuasa">
-                                            Tolak Surat Kuasa
-                                        </button>
+                                <div class="d-flex flex-wrap align-items-center justify-content-between">
+                                    {{-- Tombol Aksi untuk User --}}
+                                    @if (Auth::user()->role == \App\Enum\RoleEnum::User->value)
+                                        <div class="d-flex flex-wrap align-items-center gap-2">
+                                            @if ($suratKuasa->tahapan == \App\Enum\TahapanSuratKuasaEnum::PerbaikanData->value)
+                                                <a href="{{ route('surat-kuasa.form', ['param' => 'edit', 'klasifikasi' => $suratKuasa->klasifikasi, 'id' => Crypt::encrypt($suratKuasa->id)]) }}"
+                                                    class="btn btn-warning btn-sm">
+                                                    <i class="uil uil-edit"></i> Perbaiki Data Pendaftaran
+                                                </a>
+                                            @endif
+                                            @if ($suratKuasa->tahapan == \App\Enum\TahapanSuratKuasaEnum::PerbaikanPembayaran->value)
+                                                <a href="{{ route('surat-kuasa.pembayaran', ['id' => Crypt::encrypt($suratKuasa->id)]) }}" class="btn btn-warning btn-sm">
+                                                    <i class="uil uil-wallet"></i> Perbaiki Pembayaran
+                                                </a>
+                                            @endif
+                                        </div>
+                                    @endif
+
+                                    {{-- Tombol Aksi untuk Admin/Superadmin --}}
+                                    @if (Auth::user()->role != \App\Enum\RoleEnum::User->value &&
+                                            in_array($suratKuasa->tahapan, [
+                                                \App\Enum\TahapanSuratKuasaEnum::Pembayaran->value,
+                                                \App\Enum\TahapanSuratKuasaEnum::PerbaikanData->value,
+                                                \App\Enum\TahapanSuratKuasaEnum::PengajuanPerbaikanData->value,
+                                                \App\Enum\TahapanSuratKuasaEnum::PerbaikanPembayaran->value,
+                                                \App\Enum\TahapanSuratKuasaEnum::PengajuanPerbaikanPembayaran->value,
+                                            ]))
+                                        <div class="d-flex flex-wrap align-items-center gap-2">
+                                            <h6>Verifikasi Pendaftaran</h6>
+                                            <button class="btn btn-success btn-sm mb-1 d-grid" data-bs-toggle="modal" data-bs-target="#setujui-surat-kuasa">Setujui</button>
+                                            <button class="btn btn-danger btn-sm mb-1 d-grid" data-bs-toggle="modal" data-bs-target="#tolak-surat-kuasa">Tolak</button>
+                                        </div>
                                     @endif
                                     <a href="{{ route('surat-kuasa.index') }}" class="btn btn-secondary btn-sm mb-1 d-grid">
                                         Kembali
@@ -317,9 +351,15 @@
             </div>
         </div><!--end container-->
 
-        @if (
-            (Auth::user()->role != \App\Enum\RoleEnum::User->value && $suratKuasa->tahapan != \App\Enum\TahapanSuratKuasaEnum::Pendaftaran->value) ||
-                $suratKuasa->tahapan != \App\Enum\TahapanSuratKuasaEnum::Verifikasi->value)
+        @if (Auth::user()->role != \App\Enum\RoleEnum::User->value &&
+                in_array($suratKuasa->tahapan, [
+                    \App\Enum\TahapanSuratKuasaEnum::Pembayaran->value,
+                    \App\Enum\TahapanSuratKuasaEnum::PerbaikanData->value,
+                    \App\Enum\TahapanSuratKuasaEnum::PengajuanPerbaikanData->value,
+                    \App\Enum\TahapanSuratKuasaEnum::PerbaikanPembayaran->value,
+                    \App\Enum\TahapanSuratKuasaEnum::PengajuanPerbaikanPembayaran->value,
+                ]))
+
             <!-- Modal Setujui -->
             <div class="modal fade" id="setujui-surat-kuasa" tabindex="-1" aria-labelledby="setujui-surat-kuasa-title" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -376,6 +416,15 @@
                                 <button type="button" class="btn btn-icon btn-close" data-bs-dismiss="modal" id="close-modal"><i class="uil uil-times fs-4 text-dark"></i></button>
                             </div>
                             <div class="modal-body">
+                                <div class="form-group mb-3">
+                                    <label for="tahapan">Tolak Tahapan <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="tahapan" name="tahapan" required>
+                                        <option value="" selected disabled>--- Pilih Tahapan ---</option>
+                                        <option value="{{ \App\Enum\TahapanSuratKuasaEnum::PerbaikanData->value }}">Perbaikan Data</option>
+                                        <option value="{{ \App\Enum\TahapanSuratKuasaEnum::PerbaikanPembayaran->value }}">Perbaikan Pembayaran</option>
+                                    </select>
+                                    <div class="invalid-feedback" id="tahapan-error"></div>
+                                </div>
                                 <div class="form-group">
                                     <label for="keterangan">Alasan Ditolak <span class="text-danger">*</span></label>
                                     <textarea class="form-control" required id="keterangan" name="keterangan" placeholder="Isi alasan penolakan pendaftaran surat kuasa..."></textarea>
@@ -390,7 +439,6 @@
                 </div>
             </div>
         @endif
-
 
         @include('admin.layout.content-footer')
         <!-- End -->
@@ -481,7 +529,8 @@
                         title: 'Berhasil!',
                         text: result.message,
                         timer: 2000,
-                        showConfirmButton: false
+                        showConfirmButton: false,
+                        timerProgressBar: true,
                     }).then(() => {
                         window.location.reload();
                     });

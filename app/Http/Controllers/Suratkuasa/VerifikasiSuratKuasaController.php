@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Suratkuasa;
 use App\Enum\StatusSuratKuasaEnum;
 use App\Enum\TahapanSuratKuasaEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SuratKuasa\ApproveSuratKuasaRequest;
+use App\Http\Requests\SuratKuasa\RejectSuratKuasaRequest;
 use App\Models\Suratkuasa\PendaftaranSuratKuasaModel;
 use App\Models\Suratkuasa\RegisterSuratKuasaModel;
 use Carbon\Carbon;
@@ -14,36 +16,24 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class VerifikasiSuratKuasaController extends Controller
 {
     /**
      * Approve a power of attorney registration.
      *
-     * @param Request $request
+     * @param ApproveSuratKuasaRequest $request
      * @return JsonResponse
      */
-    public function approve(Request $request): JsonResponse
+    public function approve(ApproveSuratKuasaRequest $request): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'id' => 'required|string',
-            'nomor_surat_kuasa' => 'required|string',
-            'panitera_id' => 'required|exists:sk_panitera,id',
-        ], [
-            'nomor_surat_kuasa.required' => 'Nomor surat kuasa wajib diisi.',
-            'panitera_id.required' => 'Panitera wajib dipilih.',
-            'panitera_id.exists' => 'Panitera yang dipilih tidak valid.',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['success' => false, 'message' => 'Validasi gagal.', 'errors' => $validator->errors()], 422);
-        }
+        $validated = $request->validated();
 
         DB::beginTransaction();
         try {
-            $id = Crypt::decrypt($request->id);
+            $id = Crypt::decrypt($validated['id']);
             $pendaftaran = PendaftaranSuratKuasaModel::findOrFail($id);
 
             if ($pendaftaran->register) {
@@ -51,7 +41,7 @@ class VerifikasiSuratKuasaController extends Controller
             }
 
             $currentYear = Carbon::now()->year;
-            $isDuplicate = RegisterSuratKuasaModel::where('nomor_surat_kuasa', $request->nomor_surat_kuasa)
+            $isDuplicate = RegisterSuratKuasaModel::where('nomor_surat_kuasa', $validated['nomor_surat_kuasa'])
                 ->whereYear('created_at', $currentYear)
                 ->exists();
 
@@ -63,9 +53,9 @@ class VerifikasiSuratKuasaController extends Controller
                 'surat_kuasa_id' => $pendaftaran->id,
                 'uuid' => Str::uuid(),
                 'tanggal_register' => Carbon::now()->toDateString(),
-                'nomor_surat_kuasa' => $request->nomor_surat_kuasa,
+                'nomor_surat_kuasa' => $validated['nomor_surat_kuasa'],
                 'approval_id' => Auth::id(),
-                'panitera_id' => $request->panitera_id,
+                'panitera_id' => $validated['panitera_id'],
                 'path_file' => 'placeholder.pdf' // TODO: Ganti dengan logika generate PDF barcode
             ]);
 
@@ -76,7 +66,7 @@ class VerifikasiSuratKuasaController extends Controller
             ]);
 
             DB::commit();
-            Log::info('Surat kuasa disetujui', ['id' => $pendaftaran->id, 'nomor' => $request->nomor_surat_kuasa]);
+            Log::info('Surat kuasa disetujui', ['id' => $pendaftaran->id, 'nomor' => $validated['nomor_surat_kuasa']]);
             return response()->json(['success' => true, 'message' => 'Surat kuasa berhasil disetujui dan diregistrasi.']);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -88,40 +78,26 @@ class VerifikasiSuratKuasaController extends Controller
     /**
      * Reject a power of attorney registration.
      *
-     * @param Request $request
+     * @param RejectSuratKuasaRequest $request
      * @return JsonResponse
      */
-    public function reject(Request $request): JsonResponse
+    public function reject(RejectSuratKuasaRequest $request): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'id' => 'required|string',
-            'keterangan' => 'required|string|min:10',
-        ], [
-            'keterangan.required' => 'Alasan penolakan wajib diisi.',
-            'keterangan.min' => 'Alasan penolakan minimal 10 karakter.',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['success' => false, 'message' => 'Validasi gagal.', 'errors' => $validator->errors()], 422);
-        }
+        $validated = $request->validated();
 
         DB::beginTransaction();
         try {
-            $id = Crypt::decrypt($request->id);
+            $id = Crypt::decrypt($validated['id']);
             $pendaftaran = PendaftaranSuratKuasaModel::findOrFail($id);
 
-            $nextTahapan = $pendaftaran->tahapan === TahapanSuratKuasaEnum::Pembayaran->value
-                ? TahapanSuratKuasaEnum::PerbaikanPembayaran->value
-                : TahapanSuratKuasaEnum::PerbaikanData->value;
-
             $pendaftaran->update([
-                'tahapan' => $nextTahapan,
+                'tahapan' => $validated['tahapan'],
                 'status' => StatusSuratKuasaEnum::Ditolak->value,
-                'keterangan' => $request->keterangan,
+                'keterangan' => $validated['keterangan'],
             ]);
 
             DB::commit();
-            Log::info('Surat kuasa ditolak', ['id' => $pendaftaran->id, 'alasan' => $request->keterangan]);
+            Log::info('Surat kuasa ditolak', ['id' => $pendaftaran->id, 'alasan' => $validated['keterangan']]);
             return response()->json(['success' => true, 'message' => 'Surat kuasa berhasil ditolak.']);
         } catch (\Exception $e) {
             DB::rollBack();

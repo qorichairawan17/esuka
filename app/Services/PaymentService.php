@@ -31,10 +31,30 @@ class PaymentService
             ];
         }
 
-        // Rule 2: Jika tahapan pembayaran dan status ditolak, bisa perbarui data pembayaran.
-        // Asumsi: Tahapan 'Pembayaran' adalah saat 'tahapan' = 'Pendaftaran' dan 'status' = 'Ditolak' pada pembayaran sebelumnya.
-        // Atau jika ada tahapan spesifik 'Pembayaran'. Kita akan pakai kondisi yang ada.
-        if ($tahapan == TahapanSuratKuasaEnum::Pendaftaran->value && $status == StatusSuratKuasaEnum::Ditolak->value) {
+        // Rule: Jika tahapan 'Perbaikan Data', pembayaran ditolak.
+        if ($tahapan == TahapanSuratKuasaEnum::PerbaikanData->value) {
+            $message = 'Pendaftaran Anda memerlukan perbaikan data, bukan pembayaran. Silakan perbaiki data pendaftaran.';
+            Log::warning($message, ['id_daftar' => $suratKuasa->id_daftar]);
+            return [
+                'success' => false,
+                'message' => $message,
+                'redirect' => 'surat-kuasa.detail'
+            ];
+        }
+
+            // Rule: Jika tahapan 'Pengajuan Perbaikan', pembayaran ditolak karena menunggu verifikasi.
+        if (in_array($tahapan, [TahapanSuratKuasaEnum::PengajuanPerbaikanData->value, TahapanSuratKuasaEnum::PengajuanPerbaikanPembayaran->value])) {
+            $message = 'Pendaftaran Anda sedang dalam proses verifikasi oleh petugas. Tidak dapat melakukan pembayaran saat ini.';
+            Log::warning($message, ['id_daftar' => $suratKuasa->id_daftar]);
+            return [
+                'success' => false,
+                'message' => $message,
+                'redirect' => 'surat-kuasa.detail'
+            ];
+        }
+
+        // Rule: Jika tahapan 'Perbaikan Pembayaran', pembayaran diizinkan.
+        if ($tahapan == TahapanSuratKuasaEnum::PerbaikanPembayaran->value) {
             $message = 'Pembayaran sebelumnya ditolak. Anda dapat mengunggah bukti pembayaran yang baru.';
             Log::info($message, ['id_daftar' => $suratKuasa->id_daftar]);
             return [

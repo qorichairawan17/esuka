@@ -74,6 +74,11 @@ class SuratkuasaController extends Controller
             if (!$suratKuasa) {
                 return redirect()->route('surat-kuasa.index')->with('error', 'Data surat kuasa tidak ditemukan.');
             }
+            // Hanya izinkan edit jika statusnya 'Perbaikan Data'
+            if ($suratKuasa->tahapan !== TahapanSuratKuasaEnum::PerbaikanData->value) {
+                return redirect()->route('surat-kuasa.detail', ['id' => $request->id])->with('error', 'Surat kuasa ini tidak dalam tahap perbaikan data.');
+            }
+
             $pageTitle = 'Edit Surat Kuasa';
             $idDaftar = $suratKuasa->id_daftar;
         }
@@ -379,7 +384,7 @@ class SuratkuasaController extends Controller
             $updateData = [
                 'perihal' => $validated['perihal'],
                 'jenis_surat' => $validated['jenisSurat'],
-                'tahapan' => TahapanSuratKuasaEnum::PerbaikanData->value,
+                'tahapan' => TahapanSuratKuasaEnum::PengajuanPerbaikanData->value,
                 'status' => null, // Reset status
                 'pemohon' => $user->name
             ];

@@ -53,7 +53,12 @@ class PembayaranController extends Controller
             $statusCheck = $this->paymentService->checkPaymentStatus($suratKuasa);
 
             if (!$statusCheck['success']) {
-                return redirect()->route($statusCheck['redirect'])->with('error', $statusCheck['message']);
+                // Jika redirect tidak diset, kembali ke halaman sebelumnya.
+                $redirectRoute = $statusCheck['redirect'] ?? 'surat-kuasa.index';
+                if ($redirectRoute === 'surat-kuasa.detail') {
+                    return redirect()->route($redirectRoute, ['id' => Crypt::encrypt($suratKuasa->id)])->with('error', $statusCheck['message']);
+                }
+                return redirect()->route($redirectRoute)->with('error', $statusCheck['message']);
             }
 
             $config = PembayaranPnbpModel::first();
@@ -114,7 +119,11 @@ class PembayaranController extends Controller
                 ]
             );
 
-            $suratKuasa->update(['tahapan' => TahapanSuratKuasaEnum::Pembayaran->value, 'status' => null]);
+            $nextTahapan = $suratKuasa->tahapan === TahapanSuratKuasaEnum::PerbaikanPembayaran->value
+                ? TahapanSuratKuasaEnum::PengajuanPerbaikanPembayaran->value
+                : TahapanSuratKuasaEnum::Pembayaran->value;
+
+            $suratKuasa->update(['tahapan' => $nextTahapan, 'status' => null]);
 
             DB::commit();
             Log::info('Payment proof uploaded successfully for: ' . $suratKuasa->id_daftar);

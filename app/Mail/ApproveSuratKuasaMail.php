@@ -65,7 +65,7 @@ class ApproveSuratKuasaMail extends Mailable implements ShouldQueue
 
             // Check if the file exists before trying to attach it.
             if (!Storage::disk('local')->exists($this->pdfPath)) {
-                Log::error('File PDF tidak ditemukan untuk lampiran di ApproveSuratKuasaMail.', [
+                Log::error('PDF file not found for attachment in Approve Power of Attorney Mail.', [
                     'pendaftaran_id' => $this->pendaftaran->id,
                     'path' => $this->pdfPath,
                     'full_path_attempted' => $fullPath,

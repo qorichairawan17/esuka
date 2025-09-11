@@ -14,17 +14,19 @@
                 <div class="mt-4">
                     <div class="card shadow">
                         <div class="card-header">
-                            <div class="btn-group dropdown-primary me-2 mt-2">
-                                <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Daftar
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a href="{{ route('surat-kuasa.form', ['param' => 'add', 'klasifikasi' => App\Enum\SuratKuasaEnum::Advokat->value]) }}" class="dropdown-item">Advokat (Pengacara)
-                                    </a>
-                                    <a href="{{ route('surat-kuasa.form', ['param' => 'add', 'klasifikasi' => App\Enum\SuratKuasaEnum::NonAdvokat->value]) }}" class="dropdown-item">Non Advokat
-                                    </a>
+                            @if (Auth::user()->role == \App\Enum\RoleEnum::User->value)
+                                <div class="btn-group dropdown-primary me-2 mt-2">
+                                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Daftar
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a href="{{ route('surat-kuasa.form', ['param' => 'add', 'klasifikasi' => App\Enum\SuratKuasaEnum::Advokat->value]) }}" class="dropdown-item">Advokat (Pengacara)
+                                        </a>
+                                        <a href="{{ route('surat-kuasa.form', ['param' => 'add', 'klasifikasi' => App\Enum\SuratKuasaEnum::NonAdvokat->value]) }}" class="dropdown-item">Non Advokat
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                         </div>
                         <div class="card-body">
                             <div class="table-responsive" style="border-color: #f1f1f1;">

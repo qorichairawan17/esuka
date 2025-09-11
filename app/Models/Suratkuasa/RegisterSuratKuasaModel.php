@@ -27,7 +27,7 @@ class RegisterSuratKuasaModel extends Model
 
     public function pendaftaran(): BelongsTo
     {
-        return $this->belongsTo(PendaftaranSuratKuasaModel::class);
+        return $this->belongsTo(PendaftaranSuratKuasaModel::class, 'surat_kuasa_id', 'id');
     }
 
     public function approval(): BelongsTo

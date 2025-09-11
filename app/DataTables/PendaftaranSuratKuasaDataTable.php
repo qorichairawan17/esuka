@@ -92,9 +92,9 @@ class PendaftaranSuratKuasaDataTable extends DataTable
     {
         $roleBased = Auth::user()->role;
         if ($roleBased == \App\Enum\RoleEnum::User->value) {
-            return $model::with(['register', 'pihak'])->where('user_id', Auth::user()->id)->newQuery();
+            return $model::with(['register', 'pihak'])->where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->newQuery();
         }
-        return $model::with(['register', 'pihak'])->newQuery();
+        return $model::with(['register', 'pihak'])->orderBy('created_at', 'desc')->newQuery();
     }
 
     /**

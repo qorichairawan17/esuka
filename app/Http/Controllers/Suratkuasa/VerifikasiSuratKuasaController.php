@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers\Suratkuasa;
 
+use Carbon\Carbon;
+use Illuminate\Support\Str;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use App\Enum\StatusSuratKuasaEnum;
 use App\Enum\TahapanSuratKuasaEnum;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use App\Http\Controllers\Controller;
+use App\Jobs\GenerateBarcodeSuratKuasaPDF;
 use App\Http\Requests\SuratKuasa\ApproveSuratKuasaRequest;
 use App\Http\Requests\SuratKuasa\RejectSuratKuasaRequest;
 use App\Models\Suratkuasa\PendaftaranSuratKuasaModel;
 use App\Models\Suratkuasa\RegisterSuratKuasaModel;
-use Carbon\Carbon;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
+
 
 class VerifikasiSuratKuasaController extends Controller
 {
@@ -33,13 +33,16 @@ class VerifikasiSuratKuasaController extends Controller
 
         DB::beginTransaction();
         try {
+            // Decrypt the id
             $id = Crypt::decrypt($validated['id']);
             $pendaftaran = PendaftaranSuratKuasaModel::findOrFail($id);
 
+            // Check if the power of attorney has already been registered
             if ($pendaftaran->register) {
                 return response()->json(['success' => false, 'message' => 'Surat kuasa ini sudah diregistrasi sebelumnya.'], 409);
             }
 
+            // Check if the number of the power of attorney has already been used in the current year
             $currentYear = Carbon::now()->year;
             $isDuplicate = RegisterSuratKuasaModel::where('nomor_surat_kuasa', $validated['nomor_surat_kuasa'])
                 ->whereYear('created_at', $currentYear)
@@ -49,28 +52,39 @@ class VerifikasiSuratKuasaController extends Controller
                 return response()->json(['success' => false, 'message' => 'Nomor surat kuasa sudah digunakan tahun ini. Silakan gunakan nomor lain.'], 409);
             }
 
-            RegisterSuratKuasaModel::create([
+            // Create a new record in the register table
+            $register = RegisterSuratKuasaModel::create([
                 'surat_kuasa_id' => $pendaftaran->id,
                 'uuid' => Str::uuid(),
                 'tanggal_register' => Carbon::now()->toDateString(),
                 'nomor_surat_kuasa' => $validated['nomor_surat_kuasa'],
                 'approval_id' => Auth::id(),
                 'panitera_id' => $validated['panitera_id'],
-                'path_file' => 'placeholder.pdf' // TODO: Ganti dengan logika generate PDF barcode
+                'path_file' => '',
             ]);
 
+            // Update the status of the power of attorney
             $pendaftaran->update([
                 'tahapan' => TahapanSuratKuasaEnum::Verifikasi->value,
                 'status' => StatusSuratKuasaEnum::Disetujui->value,
                 'keterangan' => 'Pendaftaran surat kuasa telah disetujui dan diregistrasi.'
             ]);
 
+            // Commit the transaction
             DB::commit();
-            Log::info('Surat kuasa disetujui', ['id' => $pendaftaran->id, 'nomor' => $validated['nomor_surat_kuasa']]);
+
+            // Dispatch job untuk generate PDF setelah commit berhasil
+            GenerateBarcodeSuratKuasaPDF::dispatch($register);
+
+            // Log the action
+            Log::info('Power of attorney approved and registered: ', ['id' => $pendaftaran->id, 'nomor' => $validated['nomor_surat_kuasa']]);
             return response()->json(['success' => true, 'message' => 'Surat kuasa berhasil disetujui dan diregistrasi.']);
         } catch (\Exception $e) {
+            // Rollback the transaction
             DB::rollBack();
-            Log::error('Gagal menyetujui surat kuasa: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            // Log the error
+            Log::error('Failde approve power of attorney: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            // Return the error response
             return response()->json(['success' => false, 'message' => 'Terjadi kesalahan pada server.'], 500);
         }
     }
@@ -83,25 +97,37 @@ class VerifikasiSuratKuasaController extends Controller
      */
     public function reject(RejectSuratKuasaRequest $request): JsonResponse
     {
+        // Validate the request
         $validated = $request->validated();
 
+        // Start a database transaction
         DB::beginTransaction();
         try {
+            // Decrypt the id
             $id = Crypt::decrypt($validated['id']);
+            // Fetch the power of attorney
             $pendaftaran = PendaftaranSuratKuasaModel::findOrFail($id);
 
+            // Update the status of the power of attorney
             $pendaftaran->update([
                 'tahapan' => $validated['tahapan'],
                 'status' => StatusSuratKuasaEnum::Ditolak->value,
                 'keterangan' => $validated['keterangan'],
             ]);
 
+            // Commit the transaction
             DB::commit();
-            Log::info('Surat kuasa ditolak', ['id' => $pendaftaran->id, 'alasan' => $validated['keterangan']]);
+
+            // Log the action
+            Log::info('Power of attorney rejected: ', ['id' => $pendaftaran->id, 'alasan' => $validated['keterangan']]);
+            // Return success response
             return response()->json(['success' => true, 'message' => 'Surat kuasa berhasil ditolak.']);
         } catch (\Exception $e) {
+            // Rollback the transaction
             DB::rollBack();
-            Log::error('Gagal menolak surat kuasa: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            // Log the error
+            Log::error('Failed reject power of attorney: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            // Return error response
             return response()->json(['success' => false, 'message' => 'Terjadi kesalahan pada server.'], 500);
         }
     }

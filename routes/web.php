@@ -37,6 +37,7 @@ Route::prefix('index')->middleware(NonAuthMiddleware::class)->controller(Landing
     Route::get('/contact', 'contact')->name('app.contact');
     Route::get('/signin', 'signin')->name('app.signin');
     Route::get('/signup', 'signup')->name('app.signup');
+    Route::get('/surat-kuasa/verify/{uuid}', 'verify')->name('app.surat-kuasa.verify');
 });
 
 Route::prefix('dashboard')->middleware([AuthMiddleware::class, CompleteProfileMiddleware::class])->controller(HomeController::class)->group(function () {
@@ -51,7 +52,7 @@ Route::prefix('surat-kuasa')->middleware([AuthMiddleware::class, CompleteProfile
         Route::get('/detail/{id?}', 'detail')->name('surat-kuasa.detail');
         Route::post('/store', 'store')->name('surat-kuasa.store');
         Route::post('/update/{id}', 'update')->name('surat-kuasa.update');
-        Route::post('/destroy/{id}', 'destroy')->name('surat-kuasa.destroy');
+        Route::delete('/destroy/{id}', 'destroy')->name('surat-kuasa.destroy');
 
         Route::get('/download/{path}', 'downloadFile')->name('surat-kuasa.download');
         Route::get('/doc/preview/{id}/{jenis_dokumen}', 'previewFile')->name('surat-kuasa.preview-file');
@@ -63,13 +64,14 @@ Route::prefix('surat-kuasa')->middleware([AuthMiddleware::class, CompleteProfile
         Route::get('/pembayaran/preview/{id}', 'preview')->name('surat-kuasa.pembayaran-preview');
     });
 
+    Route::controller(VerifikasiSuratKuasaController::class)->group(function () {
+        Route::post('/approve', 'approve')->name('surat-kuasa.verifikasi.approve');
+        Route::post('/reject', 'reject')->name('surat-kuasa.verifikasi.reject');
+    });
+
     Route::controller(CetakBarcodeController::class)->group(function () {
         Route::get('/barcode/{id?}', 'index')->name('surat-kuasa.barcode');
     });
-});
-Route::prefix('verifikasi-surat-kuasa')->middleware([AuthMiddleware::class, CompleteProfileMiddleware::class])->controller(VerifikasiSuratKuasaController::class)->group(function () {
-    Route::post('/approve', 'approve')->name('surat-kuasa.verifikasi.approve');
-    Route::post('/reject', 'reject')->name('surat-kuasa.verifikasi.reject');
 });
 
 

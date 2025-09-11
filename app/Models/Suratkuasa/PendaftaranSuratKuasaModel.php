@@ -46,9 +46,9 @@ class PendaftaranSuratKuasaModel extends Model
         return $this->hasMany(PihakSuratKuasaModel::class, 'surat_kuasa_id', 'id');
     }
 
-    public function register(): BelongsTo
+    public function register(): HasOne
     {
-        return $this->belongsTo(RegisterSuratKuasaModel::class, 'surat_kuasa_id', 'id');
+        return $this->hasOne(RegisterSuratKuasaModel::class, 'surat_kuasa_id', 'id');
     }
 
     public function pembayaran(): HasOne

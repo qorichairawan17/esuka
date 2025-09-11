@@ -145,9 +145,9 @@
                                                         <h6>Disahkan</h6>
                                                         <p>
                                                             <span class="fw-bold text-primary">
-                                                                {{ $suratKuasa->register->panitera->name }}
+                                                                {{ $suratKuasa->register->panitera->nama }}
                                                             </span> <br>
-                                                            Panitera Pengadilan Negeri{{ $infoApp->pengadilan_negeri }}
+                                                            Panitera {{ $infoApp->pengadilan_negeri }}
                                                         </p>
                                                     </div>
                                                 @endif

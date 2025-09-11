@@ -28,7 +28,10 @@ Route::get('/', function () {
 });
 
 Route::get('/email', function () {
-    return view('mail.aktivasi-akun');
+    // return view('mail.aktivasi-akun');
+    // return view('mail.reset-password-akun');
+    // return view('mail.approve-surat-kuasa');
+    return view('mail.reject-surat-kuasa');
 });
 
 Route::prefix('index')->middleware(NonAuthMiddleware::class)->controller(LandingController::class)->group(function () {

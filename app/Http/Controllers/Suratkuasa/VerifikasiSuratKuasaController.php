@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Suratkuasa;
 
 use Carbon\Carbon;
+use App\Mail\ApproveSuratKuasaMail;
 use Illuminate\Support\Str;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Enum\StatusSuratKuasaEnum;
 use App\Enum\TahapanSuratKuasaEnum;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use App\Mail\RejectSuratKuasaMail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use App\Http\Controllers\Controller;
@@ -35,7 +38,7 @@ class VerifikasiSuratKuasaController extends Controller
         try {
             // Decrypt the id
             $id = Crypt::decrypt($validated['id']);
-            $pendaftaran = PendaftaranSuratKuasaModel::findOrFail($id);
+            $pendaftaran = PendaftaranSuratKuasaModel::with('user')->findOrFail($id);
 
             // Check if the power of attorney has already been registered
             if ($pendaftaran->register) {
@@ -70,11 +73,19 @@ class VerifikasiSuratKuasaController extends Controller
                 'keterangan' => 'Pendaftaran surat kuasa telah disetujui dan diregistrasi.'
             ]);
 
+            // Dispatch job secara sinkron untuk generate PDF agar path file langsung tersedia.
+            GenerateBarcodeSuratKuasaPDF::dispatchSync($register);
+
+            // Muat ulang model register untuk mendapatkan path_file yang baru.
+            $register->refresh();
+
+            // Kirim email notifikasi ke pengguna dengan lampiran PDF.
+            // Email akan diproses di background karena Mailable mengimplementasikan ShouldQueue.
+            Mail::to($pendaftaran->user->email)->queue(new ApproveSuratKuasaMail($pendaftaran, $register->path_file));
+
             // Commit the transaction
             DB::commit();
 
-            // Dispatch job untuk generate PDF setelah commit berhasil
-            GenerateBarcodeSuratKuasaPDF::dispatch($register);
 
             // Log the action
             Log::info('Power of attorney approved and registered: ', ['id' => $pendaftaran->id, 'nomor' => $validated['nomor_surat_kuasa']]);
@@ -106,7 +117,7 @@ class VerifikasiSuratKuasaController extends Controller
             // Decrypt the id
             $id = Crypt::decrypt($validated['id']);
             // Fetch the power of attorney
-            $pendaftaran = PendaftaranSuratKuasaModel::findOrFail($id);
+            $pendaftaran = PendaftaranSuratKuasaModel::with('user')->findOrFail($id);
 
             // Update the status of the power of attorney
             $pendaftaran->update([
@@ -114,6 +125,10 @@ class VerifikasiSuratKuasaController extends Controller
                 'status' => StatusSuratKuasaEnum::Ditolak->value,
                 'keterangan' => $validated['keterangan'],
             ]);
+
+            // Kirim email notifikasi penolakan ke pengguna.
+            // Email akan diproses di background karena Mailable mengimplementasikan ShouldQueue.
+            Mail::to($pendaftaran->user->email)->queue(new RejectSuratKuasaMail($pendaftaran, $validated['keterangan']));
 
             // Commit the transaction
             DB::commit();

@@ -14,9 +14,9 @@ Route::prefix('auth')->middleware(NonAuthMiddleware::class)->controller(GoogleAu
 });
 
 Route::prefix('auth')->controller(AuthController::class)->group(function () {
-    Route::post('/login', 'login')->name('auth.login')->middleware(NonAuthMiddleware::class);
+    Route::post('/login', 'login')->name('auth.login')->middleware([NonAuthMiddleware::class, 'throttle:login']);
     Route::post('/logout', 'logout')->name('auth.logout');
-    Route::post('/register', 'register')->name('auth.register')->middleware(NonAuthMiddleware::class);
+    Route::post('/register', 'register')->name('auth.register')->middleware([NonAuthMiddleware::class, 'throttle:5,1']);
 });
 
 Route::get('/activate-account/{token}', [ActivationController::class, 'activate'])->name('auth.activate-account');

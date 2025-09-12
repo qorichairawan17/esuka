@@ -17,7 +17,7 @@
             </div>
         </div>
 
-        <ul class="buy-button list-inline mb-0">
+        <ul class="buy-button list-inline mb-0 d-none d-lg-inline-block">
             <li class="list-inline-item ps-1 mb-0">
                 @if (Auth::check())
                     <a href="{{ route('dashboard.pengguna') }}" class="btn btn-pills btn-primary">
@@ -37,14 +37,17 @@
                 <li><a href="{{ route('app.home') }}" class="sub-menu-item active">Beranda</a></li>
                 <li><a href="{{ route('app.about') }}" class="has-submenu parent-parent-menu-item">Tentang</a></li>
                 <li><a href="{{ route('app.contact') }}" class="has-submenu parent-parent-menu-item">Kontak</a></li>
-
-                <li class="has-submenu parent-menu-item">
-                    <a href="javascript:void(0)">Surat Kuasa</a><span class="menu-arrow"></span>
-                    <ul class="submenu">
-                        <li><a href="documentation.html" class="sub-menu-item">Documentation</a></li>
-                        <li><a href="changelog.html" class="sub-menu-item">Changelog</a></li>
-                        <li><a href="widget.html" class="sub-menu-item">Widget</a></li>
-                    </ul>
+                <li><a href="#" class="has-submenu parent-parent-menu-item">Panduan</a></li>
+                <li class="d-lg-none">
+                    @if (Auth::check())
+                        <a href="{{ route('dashboard.pengguna') }}" class="sub-menu-item">
+                            Dashboard
+                        </a>
+                    @else
+                        <a href="{{ route('app.signin') }}" class="sub-menu-item">
+                            Login
+                        </a>
+                    @endif
                 </li>
             </ul>
         </div>

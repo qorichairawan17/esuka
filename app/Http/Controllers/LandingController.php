@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
 use App\Models\Pengaturan\AplikasiModel;
 use App\Models\Testimoni\TestimoniModel;
 use App\Models\Pengaturan\PejabatStrukturalModel;
+use App\Models\Suratkuasa\PendaftaranSuratKuasaModel;
+use App\Models\Suratkuasa\RegisterSuratKuasaModel;
 
 class LandingController extends Controller
 {
@@ -74,5 +79,31 @@ class LandingController extends Controller
             'infoApp' => $this->infoApp
         ];
         return view('auth.signup', $data);
+    }
+
+    public function verify($uuid)
+    {
+        try {
+            $suratKuasa = RegisterSuratKuasaModel::with([
+                'pendaftaran.pihak', // Pihak
+                'pendaftaran.user', // User pendaftar
+                'panitera', // Panitera yang mensahkan
+                'approval' // Petugas yang memverifikasi
+            ])->where('uuid', $uuid)->firstOrFail();
+
+            $data = [
+                'title' => 'Verifikasi Surat Kuasa - ' . config('app.name'),
+                'infoApp' => $this->infoApp,
+                'suratKuasa' => $suratKuasa,
+            ];
+
+            return view('landing.verify-surat-kuasa', $data);
+        } catch (ModelNotFoundException $e) {
+            Log::warning('Verification link accessed with invalid UUID: ' . $uuid);
+            return redirect()->route('app.home')->with('error', 'Link verifikasi tidak valid atau data pendaftaran tidak ditemukan.');
+        } catch (\Exception $e) {
+            Log::error('Failed to verify Power of Attorney: ' . $e->getMessage(), ['uuid' => $uuid, 'trace' => $e->getTraceAsString()]);
+            return redirect()->route('app.home')->with('error', 'Terjadi kesalahan saat memverifikasi data.');
+        }
     }
 }

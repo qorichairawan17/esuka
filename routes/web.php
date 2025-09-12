@@ -34,12 +34,14 @@ Route::get('/email', function () {
     return view('mail.reject-surat-kuasa');
 });
 
-Route::prefix('index')->middleware(NonAuthMiddleware::class)->controller(LandingController::class)->group(function () {
+Route::prefix('index')->controller(LandingController::class)->group(function () {
     Route::get('/', 'index')->name('app.home');
     Route::get('/about', 'about')->name('app.about');
     Route::get('/contact', 'contact')->name('app.contact');
-    Route::get('/signin', 'signin')->name('app.signin');
-    Route::get('/signup', 'signup')->name('app.signup');
+    Route::middleware(NonAuthMiddleware::class)->group(function () {
+        Route::get('/signin', 'signin')->name('app.signin');
+        Route::get('/signup', 'signup')->name('app.signup');
+    });
     Route::get('/surat-kuasa/verify/{uuid}', 'verify')->name('app.surat-kuasa.verify');
 });
 

@@ -31,7 +31,7 @@
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="detailModalLabel">Detail Log Aktivitas</h5>
+                        <h5 class="modal-title" id="detailModalLabel">Detail Audit Trail</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -45,7 +45,7 @@
                                 <tr>
                                     <td><strong>Aksi</strong></td>
                                     <td>:</td>
-                                    <td id="detail-description"></td>
+                                    <td id="detail-payload"></td>
                                 </tr>
                                 <tr>
                                     <td><strong>Tanggal</strong></td>
@@ -57,16 +57,19 @@
                                     <td>:</td>
                                     <td id="detail-ip_address"></td>
                                 </tr>
-                                <tr>
-                                    <td><strong>URL</strong></td>
-                                    <td>:</td>
-                                    <td id="detail-url"></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Method</strong></td>
-                                    <td>:</td>
-                                    <td id="detail-method"></td>
-                                </tr>
+                                {{-- Hanya tampilkan URL dan Method jika user bukan 'Pengguna' biasa --}}
+                                @if (auth()->user()->role !== \App\Enum\RoleEnum::User->value)
+                                    <tr id="row-url">
+                                        <td><strong>URL</strong></td>
+                                        <td>:</td>
+                                        <td id="detail-url"></td>
+                                    </tr>
+                                    <tr id="row-method">
+                                        <td><strong>Method</strong></td>
+                                        <td>:</td>
+                                        <td id="detail-method"></td>
+                                    </tr>
+                                @endif
                                 <tr>
                                     <td class="align-top"><strong>User Agent</strong></td>
                                     <td class="align-top">:</td>
@@ -76,7 +79,7 @@
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Tutup</button>
                     </div>
                 </div>
             </div>
@@ -93,10 +96,9 @@
 
     <script type="text/javascript">
         function showDetail(id) {
-            // Tampilkan loader atau status loading jika perlu
             const detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
 
-            fetch(`/audit-trail/${id}`)
+            fetch(`{{ route('audit-trail.index') }}/${id}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Data tidak ditemukan');
@@ -105,12 +107,19 @@
                 })
                 .then(data => {
                     document.getElementById('detail-user').innerText = data.user ? data.user.name : 'Sistem/Tidak Diketahui';
-                    document.getElementById('detail-description').innerText = data.description || '-';
+                    document.getElementById('detail-payload').innerText = data.payload || '-';
                     document.getElementById('detail-created_at').innerText = new Date(data.created_at).toLocaleString('id-ID');
                     document.getElementById('detail-ip_address').innerText = data.ip_address || '-';
-                    document.getElementById('detail-url').innerText = data.url || '-';
-                    document.getElementById('detail-method').innerText = data.method || '-';
                     document.getElementById('detail-user_agent').innerText = data.user_agent || '-';
+
+                    @if (auth()->user()->role !== \App\Enum\RoleEnum::User->value)
+                        const detailUrlElement = document.getElementById('detail-url');
+                        const detailMethodElement = document.getElementById('detail-method');
+                        if (detailUrlElement && detailMethodElement) {
+                            detailUrlElement.innerText = data.url || '-';
+                            detailMethodElement.innerText = data.method || '-';
+                        }
+                    @endif
                     detailModal.show();
                 })
                 .catch(error => {

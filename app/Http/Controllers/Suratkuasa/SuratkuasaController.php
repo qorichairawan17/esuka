@@ -66,7 +66,6 @@ class SuratkuasaController extends Controller
         $id = $request->id ? Crypt::decrypt($request->id) : null;
         $suratKuasa = $id ? PendaftaranSuratKuasaModel::find($id) : null;
 
-
         if ($param == 'add') {
             $pageTitle = 'Pendaftaran Surat Kuasa';
             $idDaftar = '#' . $this->infoApp->kode_dipa . '-' . Str::upper(Str::random(3)) . Str::numbers(3);

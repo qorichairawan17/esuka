@@ -132,9 +132,10 @@ Route::prefix('profil')->middleware(AuthMiddleware::class)->group(function () {
     });
 });
 
-Route::prefix('audit-trail')->group(function () {
+Route::prefix('audit-trail')->middleware(AuthMiddleware::class)->group(function () {
     Route::controller(AuditTrailController::class)->group(function () {
         Route::get('/', 'index')->name('audit-trail.index');
+        Route::get('/{id}', 'show')->name('audit-trail.show');
         Route::delete('/destroy/{id}', 'destroy')->name('audit-trail.destroy');
     });
 });

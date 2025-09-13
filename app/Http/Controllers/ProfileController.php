@@ -30,15 +30,16 @@ class ProfileController extends Controller
 
     private function breadCumb($parameters)
     {
+        $dashboardRoute = Auth::user()->role === 'User' ? route('dashboard.pengguna') : route('dashboard.admin');
         $breadCumb = [
-            ['title' => 'Dashboard', 'url' => $parameters['url'], 'active' => $parameters['active'], 'aria' => $parameters['aria']],
+            ['title' => 'Dashboard', 'url' => $dashboardRoute, 'active' => $parameters['active'], 'aria' => $parameters['aria']],
         ];
 
         return $breadCumb;
     }
     public function index()
     {
-        $breadCumb = $this->breadCumb(['url' => route('dashboard.admin'), 'active' => '', 'aria' => '']);
+        $breadCumb = $this->breadCumb(['url' => 'javascript:void(0);', 'active' => '', 'aria' => '']);
         $breadCumb[] =  ['title' => 'Profil', 'url' => 'javascript:void(0);', 'active' => 'active', 'aria' => 'aria-current="page"'];
 
         $data = [

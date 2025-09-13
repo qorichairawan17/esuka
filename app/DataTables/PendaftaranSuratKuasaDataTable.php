@@ -105,7 +105,7 @@ class PendaftaranSuratKuasaDataTable extends DataTable
         return $this->builder()
             ->setTableId('pendaftaransuratkuasa-table')
             ->columns($this->getColumns())
-            ->minifiedAjax()
+            ->ajax(route('surat-kuasa.index'))
             ->orderBy(1)
             ->selectStyleSingle()
             ->processing(true)

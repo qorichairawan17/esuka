@@ -105,23 +105,21 @@ Route::prefix('pengguna')->middleware(AuthMiddleware::class)->group(function () 
     });
 });
 
-Route::prefix('pengaturan')->group(function () {
-    Route::middleware(AuthMiddleware::class)->group(function () {
-        Route::controller(AplikasiController::class)->group(function () {
-            Route::get('/aplikasi', 'index')->name('aplikasi.index');
-            Route::post('/aplikasi/store', 'storeAplikasi')->name('aplikasi.store');
+Route::prefix('pengaturan')->middleware(AuthMiddleware::class)->group(function () {
+    Route::controller(AplikasiController::class)->group(function () {
+        Route::get('/aplikasi', 'index')->name('aplikasi.index');
+        Route::post('/aplikasi/store', 'storeAplikasi')->name('aplikasi.store');
 
-            Route::get('/pembayaran', 'pembayaran')->name('pembayaran.index');
-            Route::post('/pembayaran/store', 'storePembayaran')->name('pembayaran.store');
+        Route::get('/pembayaran', 'pembayaran')->name('pembayaran.index');
+        Route::post('/pembayaran/store', 'storePembayaran')->name('pembayaran.store');
 
-            Route::get('/pejabat-struktural', 'pejabatStruktural')->name('pejabat-struktural.index');
-            Route::post('/pejabat-struktural/store', 'storePejabatStruktural')->name('pejabat-struktural.store');
-        });
+        Route::get('/pejabat-struktural', 'pejabatStruktural')->name('pejabat-struktural.index');
+        Route::post('/pejabat-struktural/store', 'storePejabatStruktural')->name('pejabat-struktural.store');
+    });
 
-        Route::controller(TestimoniController::class)->group(function () {
-            Route::get('/testimoni', 'index')->name('testimoni.index');
-            Route::get('/testimoni/store', 'store')->name('testimoni.store');
-        });
+    Route::controller(TestimoniController::class)->group(function () {
+        Route::get('/testimoni', 'index')->name('testimoni.index');
+        Route::get('/testimoni/store', 'store')->name('testimoni.store');
     });
 });
 
@@ -137,5 +135,6 @@ Route::prefix('profil')->middleware(AuthMiddleware::class)->group(function () {
 Route::prefix('audit-trail')->group(function () {
     Route::controller(AuditTrailController::class)->group(function () {
         Route::get('/', 'index')->name('audit-trail.index');
+        Route::delete('/destroy/{id}', 'destroy')->name('audit-trail.destroy');
     });
 });

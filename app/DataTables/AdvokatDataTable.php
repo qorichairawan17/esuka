@@ -63,7 +63,7 @@ class AdvokatDataTable extends DataTable
         return $this->builder()
             ->setTableId('advokat-table')
             ->columns($this->getColumns())
-            ->minifiedAjax()
+            ->ajax(route('advokat.index'))
             ->orderBy(1)
             ->selectStyleSingle()
             ->processing(true)

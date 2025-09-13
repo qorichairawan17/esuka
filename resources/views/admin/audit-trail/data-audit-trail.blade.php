@@ -18,7 +18,7 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-
+                                {{ $dataTable->table(['class' => 'table table-bordered', 'style' => 'width:100%;font-size:15px;']) }}
                             </div>
                         </div>
                     </div>
@@ -26,8 +26,101 @@
             </div>
         </div><!--end container-->
 
+        <!-- Modal Detail -->
+        <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="detailModalLabel">Detail Log Aktivitas</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 150px;"><strong>Pengguna</strong></td>
+                                    <td style="width: 10px;">:</td>
+                                    <td id="detail-user"></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Aksi</strong></td>
+                                    <td>:</td>
+                                    <td id="detail-description"></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Tanggal</strong></td>
+                                    <td>:</td>
+                                    <td id="detail-created_at"></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>IP Address</strong></td>
+                                    <td>:</td>
+                                    <td id="detail-ip_address"></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>URL</strong></td>
+                                    <td>:</td>
+                                    <td id="detail-url"></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Method</strong></td>
+                                    <td>:</td>
+                                    <td id="detail-method"></td>
+                                </tr>
+                                <tr>
+                                    <td class="align-top"><strong>User Agent</strong></td>
+                                    <td class="align-top">:</td>
+                                    <td id="detail-user_agent" style="word-break: break-all;"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         @include('admin.layout.content-footer')
         <!-- End -->
     </main>
     <!--End page-content" -->
 @endsection
+
+@push('scripts')
+    {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
+
+    <script type="text/javascript">
+        function showDetail(id) {
+            // Tampilkan loader atau status loading jika perlu
+            const detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
+
+            fetch(`/audit-trail/${id}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Data tidak ditemukan');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById('detail-user').innerText = data.user ? data.user.name : 'Sistem/Tidak Diketahui';
+                    document.getElementById('detail-description').innerText = data.description || '-';
+                    document.getElementById('detail-created_at').innerText = new Date(data.created_at).toLocaleString('id-ID');
+                    document.getElementById('detail-ip_address').innerText = data.ip_address || '-';
+                    document.getElementById('detail-url').innerText = data.url || '-';
+                    document.getElementById('detail-method').innerText = data.method || '-';
+                    document.getElementById('detail-user_agent').innerText = data.user_agent || '-';
+                    detailModal.show();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal Memuat Data',
+                        text: 'Terjadi kesalahan saat mengambil detail log. Silakan coba lagi nanti.',
+                    });
+                });
+        }
+    </script>
+@endpush

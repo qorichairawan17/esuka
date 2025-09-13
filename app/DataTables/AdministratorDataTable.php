@@ -63,7 +63,7 @@ class AdministratorDataTable extends DataTable
         return $this->builder()
             ->setTableId('administrator-table')
             ->columns($this->getColumns())
-            ->minifiedAjax()
+            ->ajax(route('administrator.index'))
             ->orderBy(1)
             ->selectStyleSingle()
             ->processing(true)

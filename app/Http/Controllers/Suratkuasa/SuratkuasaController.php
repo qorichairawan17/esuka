@@ -178,8 +178,12 @@ class SuratkuasaController extends Controller
 
             // Check if the file exists in storage
             if (Storage::disk('local')->exists($filePath)) {
-                // Return the file as a response
-                return response()->file(storage_path('app/private/' . $filePath));
+                // Get encrypted content, decrypt it, and then create a response
+                $encryptedContent = Storage::disk('local')->get($filePath);
+                $decryptedContent = Crypt::decryptString($encryptedContent);
+
+                // Create a response with the decrypted content
+                return response($decryptedContent)->header('Content-Type', Storage::mimeType($filePath));
             }
 
             // Log an error if the file is not found
@@ -232,11 +236,15 @@ class SuratkuasaController extends Controller
 
             // Set headers custom
             $headers = [
-                'Content-Disposition' => 'inline; filename="' . $newFileName . '"'
+                'Content-Disposition' => 'inline; filename="' . $newFileName . '"',
+                'Content-Type' => Storage::mimeType($filePath)
             ];
 
-            // Return the file as a response
-            return response()->file(storage_path('app/private/' . $filePath), $headers);
+            // Get encrypted content, decrypt it, and then create a response
+            $encryptedContent = Storage::disk('local')->get($filePath);
+            $decryptedContent = Crypt::decryptString($encryptedContent);
+
+            return response($decryptedContent, 200, $headers);
         } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
             // Handle decryption error
             Log::error('Error decrypting preview file path: ' . $e->getMessage());
@@ -269,7 +277,7 @@ class SuratkuasaController extends Controller
 
             DB::commit();
 
-            Log::info('Pendaftaran surat kuasa berhasil', ['id_daftar' => $idDaftar]);
+            Log::info('Power Attorney Registration submitted successfully', ['id_daftar' => $idDaftar]);
 
             return response()->json([
                 'success' => true,
@@ -285,7 +293,7 @@ class SuratkuasaController extends Controller
             if ($uploadPath) {
                 Storage::disk('local')->deleteDirectory($uploadPath);
             }
-            Log::error('Gagal menyimpan pendaftaran surat kuasa: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            Log::error('Error saving power attorney registration: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return response()->json(['success' => false, 'message' => 'Terjadi kesalahan pada server saat menyimpan data.'], 500);
         }
     }
@@ -327,7 +335,14 @@ class SuratkuasaController extends Controller
 
         foreach ($fileFields as $field) {
             if ($request->hasFile($field)) {
-                $filePaths[$field] = $request->file($field)->store($uploadPath, 'local');
+                $file = $request->file($field);
+                // Generate a unique name but keep the extension for mime-type detection later
+                $fileName = Str::random(40) . '.' . $file->getClientOriginalExtension();
+                $fullPath = "{$uploadPath}/{$fileName}";
+
+                // Encrypt content and store
+                Storage::disk('local')->put($fullPath, Crypt::encryptString($file->get()));
+                $filePaths[$field] = $fullPath;
             }
         }
         return $filePaths;
@@ -475,7 +490,11 @@ class SuratkuasaController extends Controller
                     Storage::disk('local')->delete($pendaftaran->$dbColumn);
                 }
                 // Store new file
-                $filePaths[$dbColumn] = $request->file($field)->store($uploadPath, 'local');
+                $file = $request->file($field);
+                $fileName = Str::random(40) . '.' . $file->getClientOriginalExtension();
+                $fullPath = "{$uploadPath}/{$fileName}";
+                Storage::disk('local')->put($fullPath, Crypt::encryptString($file->get()));
+                $filePaths[$dbColumn] = $fullPath;
             }
         }
         return $filePaths;

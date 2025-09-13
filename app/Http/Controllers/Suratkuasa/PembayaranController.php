@@ -106,7 +106,12 @@ class PembayaranController extends Controller
 
             // Store the new file
             $uploadPath = 'pembayaran/' . date('m') . '/' . date('Y') . '/' . $suratKuasa->id_daftar;
-            $filePath = $request->file('bukti_pembayaran')->store($uploadPath, 'local');
+            $file = $request->file('bukti_pembayaran');
+            $fileName = \Illuminate\Support\Str::random(40) . '.' . $file->getClientOriginalExtension();
+            $filePath = "{$uploadPath}/{$fileName}";
+
+            // Encrypt content and store
+            Storage::disk('local')->put($filePath, Crypt::encryptString($file->get()));
 
             // Create or update the payment data with the new file
             PembayaranSuratKuasaModel::updateOrCreate(
@@ -156,7 +161,11 @@ class PembayaranController extends Controller
                 return abort(404, 'File bukti pembayaran tidak ditemukan atau path tidak valid.');
             }
 
-            return response()->file(storage_path('app/private/' . $filePath));
+            // Get encrypted content, decrypt it, and then create a response
+            $encryptedContent = Storage::disk('local')->get($filePath);
+            $decryptedContent = Crypt::decryptString($encryptedContent);
+
+            return response($decryptedContent)->header('Content-Type', Storage::mimeType($filePath));
         } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
             Log::error('Error decrypting payment preview ID: ' . $e->getMessage());
             return abort(404, 'ID pembayaran tidak valid.');

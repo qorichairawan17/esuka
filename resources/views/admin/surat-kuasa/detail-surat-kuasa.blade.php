@@ -34,15 +34,9 @@
                             </ul>
                             <div class="tab-content" id="pills-tabContent">
                                 <div class="tab-pane fade {{ $suratKuasa->pembayaran ? 'show active' : '' }}" id="pills-pendaftaran" role="tabpanel" aria-labelledby="pills-pendaftaran-tab" tabindex="0">
-                                    <div class="alert bg-soft-warning fw-medium" role="alert">
-                                        <i class="uil uil-info-circle fs-5 align-middle me-1"></i> Informasi
-                                        <p style="text-align:justify;" class="m-0">
-                                            Petugas akan memverifikasi seluruh informasi pendaftaran dan pembayaran surat kuasa
-                                            kamu, apabila disetujui kamu dapat melakukan cetak Barcode
-                                            Pendaftaran Surat Kuasa Secara Elektronik. Jika petugas menolak surat kuasa kamu,
-                                            maka kamu dapat memperbaiki pengajuan pendaftaran surat kuasa kamu.
-                                        </p>
-                                    </div>
+                                    @if ($suratKuasa->status != \App\Enum\StatusSuratKuasaEnum::Disetujui->value)
+                                        @include('admin.surat-kuasa.component.alert-info-surat-kuasa')
+                                    @endif
                                     <div class="row mt-3">
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <h6>ID Pendaftaran</h6>
@@ -253,15 +247,10 @@
                                 </div>
                                 <div class="tab-pane fade {{ $suratKuasa->pembayaran ? '' : 'show active' }}" id="pills-pembayaran" role="tabpanel" aria-labelledby="pills-pembayaran-tab" tabindex="0">
                                     @if ($suratKuasa->pembayaran)
-                                        <div class="alert bg-soft-danger fw-medium" role="alert">
-                                            <i class="uil uil-info-circle fs-5 align-middle me-1"></i> Informasi
-                                            <p style="text-align:justify;" class="m-0">
-                                                Kamu tidak dapat mengubah bukti pembayaran yang sudah diunggah, Jika ingin
-                                                memperbaiki harap hubungi kami !. Melalui kontak Whatsapp {{ $infoApp->kontak }}.
-                                                Apabila terdapat bukti pembayaran yang tidak valid, maka kami berhak menolak
-                                                pendaftaran surat kuasa yang diajukan !
-                                            </p>
-                                        </div>
+                                        @if ($suratKuasa->status != \App\Enum\StatusSuratKuasaEnum::Disetujui->value)
+                                            @include('admin.surat-kuasa.component.alert-info-pembayaran')
+                                        @endif
+
                                         <div class="row mt-3">
                                             <div class="col-lg-6 col-md-6 col-sm-12">
                                                 <h6>Jenis Pembayaran</h6>

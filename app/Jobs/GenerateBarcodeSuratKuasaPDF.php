@@ -49,7 +49,7 @@ class GenerateBarcodeSuratKuasaPDF implements ShouldQueue
             $data = [
                 'title' => 'Bukti Pendaftaran Surat Kuasa - ' . $pendaftaran->id_daftar,
                 'register' => $register,
-                'infoApp' => $infoApp, // Kirim data aplikasi ke view
+                'infoApp' => $infoApp, // Pass application setting
                 'pendaftaran' => $pendaftaran,
                 'qrCode' => $qrCode,
                 'qrCodeUrl' => $qrCodeUrl,
@@ -68,9 +68,9 @@ class GenerateBarcodeSuratKuasaPDF implements ShouldQueue
             // Update path_file di database
             $register->update(['path_file' => $filePath]);
 
-            Log::info('Berhasil generate PDF barcode untuk surat kuasa.', ['register_id' => $register->id, 'path' => $filePath]);
+            Log::info('Success generate PDF barcode.', ['register_id' => $register->id, 'path' => $filePath]);
         } catch (\Exception $e) {
-            Log::error('Gagal generate PDF barcode.', [
+            Log::error('Error generate PDF barcode.', [
                 'register_id' => $this->register->id ?? 'N/A',
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()

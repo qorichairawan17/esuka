@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Enum\StatusSuratKuasaEnum;
 use App\Enum\TahapanSuratKuasaEnum;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use App\Mail\RejectSuratKuasaMail;
 use Illuminate\Support\Facades\Auth;
@@ -73,19 +74,22 @@ class VerifikasiSuratKuasaController extends Controller
                 'keterangan' => 'Pendaftaran surat kuasa telah disetujui dan diregistrasi.'
             ]);
 
-            // Dispatch job secara sinkron untuk generate PDF agar path file langsung tersedia.
+            // Dispatch jobs synchronously to generate PDFs so that the file path is immediately available.
             GenerateBarcodeSuratKuasaPDF::dispatchSync($register);
 
-            // Muat ulang model register untuk mendapatkan path_file yang baru.
+            // Load register model to get new path_file.
             $register->refresh();
 
-            // Kirim email notifikasi ke pengguna dengan lampiran PDF.
-            // Email akan diproses di background karena Mailable mengimplementasikan ShouldQueue.
+            // Send email notification to user with attached PDF.
+            // Email wil be processed in the background because Mailable implements ShouldQueue.
             Mail::to($pendaftaran->user->email)->queue(new ApproveSuratKuasaMail($pendaftaran, $register->path_file));
 
             // Commit the transaction
             DB::commit();
 
+            // Invalidate cache chart to get new data
+            $cacheKey = "chart_data_" . Carbon::now()->year;
+            Cache::forget($cacheKey);
 
             // Log the action
             Log::info('Power of attorney approved and registered: ', ['id' => $pendaftaran->id, 'nomor' => $validated['nomor_surat_kuasa']]);

@@ -23,7 +23,7 @@
                                     </div>
                                     <div class="flex-1 ms-3">
                                         <h6 class="mb-0 text-muted">Pengguna</h6>
-                                        <p class="fs-5 text-dark fw-bold mb-0">230</p>
+                                        <p class="fs-5 text-dark fw-bold mb-0">{{ $userTotal }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -38,7 +38,7 @@
                                     </div>
                                     <div class="flex-1 ms-3">
                                         <h6 class="mb-0 text-muted">Surat Kuasa</h6>
-                                        <p class="fs-5 text-dark fw-bold mb-0">3056</p>
+                                        <p class="fs-5 text-dark fw-bold mb-0">{{ $suratKuasaTotal }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -53,7 +53,7 @@
                                     </div>
                                     <div class="flex-1 ms-3">
                                         <h6 class="mb-0 text-muted">Testimoni</h6>
-                                        <p class="fs-5 text-dark fw-bold mb-0">1204</p>
+                                        <p class="fs-5 text-dark fw-bold mb-0">{{ $testimoniTotal }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -64,7 +64,7 @@
                 <div class="card border-0 mt-2">
                     <div class="d-flex justify-content-between p-4 shadow rounded-top">
                         <h6 class="fw-bold mb-0">Pendaftaran Surat Kuasa</h6>
-                        <a href="#!" class="text-primary">Lihat <i class="uil uil-arrow-right align-middle"></i></a>
+                        <a href="{{ route('surat-kuasa.index') }}" class="text-primary">Lihat <i class="uil uil-arrow-right align-middle"></i></a>
                     </div>
                     <div class="table-responsive shadow rounded-bottom simplebar-scrollable-x simplebar-scrollable-y" data-simplebar="init" style="height: 250px;">
                         <div class="simplebar-wrapper" style="margin: 0px;">
@@ -79,38 +79,42 @@
                                                 <thead>
                                                     <tr>
                                                         <th class="border-bottom p-3">#</th>
-                                                        <th class="border-bottom p-3">ID Pendaftaran</th>
+                                                        <th class="border-bottom p-3">ID Daftar</th>
                                                         <th class="border-bottom p-3">Tanggal</th>
                                                         <th class="border-bottom p-3" style="min-width: 220px;">Pemohon</th>
                                                         <th class="border-bottom p-3">Jenis</th>
-                                                        <th class="border-bottom p-3">Status</th>
+                                                        <th class="border-bottom p-3">Tahapan</th>
                                                         <th class="border-bottom p-3" style="min-width: 100px;">Lihat</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <!-- Start -->
-                                                    <tr>
-                                                        <th class="p-3">1</th>
-                                                        <th class="p-3">{{ Str::random(4) }}</th>
-                                                        <td class="p-3">{{ \Carbon\Carbon::now()->format('d-m-Y') }}</td>
-                                                        <td class="p-3">
-                                                            <a href="#" class="text-primary">
-                                                                <div class="d-flex align-items-center">
-                                                                    <img src="{{ asset('assets/images/user/user-none.png') }}" class="avatar avatar-ex-small rounded-circle shadow" alt="">
-                                                                    <span class="ms-2">Howard Tanner</span>
-                                                                </div>
-                                                            </a>
-                                                        </td>
-                                                        <td class="p-3">Pidana</td>
-                                                        <td class="p-3">Pembayaran</td>
-                                                        <td class="p-3">
-                                                            <a href="{{ route('surat-kuasa.detail') }}" class="btn btn-sm btn-soft-primary">
-                                                                <i class="ti ti-eye"></i>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-
-                                                    <!-- End -->
+                                                    @php
+                                                        $no = 1;
+                                                    @endphp
+                                                    @foreach ($verifikasiSuratKuasa as $suratKuasa)
+                                                        <tr>
+                                                            <th class="p-3">{{ $no }}</th>
+                                                            <th class="p-3">{{ $suratKuasa->id_daftar }}</th>
+                                                            <td class="p-3">{{ \Carbon\Carbon::parse($suratKuasa->tanggal_daftar)->isoFormat('dddd, D MMMM Y') }}</td>
+                                                            <td class="p-3">
+                                                                {{ $suratKuasa->pemohon }}
+                                                            </td>
+                                                            <td class="p-3">
+                                                                {{ $suratKuasa->jenis_surat }}
+                                                            </td>
+                                                            <td class="p-3">
+                                                                {{ $suratKuasa->tahapan }}
+                                                            </td>
+                                                            <td class="p-3">
+                                                                <a href="{{ route('surat-kuasa.detail', ['id' => Crypt::encrypt($suratKuasa->id)]) }}" class="btn btn-sm btn-soft-primary">
+                                                                    <i class="ti ti-eye"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                        @php
+                                                            $no++;
+                                                        @endphp
+                                                    @endforeach
                                                 </tbody>
                                             </table>
                                         </div>
@@ -142,12 +146,9 @@
                         <div class="card shadow">
                             <div class="card-body">
                                 <h6>Audit Trail</h6>
-                                <p class="text-muted">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea, eveniet? Reprehenderit odit blanditiis impedit ullam
-                                    accusantium
-                                    reiciendis
-                                    laboriosam
-                                    deleniti alias natus
-                                    modi, eos, veniam similique libero nihil quae, molestias est?</p>
+                                <p class="text-muted" style="text-align:justify;">
+                                    {{ $lastAuditTrail->payload }}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -161,7 +162,9 @@
                                         </div>
                                         <div class="flex-1 ms-3">
                                             <h6 class="mb-0 text-muted">Surat Kuasa Disetujui</h6>
-                                            <p class="fs-5 text-dark fw-bold mb-0">230</p>
+                                            <p class="fs-5 text-dark fw-bold mb-0">
+                                                {{ $statusSuratKuasa['disetujui'] }}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -177,7 +180,9 @@
                                         </div>
                                         <div class="flex-1 ms-3">
                                             <h6 class="mb-0 text-muted">Surat Kuasa Ditolak</h6>
-                                            <p class="fs-5 text-dark fw-bold mb-0">230</p>
+                                            <p class="fs-5 text-dark fw-bold mb-0">
+                                                {{ $statusSuratKuasa['ditolak'] }}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -193,7 +198,9 @@
                                         </div>
                                         <div class="flex-1 ms-3">
                                             <h6 class="mb-0 text-muted">Surat Kuasa Belum Bayar</h6>
-                                            <p class="fs-5 text-dark fw-bold mb-0">230</p>
+                                            <p class="fs-5 text-dark fw-bold mb-0">
+                                                {{ $tahapanSuratKuasa['pendaftaran'] }}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -209,7 +216,9 @@
                                         </div>
                                         <div class="flex-1 ms-3">
                                             <h6 class="mb-0 text-muted">Surat Kuasa Sudah Bayar</h6>
-                                            <p class="fs-5 text-dark fw-bold mb-0">230</p>
+                                            <p class="fs-5 text-dark fw-bold mb-0">
+                                                {{ $tahapanSuratKuasa['pembayaran'] }}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -236,8 +245,8 @@
                     'Oktober', 'November', 'Desember'
                 ],
                 datasets: [{
-                    label: 'Surat Kuasa',
-                    data: [12, 19, 3, 5, 2, 3],
+                    label: 'Surat Kuasa Disetujui ({{ date('Y') }})',
+                    data: @json($chartData),
                     borderWidth: 1
                 }]
             },

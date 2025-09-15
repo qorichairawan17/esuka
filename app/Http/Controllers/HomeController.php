@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Helpers\HomeHelper;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Pengaturan\AplikasiModel;
 
 class HomeController extends Controller
 {
-    protected $infoApp;
+    protected $infoApp, $homeHelper;
     public function __construct()
     {
         $this->infoApp = Cache::memo()->remember('infoApp', 60, function () {
             return AplikasiModel::first();
         });
+
+        $this->homeHelper = new HomeHelper();
     }
 
     private function breadCumb($parameters)
@@ -33,7 +35,21 @@ class HomeController extends Controller
             'title' => 'Home - ' . config('app.name'),
             'pageTitle' => config('app.name'),
             'breadCumb' => $breadCumb,
-            'infoApp' => $this->infoApp
+            'infoApp' => $this->infoApp,
+            'userTotal' => $this->homeHelper->userTotal(),
+            'suratKuasaTotal' => $this->homeHelper->suratKuasaTotal(),
+            'testimoniTotal' => $this->homeHelper->testimoniTotal(),
+            'verifikasiSuratKuasa' => $this->homeHelper->verifikasiSuratKuasa(),
+            'statusSuratKuasa' => [
+                'disetujui' => $this->homeHelper->statusSuratKuasa(\App\Enum\StatusSuratKuasaEnum::Disetujui->value),
+                'ditolak' => $this->homeHelper->statusSuratKuasa(\App\Enum\StatusSuratKuasaEnum::Ditolak->value),
+            ],
+            'tahapanSuratKuasa' => [
+                'pendaftaran' => $this->homeHelper->tahapanSuratKuasa(\App\Enum\TahapanSuratKuasaEnum::Pendaftaran->value),
+                'pembayaran' => $this->homeHelper->tahapanSuratKuasa(\App\Enum\TahapanSuratKuasaEnum::Pembayaran->value),
+            ],
+            'lastAuditTrail' => $this->homeHelper->lastAuditTrail(),
+            'chartData' => $this->homeHelper->getChart()
         ];
 
         return view('admin.home.home-admin', $data);

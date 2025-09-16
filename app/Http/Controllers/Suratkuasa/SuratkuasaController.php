@@ -11,8 +11,9 @@ use App\Enum\PihakSuratKuasaEnum;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Enum\TahapanSuratKuasaEnum;
-use Illuminate\Support\Facades\Log;
+use App\Services\AuditTrailService;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
@@ -276,6 +277,21 @@ class SuratkuasaController extends Controller
 
             DB::commit();
 
+            // 5. Record detailed audit trail
+            $newData = array_merge($validated, $filePaths, [
+                'klasifikasi' => $klasifikasi,
+                'id_daftar' => $idDaftar,
+                'pemberi_kuasa' => $request->input('pemberi_kuasa'),
+                'penerima_kuasa' => $request->input('penerima_kuasa'),
+            ]);
+
+            // For a create action, 'old' is empty. The service will log the creation of new values.
+            $context = [
+                'old' => [],
+                'new' => $newData
+            ];
+            AuditTrailService::record('telah mengajukan pendaftaran surat kuasa baru dengan nomor ' . $idDaftar, $context);
+
             Log::info('Power Attorney Registration submitted successfully', ['id_daftar' => $idDaftar]);
 
             return response()->json([
@@ -408,8 +424,30 @@ class SuratkuasaController extends Controller
         DB::beginTransaction();
         try {
             $decryptedId = Crypt::decrypt($id);
-            $pendaftaran = PendaftaranSuratKuasaModel::findOrFail($decryptedId);
+            $pendaftaran = PendaftaranSuratKuasaModel::with('pihak')->findOrFail($decryptedId);
             $klasifikasi = $pendaftaran->klasifikasi;
+
+            // 0. Capture old data for audit trail
+            $oldPendaftaranData = $pendaftaran->only([
+                'perihal',
+                'jenis_surat',
+                'edoc_kartu_tanda_penduduk',
+                'edoc_kartu_tanda_anggota',
+                'edoc_kartu_tanda_pegawai',
+                'edoc_berita_acara_sumpah',
+                'edoc_surat_tugas',
+                'edoc_surat_kuasa'
+            ]);
+            // Format pihak lama agar cocok dengan format input (JSON string dari array)
+            $oldPemberiKuasa = $pendaftaran->pihak->where('jenis', PihakSuratKuasaEnum::Pemberi->value)->map->only(['nik', 'nama', 'pekerjaan', 'alamat'])->values()->toArray();
+            $oldPenerimaKuasa = $pendaftaran->pihak->where('jenis', PihakSuratKuasaEnum::Penerima->value)->map->only(['nik', 'nama', 'pekerjaan', 'alamat'])->values()->toArray();
+
+            $oldData = array_merge($oldPendaftaranData, [
+                // Gunakan json_decode pada input request untuk perbandingan array-ke-array di AuditTrailService
+                'pemberi_kuasa' => $oldPemberiKuasa,
+                'penerima_kuasa' => $oldPenerimaKuasa,
+            ]);
+
 
             // 1. Validate request
             $formRequest = $this->getFormRequestForKlasifikasi($klasifikasi);
@@ -430,7 +468,21 @@ class SuratkuasaController extends Controller
 
             DB::commit();
 
-            Log::info('Update pendaftaran surat kuasa berhasil', ['id' => $pendaftaran->id]);
+            // 5. Record detailed audit trail
+            $newData = array_merge($validated, $filePaths, [
+                // Gunakan json_decode agar formatnya sama dengan oldData (array)
+                'pemberi_kuasa' => json_decode($request->input('pemberi_kuasa'), true),
+                'penerima_kuasa' => json_decode($request->input('penerima_kuasa'), true),
+            ]);
+
+            $context = [
+                'old' => $oldData,
+                'new' => $newData,
+            ];
+
+            AuditTrailService::record('telah memperbarui pendaftaran surat kuasa ' . $pendaftaran->id_daftar, $context);
+
+            Log::info('Power of attorney registration updated successfully', ['id' => $pendaftaran->id]);
 
             return response()->json(['success' => true, 'message' => 'Data pendaftaran surat kuasa berhasil diperbarui.']);
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -438,7 +490,7 @@ class SuratkuasaController extends Controller
             throw $e;
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Gagal memperbarui pendaftaran surat kuasa: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            Log::error('Failed to update power of attorney registration: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return response()->json(['success' => false, 'message' => 'Terjadi kesalahan pada server saat memperbarui data.'], 500);
         }
     }
@@ -524,6 +576,10 @@ class SuratkuasaController extends Controller
             $id = Crypt::decrypt($request->id);
             $pendaftaran = PendaftaranSuratKuasaModel::with(['register', 'pembayaran', 'pihak'])->findOrFail($id);
 
+            // Capture data for audit trail before deletion
+            $idDaftar = $pendaftaran->id_daftar; // Store for the log message
+            $oldData = $pendaftaran->toArray(); // Captures the model and its loaded relations
+
             // 2. Collect all file paths to be deleted
             $filesToDelete = [];
 
@@ -573,13 +629,20 @@ class SuratkuasaController extends Controller
             // 5. Permanently delete the main registration record
             $pendaftaran->forceDelete();
 
+            // 6. Record the deletion in the audit trail
+            $context = [
+                'old' => $oldData,
+                'new' => [], // 'new' is empty for a delete action
+            ];
+            AuditTrailService::record('telah menghapus permanen pendaftaran surat kuasa ' . $idDaftar, $context);
+
             DB::commit();
 
             Log::info('Power of attorney registration and all related data have been successfully deleted.', ['id' => $id]);
             return response()->json(['success' => true, 'message' => 'Pendaftaran surat kuasa berhasil dihapus.'], 200);
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Failed to delete power of attorney registration: ' . $e->getMessage(), ['id_encrypted' => $id, 'trace' => $e->getTraceAsString()]);
+            Log::error('Failed to delete power of attorney registration: ' . $e->getMessage(), ['id_encrypted' => $request->id, 'trace' => $e->getTraceAsString()]);
             return response()->json(['success' => false, 'message' => 'Terjadi kesalahan pada server.'], 500);
         }
     }

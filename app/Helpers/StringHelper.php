@@ -12,8 +12,8 @@ class StringHelper
             return ['first_name' => '', 'last_name' => ''];
         }
 
-        $firstName = array_shift($parts); // ambil elemen pertama
-        $lastName = implode(' ', $parts); // gabungkan sisanya
+        $firstName = array_shift($parts); // Get first element
+        $lastName = implode(' ', $parts); // Join the remaining elements
 
         return [
             'first_name' => $firstName,

@@ -83,7 +83,7 @@ class AuthController extends Controller
             default => '/dashboard/panel-pengguna'
         };
 
-        AuditTrailService::record('login pada sistem aplikasi pada ' . now()->format('d F Y, h:i A'));
+        AuditTrailService::record('telah login ke sistem aplikasi', [], $user);
         // The 'redirect' key must be a URL string for the frontend JavaScript to use.
         // redirect()->intended() returns a RedirectResponse object. We need to get the URL from it.
         return response()->json([

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Suratkuasa;
 
+use App\Services\AuditTrailService;
 use Illuminate\Http\Request;
 use App\Services\PaymentService;
 use Illuminate\Support\Facades\DB;
@@ -13,8 +14,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Pengaturan\AplikasiModel;
-use Illuminate\Support\Facades\Validator;
-use App\Models\Suratkuasa\PembayaranModel;
 use App\Models\Pengaturan\PembayaranPnbpModel;
 use App\Http\Requests\SuratKuasa\PembayaranRequest;
 use App\Models\Suratkuasa\PembayaranSuratKuasaModel;
@@ -96,10 +95,11 @@ class PembayaranController extends Controller
             $id = $request->input('id');
             $suratKuasa = PendaftaranSuratKuasaModel::findOrFail(Crypt::decrypt($id));
 
-            // Find existing payment to delete the old file
+            // 1. Capture old data for audit trail and find existing payment to delete the old file
             $pembayaran = PembayaranSuratKuasaModel::where('surat_kuasa_id', $suratKuasa->id)->first();
+            $oldData = $pembayaran ? $pembayaran->only(['jenis_pembayaran', 'bukti_pembayaran']) : [];
 
-            // If an old payment proof exists, delete it from storage
+            // If an old payment proof exists, delete it
             if ($pembayaran && $pembayaran->bukti_pembayaran && Storage::disk('local')->exists($pembayaran->bukti_pembayaran)) {
                 Storage::disk('local')->delete($pembayaran->bukti_pembayaran);
             }
@@ -113,14 +113,20 @@ class PembayaranController extends Controller
             // Encrypt content and store
             Storage::disk('local')->put($filePath, Crypt::encryptString($file->get()));
 
+            // 2. Capture new data for audit trail
+            $newData = [
+                'jenis_pembayaran' => $validated['jenis_pembayaran'],
+                'bukti_pembayaran' => $filePath,
+            ];
+
             // Create or update the payment data with the new file
             PembayaranSuratKuasaModel::updateOrCreate(
                 ['surat_kuasa_id' => $suratKuasa->id],
                 [
                     'tanggal_pembayaran' => date('Y-m-d'),
-                    'jenis_pembayaran' => $validated['jenis_pembayaran'],
-                    'bukti_pembayaran' => $filePath,
-                    'user_payment_id' => Auth::user()->id
+                    'jenis_pembayaran' => $newData['jenis_pembayaran'],
+                    'bukti_pembayaran' => $newData['bukti_pembayaran'],
+                    'user_payment_id' => Auth::id()
                 ]
             );
 
@@ -131,6 +137,14 @@ class PembayaranController extends Controller
             $suratKuasa->update(['tahapan' => $nextTahapan, 'status' => null]);
 
             DB::commit();
+
+            // 3. Record detailed audit trail
+            $context = [
+                'old' => $oldData,
+                'new' => $newData,
+            ];
+            AuditTrailService::record('telah mengunggah bukti pembayaran untuk pendaftaran ' . $suratKuasa->id_daftar, $context);
+
             Log::info('Payment proof uploaded successfully for: ' . $suratKuasa->id_daftar);
             return response()->json(['success' => true, 'message' => 'Bukti pembayaran berhasil diunggah. Pendaftaran akan segera diverifikasi.']);
         } catch (\Exception $e) {
@@ -139,7 +153,6 @@ class PembayaranController extends Controller
                 Storage::disk('local')->delete($filePath);
             }
             Log::error('Failed to store payment proof: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            // return response()->json(['success' => false, 'message' => 'Terjadi kesalahan pada server saat mengunggah bukti pembayaran.'], 500);
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }

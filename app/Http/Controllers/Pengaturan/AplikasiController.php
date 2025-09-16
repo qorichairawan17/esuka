@@ -53,8 +53,8 @@ class AplikasiController extends Controller
     public function storeAplikasi(AplikasiRequest $request): JsonResponse|RedirectResponse
     {
         $validatedData = $request->validated();
-        $aplikasi = AplikasiModel::first();
-        $oldLogo = $aplikasi->logo ?? null;
+        $aplikasi = AplikasiModel::find(1);
+        $oldData = $aplikasi ? $aplikasi->toArray() : [];
         $newLogoPath = null;
 
         DB::beginTransaction();
@@ -66,21 +66,26 @@ class AplikasiController extends Controller
 
             $record = AplikasiModel::updateOrCreate(['id' => 1], $validatedData);
 
-            if ($newLogoPath && $oldLogo) {
-                Storage::disk('public')->delete($oldLogo);
+            if ($newLogoPath && ($oldData['logo'] ?? null)) {
+                Storage::disk('public')->delete($oldData['logo']);
             }
 
             DB::commit();
 
             Cache::forget('infoApp');
 
-            $message = $record->wasRecentlyCreated ? 'Data berhasil disimpan' : 'Data berhasil diubah';
+            $action = $record->wasRecentlyCreated ? 'menambahkan' : 'memperbarui';
+            $message = $record->wasRecentlyCreated ? 'Data berhasil disimpan.' : 'Data berhasil diubah.';
 
             if ($request->wantsJson()) {
                 return response()->json(['success' => true, 'message' => $message]);
             }
 
-            AuditTrailService::record('memperbarui pengaturan aplikasi pada ' . now()->format('d F Y, h:i A'));
+            $context = [
+                'old' => $oldData,
+                'new' => $record->toArray(),
+            ];
+            AuditTrailService::record("telah {$action} pengaturan aplikasi", $context);
             return back()->with('success', $message);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -119,11 +124,8 @@ class AplikasiController extends Controller
     public function storePembayaran(PembayaranPnbpRequest $request): JsonResponse|RedirectResponse
     {
         $validatedData = $request->validated();
-        $pembayaran = PembayaranPnbpModel::firstOrNew(['id' => 1]);
-
-        $oldLogoBankPath = $pembayaran->logo_bank;
-        $oldQrisPath = $pembayaran->qris;
-
+        $pembayaran = PembayaranPnbpModel::find(1);
+        $oldData = $pembayaran ? $pembayaran->toArray() : [];
         $newLogoBankPath = null;
         $newQrisPath = null;
 
@@ -146,23 +148,28 @@ class AplikasiController extends Controller
 
             $record = PembayaranPnbpModel::updateOrCreate(['id' => 1], $dataToUpdate);
 
-            if ($newLogoBankPath && $oldLogoBankPath) {
-                Storage::disk('public')->delete($oldLogoBankPath);
+            if ($newLogoBankPath && ($oldData['logo_bank'] ?? null)) {
+                Storage::disk('public')->delete($oldData['logo_bank']);
             }
 
-            if ($newQrisPath && $oldQrisPath) {
-                Storage::disk('public')->delete($oldQrisPath);
+            if ($newQrisPath && ($oldData['qris'] ?? null)) {
+                Storage::disk('public')->delete($oldData['qris']);
             }
 
             DB::commit();
 
-            $message = $record->wasRecentlyCreated ? 'Data berhasil disimpan' : 'Data berhasil diubah';
+            $action = $record->wasRecentlyCreated ? 'menambahkan' : 'memperbarui';
+            $message = $record->wasRecentlyCreated ? 'Data berhasil disimpan.' : 'Data berhasil diubah.';
 
             if ($request->wantsJson()) {
                 return response()->json(['success' => true, 'message' => $message]);
             }
 
-            AuditTrailService::record('memperbarui pengaturan pembayaran pnbp pada ' . now()->format('d F Y, h:i A'));
+            $context = [
+                'old' => $oldData,
+                'new' => $record->toArray(),
+            ];
+            AuditTrailService::record("telah {$action} pengaturan pembayaran & PNBP", $context);
             return back()->with('success', $message);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -204,14 +211,8 @@ class AplikasiController extends Controller
     public function storePejabatStruktural(PejabatStrukturalRequest $request): JsonResponse|RedirectResponse
     {
         $validatedData = $request->validated();
-        $pejabat = PejabatStrukturalModel::firstOrNew(['id' => 1]);
-
-        $oldPhotos = [
-            'foto_ketua' => $pejabat->foto_ketua,
-            'foto_wakil_ketua' => $pejabat->foto_wakil_ketua,
-            'foto_panitera' => $pejabat->foto_panitera,
-            'foto_sekretaris' => $pejabat->foto_sekretaris,
-        ];
+        $pejabat = PejabatStrukturalModel::find(1);
+        $oldData = $pejabat ? $pejabat->toArray() : [];
 
         $dataToUpdate = [
             'ketua' => $validatedData['ketua'],
@@ -237,19 +238,24 @@ class AplikasiController extends Controller
             $record = PejabatStrukturalModel::updateOrCreate(['id' => 1], $dataToUpdate);
 
             foreach ($newlyUploadedPaths as $key => $path) {
-                if (isset($oldPhotos[$key]) && $oldPhotos[$key]) {
-                    Storage::disk('public')->delete($oldPhotos[$key]);
+                if (isset($oldData[$key]) && $oldData[$key]) {
+                    Storage::disk('public')->delete($oldData[$key]);
                 }
             }
 
             DB::commit();
 
-            $message = $record->wasRecentlyCreated ? 'Data berhasil disimpan' : 'Data berhasil diubah';
+            $action = $record->wasRecentlyCreated ? 'menambahkan' : 'memperbarui';
+            $message = $record->wasRecentlyCreated ? 'Data berhasil disimpan.' : 'Data berhasil diubah.';
 
             if ($request->wantsJson()) {
                 return response()->json(['success' => true, 'message' => $message]);
             }
-            AuditTrailService::record('memperbarui pengaturan pejabat struktural pada ' . now()->format('d F Y, h:i A'));
+            $context = [
+                'old' => $oldData,
+                'new' => $record->toArray(),
+            ];
+            AuditTrailService::record("telah {$action} pengaturan pejabat struktural", $context);
             return back()->with('success', $message);
         } catch (\Exception $e) {
             DB::rollBack();

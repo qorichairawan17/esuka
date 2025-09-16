@@ -106,13 +106,21 @@ class AdvokatNonAdvokatController extends Controller
         try {
             if ($id) {
                 // Update existing record
-                $user = User::find($id);
+                $user = User::with('profile')->find($id);
                 if (!$user) {
                     return response()->json(['success' => false, 'message' => 'Data advokat/non advokat tidak ditemukan.'], 404);
                 }
 
+                // 1. Capture old data for audit trail
+                $oldUserData = $user->only(['name', 'email', 'block']);
+                $oldProfileData = $user->profile ? $user->profile->only(['kontak', 'foto']) : [];
+                $oldData = array_merge($oldUserData, $oldProfileData);
+                // Add a comparable 'aktif' field, which is the inverse of 'block'
+                $oldData['aktif'] = !$user->block;
+
                 // Update profile
                 $profile = $user->profile ?? new ProfileModel();
+                $newFotoPath = null;
                 $splitName = StringHelper::splitName($validated['nama']);
                 $profileData = [
                     'nama_depan' => $splitName['first_name'],
@@ -124,7 +132,8 @@ class AdvokatNonAdvokatController extends Controller
                     if ($profile->foto && Storage::disk('public')->exists($profile->foto)) {
                         Storage::disk('public')->delete($profile->foto);
                     }
-                    $profileData['foto'] = $validated['foto']->store($fotoPath, 'public');
+                    $newFotoPath = $validated['foto']->store($fotoPath, 'public');
+                    $profileData['foto'] = $newFotoPath;
                 }
                 $profile->update($profileData);
 
@@ -141,11 +150,25 @@ class AdvokatNonAdvokatController extends Controller
 
                 $user->update($userData);
 
-                AuditTrailService::record('memperbarui data advokat/non advokat : ' . $validated['nama'] . ' pada ' . now()->format('d F Y, h:i A'));
+                // 2. Prepare new data for audit trail
+                $newData = [
+                    'nama' => $validated['nama'],
+                    'email' => $validated['email'],
+                    'kontak' => $validated['kontak'],
+                    'aktif' => $validated['aktif'],
+                ];
+                if ($newFotoPath) {
+                    $newData['foto'] = $newFotoPath;
+                }
+
+                // 3. Record detailed audit trail
+                $context = ['old' => $oldData, 'new' => $newData];
+                AuditTrailService::record('telah memperbarui data advokat/non advokat: ' . $validated['nama'], $context);
                 $message = 'Data advokat/non advokat berhasil diubah.';
             } else {
                 // Create new record
                 $splitName = StringHelper::splitName($validated['nama']);
+                $newFotoPath = null;
                 $profileData = [
                     'nama_depan' => $splitName['first_name'],
                     'nama_belakang' => $splitName['last_name'],
@@ -153,7 +176,8 @@ class AdvokatNonAdvokatController extends Controller
                 ];
 
                 if (isset($validated['foto'])) {
-                    $profileData['foto'] = $validated['foto']->store($fotoPath, 'public');
+                    $newFotoPath = $validated['foto']->store($fotoPath, 'public');
+                    $profileData['foto'] = $newFotoPath;
                 }
                 $profile = ProfileModel::create($profileData);
 
@@ -168,7 +192,20 @@ class AdvokatNonAdvokatController extends Controller
                     'profile_status' => '0'
                 ]);
 
-                AuditTrailService::record('menambahkan data advokat/non advokat : ' . $validated['nama'] . ' pada ' . now()->format('d F Y, h:i A'));
+                // Prepare new data for audit trail
+                $newData = [
+                    'nama' => $validated['nama'],
+                    'email' => $validated['email'],
+                    'kontak' => $validated['kontak'],
+                    'aktif' => $validated['aktif'],
+                ];
+                if ($newFotoPath) {
+                    $newData['foto'] = $newFotoPath;
+                }
+
+                // Record detailed audit trail
+                $context = ['old' => [], 'new' => $newData];
+                AuditTrailService::record('telah menambahkan data advokat/non advokat: ' . $validated['nama'], $context);
                 $message = 'Data advokat/non advokat berhasil ditambahkan.';
             }
 
@@ -198,6 +235,10 @@ class AdvokatNonAdvokatController extends Controller
                 return response()->json(['success' => false, 'message' => 'Data advokat/non advokat tidak ditemukan.'], 404);
             }
 
+            // Capture data for audit trail before deletion
+            $userName = $user->name;
+            $oldData = $user->toArray(); // Captures the model and its loaded relations
+
             // Safely delete profile and its photo if it exists
             if ($user->profile) {
                 if ($user->profile->foto && Storage::disk('public')->exists($user->profile->foto)) {
@@ -206,7 +247,12 @@ class AdvokatNonAdvokatController extends Controller
                 $user->profile->delete();
             }
 
-            AuditTrailService::record('menghapus data advokat/non advokat : ' . $user->name . ' pada ' . now()->format('d F Y, h:i A'));
+            // Record the deletion in the audit trail
+            $context = [
+                'old' => $oldData,
+                'new' => [], // 'new' is empty for a delete action
+            ];
+            AuditTrailService::record('telah menghapus data advokat/non advokat: ' . $userName, $context);
 
             $user->delete();
             DB::commit();

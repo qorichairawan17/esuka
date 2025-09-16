@@ -84,7 +84,15 @@ class PaniteraController extends Controller
     public function store(PaniteraRequest $request): JsonResponse
     {
         $validatedData = $request->validated();
-        $id = $request->filled('id') ? Crypt::decrypt($request->input('id')) : null;
+        $id = null;
+
+        if ($request->filled('id')) {
+            try {
+                $id = Crypt::decrypt($request->input('id'));
+            } catch (DecryptException $e) {
+                return response()->json(['success' => false, 'message' => 'ID data tidak valid.'], 400);
+            }
+        }
 
         DB::beginTransaction();
         try {
@@ -94,15 +102,28 @@ class PaniteraController extends Controller
                 if (!$panitera) {
                     return response()->json(['success' => false, 'message' => 'Data panitera tidak ditemukan.'], 404);
                 }
+
+                // 1. Ambil data lama untuk audit trail
+                $oldData = $panitera->toArray();
+
+                // 2. Update data
                 $panitera->update($validatedData);
+
+                // 3. Catat audit trail dengan detail
+                $context = ['old' => $oldData, 'new' => $validatedData];
+                AuditTrailService::record('telah memperbarui data panitera: ' . $validatedData['nama'], $context);
+
                 $message = 'Data panitera berhasil diubah.';
-                AuditTrailService::record('memperbarui data administrator : ' . $validatedData['nama'] . ' pada ' . now()->format('d F Y, h:i A'));
             } else {
                 // Create new record
                 $validatedData['created_by'] = Auth::id();
                 PaniteraModel::create($validatedData);
+
+                // Catat audit trail dengan detail
+                $context = ['old' => [], 'new' => $validatedData];
+                AuditTrailService::record('telah menambahkan data panitera: ' . $validatedData['nama'], $context);
+
                 $message = 'Data panitera berhasil ditambahkan.';
-                AuditTrailService::record('menambahkan data administrator : ' . $validatedData['nama'] . ' pada ' . now()->format('d F Y, h:i A'));
             }
 
             DB::commit();
@@ -131,7 +152,13 @@ class PaniteraController extends Controller
                 return response()->json(['success' => false, 'message' => 'Data panitera tidak ditemukan.'], 404);
             }
 
-            AuditTrailService::record('menghapus data panitera : ' . $panitera->nama . ' pada ' . now()->format('d F Y, h:i A'));
+            // Ambil data sebelum dihapus untuk audit trail
+            $oldData = $panitera->toArray();
+            $paniteraName = $panitera->nama;
+
+            // Catat audit trail dengan detail
+            $context = ['old' => $oldData, 'new' => []];
+            AuditTrailService::record('telah menghapus data panitera: ' . $paniteraName, $context);
 
             $panitera->delete();
             DB::commit();

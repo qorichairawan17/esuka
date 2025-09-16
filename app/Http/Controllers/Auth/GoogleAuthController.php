@@ -123,7 +123,7 @@ class GoogleAuthController extends Controller
             RoleEnum::Superadmin->value, RoleEnum::Administrator->value => '/dashboard/panel-administrator',
             default => '/dashboard/panel-pengguna'
         };
-        AuditTrailService::record('login pada sistem aplikasi melalui Google pada ' . now()->format('d F Y, h:i A'));
+        AuditTrailService::record('telah login ke sistem aplikasi melalui Google', [], $user);
         return redirect()->intended($intended);
     }
 
@@ -157,7 +157,7 @@ class GoogleAuthController extends Controller
                 'avatar' => $googleUser->getAvatar(),
             ]);
 
-            AuditTrailService::record('telah menautkan akun Google pada ' . now()->format('d F Y, h:i A'));
+            AuditTrailService::record('telah menautkan akun dengan Google');
 
             return redirect()->route('profile.index')->with('success', 'Akun Google berhasil ditautkan!');
         } catch (\Exception $e) {

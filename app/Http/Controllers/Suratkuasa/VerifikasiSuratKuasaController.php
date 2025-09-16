@@ -3,19 +3,20 @@
 namespace App\Http\Controllers\Suratkuasa;
 
 use Carbon\Carbon;
-use App\Mail\ApproveSuratKuasaMail;
 use Illuminate\Support\Str;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Enum\StatusSuratKuasaEnum;
+use App\Services\AuditTrailService;
 use App\Enum\TahapanSuratKuasaEnum;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 use App\Mail\RejectSuratKuasaMail;
+use App\Mail\ApproveSuratKuasaMail;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
-use App\Http\Controllers\Controller;
 use App\Jobs\GenerateBarcodeSuratKuasaPDF;
 use App\Http\Requests\SuratKuasa\ApproveSuratKuasaRequest;
 use App\Http\Requests\SuratKuasa\RejectSuratKuasaRequest;
@@ -40,6 +41,9 @@ class VerifikasiSuratKuasaController extends Controller
             // Decrypt the id
             $id = Crypt::decrypt($validated['id']);
             $pendaftaran = PendaftaranSuratKuasaModel::with('user')->findOrFail($id);
+
+            // Capture old data for audit trail
+            $oldData = $pendaftaran->only(['tahapan', 'status', 'keterangan']);
 
             // Check if the power of attorney has already been registered
             if ($pendaftaran->register) {
@@ -67,11 +71,20 @@ class VerifikasiSuratKuasaController extends Controller
                 'path_file' => '',
             ]);
 
-            // Update the status of the power of attorney
-            $pendaftaran->update([
+            // Define new data for audit trail
+            $newData = [
                 'tahapan' => TahapanSuratKuasaEnum::Verifikasi->value,
                 'status' => StatusSuratKuasaEnum::Disetujui->value,
-                'keterangan' => 'Pendaftaran surat kuasa telah disetujui dan diregistrasi.'
+                'keterangan' => 'Pendaftaran surat kuasa telah disetujui dan diregistrasi.',
+                'nomor_surat_kuasa' => $validated['nomor_surat_kuasa'],
+                'panitera_id' => $validated['panitera_id'],
+            ];
+
+            // Update the status of the power of attorney
+            $pendaftaran->update([
+                'tahapan' => $newData['tahapan'],
+                'status' => $newData['status'],
+                'keterangan' => $newData['keterangan']
             ]);
 
             // Dispatch jobs synchronously to generate PDFs so that the file path is immediately available.
@@ -86,6 +99,13 @@ class VerifikasiSuratKuasaController extends Controller
 
             // Commit the transaction
             DB::commit();
+
+            // Record audit trail
+            $context = [
+                'old' => $oldData,
+                'new' => $newData,
+            ];
+            AuditTrailService::record('telah menyetujui pendaftaran surat kuasa ' . $pendaftaran->id_daftar, $context);
 
             // Invalidate cache chart to get new data
             $cacheKey = "chart_data_" . Carbon::now()->year;
@@ -123,11 +143,20 @@ class VerifikasiSuratKuasaController extends Controller
             // Fetch the power of attorney
             $pendaftaran = PendaftaranSuratKuasaModel::with('user')->findOrFail($id);
 
-            // Update the status of the power of attorney
-            $pendaftaran->update([
+            // Capture old data for audit trail
+            $oldData = $pendaftaran->only(['tahapan', 'status', 'keterangan']);
+
+            $newData = [
                 'tahapan' => $validated['tahapan'],
                 'status' => StatusSuratKuasaEnum::Ditolak->value,
                 'keterangan' => $validated['keterangan'],
+            ];
+
+            // Update the status of the power of attorney
+            $pendaftaran->update([
+                'tahapan' => $newData['tahapan'],
+                'status' => $newData['status'],
+                'keterangan' => $newData['keterangan'],
             ]);
 
             // Kirim email notifikasi penolakan ke pengguna.
@@ -136,6 +165,13 @@ class VerifikasiSuratKuasaController extends Controller
 
             // Commit the transaction
             DB::commit();
+
+            // Record audit trail
+            $context = [
+                'old' => $oldData,
+                'new' => $newData,
+            ];
+            AuditTrailService::record('telah menolak pendaftaran surat kuasa ' . $pendaftaran->id_daftar, $context);
 
             // Log the action
             Log::info('Power of attorney rejected: ', ['id' => $pendaftaran->id, 'alasan' => $validated['keterangan']]);

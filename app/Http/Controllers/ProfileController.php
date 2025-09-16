@@ -58,17 +58,26 @@ class ProfileController extends Controller
     {
         $validated = $request->validated();
 
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
+            /** @var \App\Models\User $user */
+            $user = Auth::user()->load('profile');
 
-            $user = Auth::user();
+            // 1. Capture old data for audit trail
+            $oldUserData = $user->only(['name', 'email']);
+            $oldProfileData = $user->profile ? $user->profile->only(['nama_depan', 'nama_belakang', 'kontak', 'tanggal_lahir', 'jenis_kelamin', 'alamat']) : [];
+            $oldData = array_merge($oldUserData, $oldProfileData);
+            if (!empty($oldData['tanggal_lahir'])) {
+                $oldData['tanggal_lahir'] = Carbon::parse($oldData['tanggal_lahir'])->format('d-m-Y');
+            }
 
+            // 2. Update user and profile data
             // The user's name is a combination of first and last name
             $user->name = trim($validated['namaDepan'] . ' ' . $validated['namaBelakang']);
             $user->email = $validated['email'];
 
             // Check existing foto on profile
-            if ($user->profile->foto != null && $user->profile_status == 0) {
+            if ($user->profile && $user->profile->foto != null && $user->profile_status == 0) {
                 $user->profile_status = 1;
             }
             $user->save();
@@ -82,17 +91,21 @@ class ProfileController extends Controller
                 'jenis_kelamin' => $validated['jenisKelamin'],
                 'alamat' => $validated['alamat'],
             ]);
-
             DB::commit();
 
+            // 3. Record detailed audit trail
+            $context = [
+                'old' => $oldData,
+                'new' => $validated, // The validated request data represents the new state
+            ];
+            AuditTrailService::record('telah memperbarui profil', $context);
+
             Log::info('User profile updated successfully.', ['user_id' => $user->id]);
-            AuditTrailService::record('memperbarui profil pada ' . now()->format('d F Y, h:i A'));
 
             return response()->json(['success' => true, 'message' => 'Profil berhasil diperbarui.']);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error updating user profile: ' . $e->getMessage(), ['user_id' => Auth::user()->id, 'trace' => $e->getTraceAsString()]);
-            // return response()->json(['success' => false, 'message' => 'Terjadi kesalahan saat memperbarui profil.'], 500);
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
@@ -100,35 +113,53 @@ class ProfileController extends Controller
     public function updatePhoto(UpdatePhotoRequest $request): JsonResponse
     {
         $request->validated();
+        DB::beginTransaction();
         try {
-
             // Generate photo path user/profile/08/2025
             $fotoPath = 'user/profile/' . date('m') . '/' . date('Y');
 
             $file = $request->file('foto');
+            /** @var \App\Models\User $user */
             $user = User::with('profile')->find(Auth::user()->id);
 
             if (!$user) {
                 Log::error('User not found when updating profile photo.', ['user_id' => Auth::user()->id]);
                 return response()->json(['message' => 'Data pengguna tidak ditemukan.'], 404);
             }
+            // 1. Capture old data
+            $oldPhotoPath = $user->profile->foto ?? null;
 
-            if ($user->profile && $user->profile->foto && Storage::disk('public')->exists($user->profile->foto)) {
-                Storage::disk('public')->delete($user->profile->foto);
+            // 2. Update photo
+            if ($oldPhotoPath && Storage::disk('public')->exists($oldPhotoPath)) {
+                Storage::disk('public')->delete($oldPhotoPath);
             }
 
-            $foto = $file->store($fotoPath, 'public');
+            $newPhotoPath = $file->store($fotoPath, 'public');
 
             // Check existing foto on profile
-            if ($user->profile->foto != null && $user->profile_status == 0) {
+            if ($user->profile && $user->profile->foto != null && $user->profile_status == 0) {
                 $user->update(['profile_status' => 1]);
             }
-            $user->profile()->update(['foto' => $foto]);
+
+            // Ensure profile exists before updating
+            $user->profile()->updateOrCreate(
+                ['id' => $user->id],
+                ['foto' => $newPhotoPath]
+            );
+            DB::commit();
+
+            // 3. Record detailed audit trail
+            $context = [
+                'old' => ['foto' => $oldPhotoPath],
+                'new' => ['foto' => $newPhotoPath],
+            ];
+            AuditTrailService::record('telah memperbarui foto profil', $context);
+
             Log::info('Profile photo updated successfully.', ['user_id' => $user->id]);
-            AuditTrailService::record('memperbarui foto profil pada ' . now()->format('d F Y, h:i A'));
 
             return response()->json(['message' => 'Foto profil berhasil diubah']);
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error('Error updating profile photo: ' . $e->getMessage(), ['user_id' => Auth::user()->id, 'trace' => $e->getTraceAsString()]);
             return response()->json(['message' => 'Terjadi kesalahan saat memperbarui foto profil.'], 500);
         }
@@ -137,16 +168,14 @@ class ProfileController extends Controller
     public function updatePassword(UpdatePasswordRequest $request): JsonResponse
     {
         $request->validated();
-
         try {
             $user = Auth::user();
 
             // Update password
             $user->password = Hash::make($request->input('passwordBaru'));
             $user->save();
-
             Log::info('User changed their password successfully.', ['user_id' => $user->id]);
-
+            AuditTrailService::record('telah mengubah password');
 
             return response()->json(['success' => true, 'message' => 'Password berhasil diubah.']);
         } catch (\Exception $e) {

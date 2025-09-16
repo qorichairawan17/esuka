@@ -2,18 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Session;
 use App\Models\Pengaturan\AplikasiModel;
 use App\Models\Testimoni\TestimoniModel;
 use App\Models\Pengaturan\PejabatStrukturalModel;
-use App\Models\Suratkuasa\PendaftaranSuratKuasaModel;
 use App\Models\Suratkuasa\RegisterSuratKuasaModel;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class LandingController extends Controller
 {

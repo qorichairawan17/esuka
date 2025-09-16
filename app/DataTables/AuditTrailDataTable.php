@@ -2,16 +2,17 @@
 
 namespace App\DataTables;
 
-use App\Models\AuditTrail\AuditTrailModel;
-use Illuminate\Database\Eloquent\Builder as QueryBuilder;
-use Yajra\DataTables\EloquentDataTable;
-use Illuminate\Support\Facades\Auth;
-use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
+use App\Models\AuditTrail\AuditTrailModel;
+use Yajra\DataTables\Html\Builder as HtmlBuilder;
+use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 
 class AuditTrailDataTable extends DataTable
 {
@@ -25,7 +26,7 @@ class AuditTrailDataTable extends DataTable
         return (new EloquentDataTable($query))
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                $actionBtn = '<button type="button" onclick="showDetail(' . $row->id . ')" class="btn btn-soft-primary btn-sm"><i class="ti ti-eye"></i></button>';
+                $actionBtn = '<button type="button" onclick="showDetail(\'' . Crypt::encrypt($row->id) . '\')" class="btn btn-soft-primary btn-sm"><i class="ti ti-eye"></i></button>';
                 return $actionBtn;
             })
             ->editColumn('created_at', function ($row) {
@@ -49,7 +50,9 @@ class AuditTrailDataTable extends DataTable
     {
         // Menggunakan nama tabel secara eksplisit untuk menghindari error "ambiguous column"
         $tableName = $model->getTable();
-        $query = $model->with('user')->orderBy($tableName . '.created_at', 'desc');
+        // Perbaikan: Tambahkan select() untuk secara eksplisit memilih semua kolom dari tabel audit_trails.
+        // Ini untuk memastikan `$row->id` merujuk ke ID audit_trail, bukan ID user.
+        $query = $model->with('user')->select($tableName . '.*')->orderBy($tableName . '.created_at', 'desc');
 
         if (Auth::user()->role === 'User') {
             $query->where('user_id', Auth::id());
@@ -86,7 +89,7 @@ class AuditTrailDataTable extends DataTable
                 ->addClass('text-center')
                 ->title('No'),
             Column::make('user.name')->title('Pengguna'),
-            Column::make('payload')->title('Aksi'),
+            Column::make('payload'),
             Column::make('ip_address'),
             Column::make('created_at'),
             Column::computed('action')

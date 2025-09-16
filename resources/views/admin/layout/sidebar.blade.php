@@ -57,12 +57,12 @@
                          </ul>
                      </div>
                  </li>
+                 <li class="sidebar">
+                     <a href="{{ route('audit-trail.index') }}"><i class="ti ti-database me-2"></i>Audit Trail</a>
+                 </li>
              @endif
              <li class="sidebar">
-                 <a href="{{ route('audit-trail.index') }}"><i class="ti ti-database me-2"></i>Audit Trail</a>
-             </li>
-             <li class="sidebar">
-                 <a href="javascript:void(0)" class="text-danger"><i class="ti ti-arrow-right me-2"></i>Keluar</a>
+                 <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();" href="javascript:void(0)" class="text-danger"><i class="ti ti-arrow-right me-2"></i>Keluar</a>
              </li>
 
          </ul>

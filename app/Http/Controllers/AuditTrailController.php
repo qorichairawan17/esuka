@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\DataTables\AuditTrailDataTable;
-use App\Models\AuditTrail\AuditTrailModel;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Crypt;
+use App\DataTables\AuditTrailDataTable;
+use App\Models\AuditTrail\AuditTrailModel;
 
 class AuditTrailController extends Controller
 {
@@ -52,6 +53,7 @@ class AuditTrailController extends Controller
     public function show(string $id): JsonResponse
     {
         try {
+            $id = Crypt::decrypt($id);
             $query = AuditTrailModel::with('user:id,name');
             if (Auth::user()->role === 'User') {
                 $query->where('user_id', Auth::id());

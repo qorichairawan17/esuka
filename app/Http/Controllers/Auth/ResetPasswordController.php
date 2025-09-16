@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Services\AuditTrailService;
 use App\Mail\ResetPasswordMail;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +27,7 @@ class ResetPasswordController extends Controller
         return view('auth.forgot-password', $data);
     }
 
-    public function reset(Request $request, $token)
+    public function reset($token)
     {
         $resetRecord = DB::table('password_reset_tokens')->where('token', $token)->first();
 
@@ -95,11 +96,21 @@ class ResetPasswordController extends Controller
             return response()->json(['success' => false, 'message' => 'Token reset password tidak valid atau sudah kedaluwarsa.'], 400);
         }
 
+        $user = User::where('email', $validated['email'])->first();
+
+        if (!$user) {
+            // This case is unlikely if the token is valid, but it's a good safeguard.
+            return response()->json(['success' => false, 'message' => 'Pengguna dengan email tersebut tidak ditemukan.'], 404);
+        }
+
         // Use a transaction to ensure atomicity of password update and token deletion.
-        DB::transaction(function () use ($validated) {
-            User::where('email', $validated['email'])->update(['password' => Hash::make($validated['password'])]);
+        DB::transaction(function () use ($user, $validated) {
+            $user->update(['password' => Hash::make($validated['password'])]);
             DB::table('password_reset_tokens')->where('email', $validated['email'])->delete();
         });
+
+        // Record the password reset event to the audit trail.
+        AuditTrailService::record('telah melakukan reset password', [], $user);
 
         return response()->json([
             'success' => true,

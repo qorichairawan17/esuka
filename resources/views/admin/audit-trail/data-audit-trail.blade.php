@@ -43,7 +43,7 @@
                                     <td id="detail-user"></td>
                                 </tr>
                                 <tr>
-                                    <td><strong>Aksi</strong></td>
+                                    <td><strong>Payload</strong></td>
                                     <td>:</td>
                                     <td id="detail-payload"></td>
                                 </tr>
@@ -57,19 +57,16 @@
                                     <td>:</td>
                                     <td id="detail-ip_address"></td>
                                 </tr>
-                                {{-- Hanya tampilkan URL dan Method jika user bukan 'Pengguna' biasa --}}
-                                @if (auth()->user()->role !== \App\Enum\RoleEnum::User->value)
-                                    <tr id="row-url">
-                                        <td><strong>URL</strong></td>
-                                        <td>:</td>
-                                        <td id="detail-url"></td>
-                                    </tr>
-                                    <tr id="row-method">
-                                        <td><strong>Method</strong></td>
-                                        <td>:</td>
-                                        <td id="detail-method"></td>
-                                    </tr>
-                                @endif
+                                <tr id="row-url">
+                                    <td><strong>URL</strong></td>
+                                    <td>:</td>
+                                    <td id="detail-url"></td>
+                                </tr>
+                                <tr id="row-method">
+                                    <td><strong>Method</strong></td>
+                                    <td>:</td>
+                                    <td id="detail-method"></td>
+                                </tr>
                                 <tr>
                                     <td class="align-top"><strong>User Agent</strong></td>
                                     <td class="align-top">:</td>
@@ -95,10 +92,12 @@
     {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
 
     <script type="text/javascript">
-        function showDetail(id) {
-            const detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
+        window.showDetail = function(id) {
+            const urlTemplate = "{{ route('audit-trail.show', ['id' => ':id']) }}";
+            const url = urlTemplate.replace(':id', id);
 
-            fetch(`{{ route('audit-trail.index') }}/${id}`)
+            const detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
+            fetch(url)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Data tidak ditemukan');
@@ -112,14 +111,12 @@
                     document.getElementById('detail-ip_address').innerText = data.ip_address || '-';
                     document.getElementById('detail-user_agent').innerText = data.user_agent || '-';
 
-                    @if (auth()->user()->role !== \App\Enum\RoleEnum::User->value)
-                        const detailUrlElement = document.getElementById('detail-url');
-                        const detailMethodElement = document.getElementById('detail-method');
-                        if (detailUrlElement && detailMethodElement) {
-                            detailUrlElement.innerText = data.url || '-';
-                            detailMethodElement.innerText = data.method || '-';
-                        }
-                    @endif
+                    const detailUrlElement = document.getElementById('detail-url');
+                    const detailMethodElement = document.getElementById('detail-method');
+                    if (detailUrlElement && detailMethodElement) {
+                        detailUrlElement.innerText = data.url || '-';
+                        detailMethodElement.innerText = data.method || '-';
+                    }
                     detailModal.show();
                 })
                 .catch(error => {
@@ -127,7 +124,7 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Gagal Memuat Data',
-                        text: 'Terjadi kesalahan saat mengambil detail log. Silakan coba lagi nanti.',
+                        text: 'Terjadi kesalahan saat mengambil detail audit trail. Silakan coba lagi nanti.',
                     });
                 });
         }

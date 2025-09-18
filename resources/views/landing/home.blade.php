@@ -265,7 +265,7 @@
                             <h4 class="title mb-4">Testimoni Pengguna</h4>
                             <p class="text-muted para-desc mb-0 mx-auto">
                                 Apa pendapat mereka sebagai pengguna yang telah mendaftarkan surat kuasa secara elektronik
-                                melalui Aplikasi <span class="text-primary fw-bold">{{ config('app.name') }}?</span>
+                                melalui Aplikasi <span class="text-primary fw-bold">{{ config('app.name') }}</span>
                             </p>
                         </div>
                     </div>
@@ -279,7 +279,6 @@
                                 <div class="tiny-slide wow animate__animated animate__fadeInUp" data-wow-delay=".3s">
                                     <div class="d-flex client-testi m-1">
                                         @php
-                                            // Prioritaskan foto profil, fallback ke avatar Google, lalu ke gambar default.
                                             $photoPath = $item->user->profile?->foto;
                                             $googleAvatar = $item->user->avatar;
                                             $imageSrc = $photoPath ? asset('storage/' . $photoPath) : ($googleAvatar ?: asset('assets/images/client/01.jpg'));
@@ -294,8 +293,7 @@
                                             <p class="text-muted mt-2">
                                                 " {{ $item->testimoni }}"
                                             </p>
-                                            <h6 class="text-primary">- {{ $item->user->name }} <small class="text-muted">Pengguna</small>
-                                            </h6>
+                                            <h6 class="text-primary">- {{ $item->user->name }}</h6>
                                         </div>
                                     </div>
                                 </div>

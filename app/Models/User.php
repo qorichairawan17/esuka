@@ -32,6 +32,7 @@ class User extends Authenticatable
         'avatar',
         'profile_id',
         'profile_status',
+        'privacy_policy_agreed_at'
     ];
 
     /**

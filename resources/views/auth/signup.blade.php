@@ -81,12 +81,25 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-12 mb-0">
+                                    <div class="col-lg-12">
+                                        <div class="mb-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="privacy_policy" id="privacy_policy">
+                                                <label class="form-check-label" for="privacy_policy">Saya telah membaca dan menyetujui
+                                                    <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#privacyPolicyModal" class="text-primary">
+                                                        Kebijakan Privasi & Persyaratan Penggunaan
+                                                    </a>.
+                                                </label>
+                                                <small class="text-danger mt-2 d-block" id="privacy_policyError"></small>
+                                            </div>
+                                        </div>
+
                                         <p class="forgot-pass mb-0"><a href="{{ route('auth.forgot-password') }}" class="text-dark fw-bold">Lupa Password ?</a></p>
                                         <div class="d-grid mt-3">
                                             <button class="btn btn-primary" type="submit" id="register-button">Daftar</button>
                                         </div>
                                     </div>
+
 
                                     <div class="col-lg-12 mt-2 text-center">
                                         <h6>Daftar Dengan</h6>
@@ -114,6 +127,93 @@
         </div>
     </section>
 
+    <!-- Privacy Policy Modal -->
+    <div class="modal fade" id="privacyPolicyModal" tabindex="-1" aria-labelledby="privacyPolicyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="privacyPolicyModalLabel">Kebijakan Privasi dan Persyaratan Penggunaan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h5>1. Pendahuluan</h5>
+                    <p class="text-muted" style="text-align: justify;">
+                        Kebijakan Privasi ini menjelaskan bagaimana Pengadilan Negeri Lubuk Pakam (“Kami”) melalui aplikasi Elektronik Surat Kuasa (“Aplikasi”) mengelola Data Pribadi pengguna. Kami
+                        berkomitmen untuk menjaga kerahasiaan dan keamanan Data Pribadi sesuai UU No. 27 Tahun 2022 tentang Perlindungan Data Pribadi.
+                        Dengan menggunakan Aplikasi ini, pengguna dianggap telah membaca, memahami, dan menyetujui Kebijakan Privasi ini.
+                    </p>
+
+                    <h5>2. Pengumpulan Informasi</h5>
+                    <p class="text-muted">
+                        Aplikasi dapat mengumpulkan data berikut:
+                    <ul class="text-muted">
+                        <li>Identitas diri: nama lengkap, NIK, alamat, nomor telepon, email.</li>
+                        <li>Data hukum: nomor perkara, pihak berperkara, informasi terkait Surat Kuasa.</li>
+                        <li>Dokumen pendukung: KTP, Surat Kuasa, dan dokumen hukum lainnya.</li>
+                        <li>Data teknis: username, password, log aktivitas, alamat IP.</li>
+                    </ul>
+                    </p>
+
+                    <h5>3. Penggunaan Informasi</h5>
+                    <p class="text-muted">Informasi Anda digunakan untuk:
+                    <ul class="text-muted">
+                        <li class="text-muted">Memproses pendaftaran surat kuasa Anda.</li>
+                        <li class="text-muted">Mengirim notifikasi terkait status pendaftaran Anda.</li>
+                        <li class="text-muted">Memverifikasi identitas pemberi dan penerima kuasa.</li>
+                        <li class="text-muted">Pemenuhan kewajiban hukum dan administrasi peradilan</li>
+                        <li class="text-muted">Menyediakan dukungan layanan pengguna.</li>
+                    </ul>
+                    </p>
+
+                    <h5>4. Keamanan Data</h5>
+                    <p class="text-muted" style="text-align: justify;">
+                        Kami menerapkan langkah-langkah keamanan yang wajar untuk
+                        melindungi informasi pribadi Anda dari akses, penggunaan, atau pengungkapan yang
+                        tidak sah. Namun, tidak ada metode transmisi melalui internet atau metode
+                        penyimpanan elektronik yang 100% aman.
+                    </p>
+
+                    <h5>5. Hak Pengguna</h5>
+                    <p class="text-muted">
+                        Pengguna berhak untuk:
+                    <ul class="text-muted">
+                        <li>Mendapatkan informasi pemrosesan Data Pribadi.</li>
+                        <li>Memperbaiki, memperbarui, atau menghapus Data Pribadi sesuai hukum.</li>
+                        <li>Menarik persetujuan pemrosesan Data Pribadi.</li>
+                        <li>Mengajukan keberatan atas pemrosesan tertentu.</li>
+                    </ul>
+                    </p>
+
+                    <h5>6. Pengungkapan Data</h5>
+                    <p class="text-muted">
+                        Data Pribadi tidak akan diperjualbelikan kepada pihak manapun. Data hanya dapat dibuka apabila:
+                    <ul class="text-muted">
+                        <li> Diwajibkan oleh undang-undang. </li>
+                        <li> Diminta oleh otoritas resmi berdasarkan prosedur hukum. </li>
+                        <li> Dibutuhkan dalam penyelenggaraan tugas peradilan. </li>
+                    </ul>
+                    </p>
+
+                    <h5>7. Perubahan Kebijakan Privasi</h5>
+                    <p class="text-muted">
+                        Kami dapat mengubah Kebijakan Privasi ini sewaktu-waktu. Setiap perubahan akan diumumkan melalui Aplikasi atau situs resmi Pengadilan Negeri Lubuk Pakam.
+                    </p>
+
+                    <h5>8. Persetujuan Pengguna</h5>
+                    <p class="text-muted" style="text-align:justify;">
+                        Dengan mencentang kotak persetujuan saat pendaftaran, Anda setuju
+                        dengan pengumpulan dan penggunaan informasi sesuai dengan kebijakan ini. Anda juga
+                        setuju untuk mematuhi semua persyaratan dan ketentuan yang berlaku.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-sm btn-primary" id="agree-button">Saya Setuju</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/libs/feather-icons/feather.min.js') }}"></script>
     <script src="{{ asset('assets/libs/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
@@ -140,6 +240,17 @@
         </script>
     @endif
     @include('auth.scripts.handleRegister')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const agreeButton = document.getElementById('agree-button');
+            if (agreeButton) {
+                agreeButton.addEventListener('click', function() {
+                    document.getElementById('privacy_policy').checked = true;
+                    bootstrap.Modal.getInstance(document.getElementById('privacyPolicyModal')).hide();
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

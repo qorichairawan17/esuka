@@ -12,9 +12,20 @@
             document.getElementById('namaBelakangError').textContent = '';
             document.getElementById('emailError').textContent = '';
             document.getElementById('passwordError').textContent = '';
+            document.getElementById('privacy_policyError').textContent = '';
         };
 
         clearErrors();
+
+        // Validasi client-side untuk checkbox persetujuan
+        const privacyPolicyCheckbox = document.getElementById('privacy_policy');
+        if (!privacyPolicyCheckbox.checked) {
+            document.getElementById('privacy_policyError').textContent =
+                'Anda harus menyetujui Kebijakan Privasi & Persyaratan Penggunaan.';
+            // Hentikan eksekusi jika belum dicentang
+            return;
+        }
+
 
         // Disable button to prevent multiple submissions
         const button = document.getElementById('register-button');
@@ -38,7 +49,7 @@
             if (!response.ok) {
                 if (response.status === 422 && result.errors) {
                     // Handle validation errors
-                    const fields = ["namaDepan", "namaBelakang", "email", "password"];
+                    const fields = ["namaDepan", "namaBelakang", "email", "password", "privacy_policy"];
                     fields.forEach(field => {
                         const errorElement = document.getElementById(field + "Error");
                         if (result.errors[field] && errorElement) {

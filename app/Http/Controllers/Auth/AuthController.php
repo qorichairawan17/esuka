@@ -148,6 +148,7 @@ class AuthController extends Controller
                     'reactivation' => '0',
                     'profile_id' => $profile->id,
                     'profile_status' => '0',
+                    'privacy_policy_agreed_at' => now(),
                 ]);
 
                 $token = Str::random(64);

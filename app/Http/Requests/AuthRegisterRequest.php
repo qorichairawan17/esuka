@@ -33,6 +33,7 @@ class AuthRegisterRequest extends FormRequest
                     ->numbers()
                     ->symbols()
             ],
+            'privacy_policy' => 'accepted',
         ];
     }
 
@@ -48,6 +49,7 @@ class AuthRegisterRequest extends FormRequest
             'password.mixed' => 'Password harus mengandung huruf kapital dan huruf kecil.',
             'password.numbers' => 'Password harus mengandung setidaknya satu angka.',
             'password.symbols' => 'Password harus mengandung setidaknya satu simbol.',
+            'privacy_policy.accepted' => 'Anda harus menyetujui Kebijakan Privasi & Persyaratan Penggunaan.',
         ];
     }
 }

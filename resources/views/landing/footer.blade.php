@@ -88,10 +88,8 @@
                 <p class="mb-0">© 2021 -
                     <script>
                         document.write(new Date().getFullYear())
-                    </script> {{ config('app.name') }}. Powered <i class="mdi mdi-heart text-danger"></i>
-                    by
-                    <a href="{{ $infoApp->website }}" target="_blank" class="text-reset">{{ $infoApp->pengadilan_negeri }}
-                    </a>
+                    </script> {{ config('app.name') }}. Powered by
+                    <a href="{{ $infoApp->website }}" target="_blank" class="text-reset">{{ $infoApp->pengadilan_negeri }}</a>
                 </p>
             </div>
         </div>

@@ -26,42 +26,45 @@
         <ul class="list-unstyled mb-0">
             <li class="list-inline-item mb-0">
                 <div class="dropdown dropdown-primary">
-                    <button type="button" class="btn btn-icon btn-soft-light dropdown-toggle p-0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="btn btn-icon btn-soft-light dropdown-toggle p-0" id="notification-button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="ti ti-bell"></i>
                     </button>
-                    <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
-                        <span class="visually-hidden">Notifikasi</span>
-                    </span>
+                    @if (isset($unreadNotificationsCount) && $unreadNotificationsCount > 0)
+                        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                            <span class="visually-hidden">Notifikasi Baru</span>
+                        </span>
+                    @endif
                     <div class="dropdown-menu dd-menu shadow rounded border-0 mt-3 p-0" data-simplebar style="height: 320px; width: 290px;">
                         <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
                             <h6 class="mb-0 text-dark">Notifikasi</h6>
-                            <span class="badge bg-soft-danger rounded-pill">3</span>
+                            @if (isset($unreadNotificationsCount) && $unreadNotificationsCount > 0)
+                                <span class="badge bg-soft-danger rounded-pill">{{ $unreadNotificationsCount }}</span>
+                            @endif
                         </div>
                         <div class="p-3">
-                            <a href="#!" class="dropdown-item features feature-primary key-feature p-0 py-2 border-bottom">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-1">
-                                        <h6 class="mb-0 text-dark title">Pendaftaran
-                                        </h6>
-                                        <small class="text-muted">
-                                            Surat Kuasa Nomor : #124 Disetujui <br>
-                                            1 menit yang lalu
-                                        </small>
+                            @if (isset($unreadNotifications) && $unreadNotifications->count() > 0)
+                                @foreach ($unreadNotifications as $notification)
+                                    <a href="{{ $notification->data['url'] }}" class="dropdown-item features feature-primary key-feature p-0 py-2 border-bottom">
+                                        <div class="d-flex align-items-center">
+                                            <div class="flex-1">
+                                                <h6 class="mb-0 text-dark title">{{ $notification->data['title'] }}</h6>
+                                                <small class="text-muted text-wrap">
+                                                    {{ $notification->data['message'] }} <br>
+                                                    {{ $notification->created_at->diffForHumans() }}
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            @else
+                                <div class="text-center">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-1">
+                                            <small class="text-muted">Tidak ada notifikasi baru.</small>
+                                        </div>
                                     </div>
                                 </div>
-                            </a>
-                            <a href="#!" class="dropdown-item features feature-primary key-feature p-0 py-2">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-1">
-                                        <h6 class="mb-0 text-dark title">Pendaftaran
-                                        </h6>
-                                        <small class="text-muted">
-                                            Surat Kuasa Nomor : #124 Disetujui <br>
-                                            1 menit yang lalu
-                                        </small>
-                                    </div>
-                                </div>
-                            </a>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -98,4 +101,31 @@
         </ul>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const notificationButton = document.getElementById('notification-button');
+        if (notificationButton) {
+            notificationButton.addEventListener('click', function() {
+                const notificationBadge = document.querySelector('.bg-danger.rounded-circle');
+                if (!notificationBadge) {
+                    return; // Jangan lakukan apa-apa jika tidak ada notifikasi baru
+                }
+
+                // Mark notifications as read on the server
+                fetch("{{ route('notifications.markAsRead') }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        // Hapus indikator titik merah setelah notifikasi ditandai terbaca
+                        setTimeout(() => notificationBadge.remove(), 1000);
+                    }
+                });
+            });
+        }
+    });
+</script>
 <!-- Top Header -->

@@ -139,3 +139,8 @@ Route::prefix('audit-trail')->middleware(AuthMiddleware::class)->group(function 
         Route::delete('/destroy/{id}', 'destroy')->name('audit-trail.destroy');
     });
 });
+
+Route::post('/notifications/mark-as-read', function () {
+    auth()->user()->unreadNotifications->markAsRead();
+    return response()->noContent();
+})->middleware(AuthMiddleware::class)->name('notifications.markAsRead');

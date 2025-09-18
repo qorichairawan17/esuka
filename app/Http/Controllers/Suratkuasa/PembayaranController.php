@@ -6,6 +6,7 @@ use App\Services\AuditTrailService;
 use Illuminate\Http\Request;
 use App\Services\PaymentService;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\NotificationHelper;
 use App\Enum\TahapanSuratKuasaEnum;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -144,6 +145,16 @@ class PembayaranController extends Controller
                 'new' => $newData,
             ];
             AuditTrailService::record('telah mengunggah bukti pembayaran untuk pendaftaran ' . $suratKuasa->id_daftar, $context);
+
+            // 4. Send notification to admins
+            if ($nextTahapan === TahapanSuratKuasaEnum::PengajuanPerbaikanPembayaran->value) {
+                $title = 'Perbaikan Pembayaran';
+                $message = "Pengguna mengajukan perbaikan pembayaran untuk ID {$suratKuasa->id_daftar}.";
+            } else {
+                $title = 'Pembayaran Baru';
+                $message = "Pembayaran untuk ID {$suratKuasa->id_daftar} telah diunggah.";
+            }
+            NotificationHelper::sendToAdmins($suratKuasa, $title, $message);
 
             Log::info('Payment proof uploaded successfully for: ' . $suratKuasa->id_daftar);
             return response()->json(['success' => true, 'message' => 'Bukti pembayaran berhasil diunggah. Pendaftaran akan segera diverifikasi.']);

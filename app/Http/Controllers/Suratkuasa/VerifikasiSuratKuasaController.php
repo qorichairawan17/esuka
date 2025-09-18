@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use App\Notifications\SuratKuasaStatusNotification;
 use App\Jobs\GenerateBarcodeSuratKuasaPDF;
 use App\Http\Requests\SuratKuasa\ApproveSuratKuasaRequest;
 use App\Http\Requests\SuratKuasa\RejectSuratKuasaRequest;
@@ -97,6 +98,11 @@ class VerifikasiSuratKuasaController extends Controller
             // Email wil be processed in the background because Mailable implements ShouldQueue.
             Mail::to($pendaftaran->user->email)->queue(new ApproveSuratKuasaMail($pendaftaran, $register->path_file));
 
+            // Send notification to user
+            $title = 'Pendaftaran Disetujui';
+            $message = "Pendaftaran surat kuasa {$pendaftaran->id_daftar} telah disetujui.";
+            $pendaftaran->user->notify(new SuratKuasaStatusNotification($pendaftaran, $title, $message));
+
             // Commit the transaction
             DB::commit();
 
@@ -162,6 +168,11 @@ class VerifikasiSuratKuasaController extends Controller
             // Kirim email notifikasi penolakan ke pengguna.
             // Email akan diproses di background karena Mailable mengimplementasikan ShouldQueue.
             Mail::to($pendaftaran->user->email)->queue(new RejectSuratKuasaMail($pendaftaran, $validated['keterangan']));
+
+            // Send notification to user
+            $title = 'Pendaftaran Ditolak';
+            $message = "Pendaftaran surat kuasa {$pendaftaran->id_daftar} ditolak. Silakan periksa detailnya.";
+            $pendaftaran->user->notify(new SuratKuasaStatusNotification($pendaftaran, $title, $message));
 
             // Commit the transaction
             DB::commit();

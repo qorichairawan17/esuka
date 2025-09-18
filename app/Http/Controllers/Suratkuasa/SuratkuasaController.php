@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use App\Enum\TahapanSuratKuasaEnum;
 use App\Services\AuditTrailService;
 use App\Http\Controllers\Controller;
+use App\Helpers\NotificationHelper;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -292,6 +293,11 @@ class SuratkuasaController extends Controller
             ];
             AuditTrailService::record('telah mengajukan pendaftaran surat kuasa baru dengan nomor ' . $idDaftar, $context);
 
+            // 6. Send notification to admins
+            $title = 'Pendaftaran Baru';
+            $message = "Ada pendaftaran baru dari {$pendaftaran->pemohon} dengan ID {$pendaftaran->id_daftar}.";
+            NotificationHelper::sendToAdmins($pendaftaran, $title, $message);
+
             Log::info('Power Attorney Registration submitted successfully', ['id_daftar' => $idDaftar]);
 
             return response()->json([
@@ -481,6 +487,11 @@ class SuratkuasaController extends Controller
             ];
 
             AuditTrailService::record('telah memperbarui pendaftaran surat kuasa ' . $pendaftaran->id_daftar, $context);
+
+            // 6. Send notification to admins about the data correction submission
+            $title = 'Pengajuan Perbaikan Data';
+            $message = "Pengguna mengajukan perbaikan data untuk ID {$pendaftaran->id_daftar}.";
+            NotificationHelper::sendToAdmins($pendaftaran, $title, $message);
 
             Log::info('Power of attorney registration updated successfully', ['id' => $pendaftaran->id]);
 

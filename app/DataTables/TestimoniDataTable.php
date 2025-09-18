@@ -2,58 +2,48 @@
 
 namespace App\DataTables;
 
-use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Yajra\DataTables\EloquentDataTable;
-use Yajra\DataTables\Html\Editor\Editor;
-use Yajra\DataTables\Html\Editor\Fields;
+use App\Models\Testimoni\TestimoniModel;
 use Yajra\DataTables\Services\DataTable;
-use App\Models\AuditTrail\AuditTrailModel;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 
-class AuditTrailDataTable extends DataTable
+class TestimoniDataTable extends DataTable
 {
     /**
      * Build the DataTable class.
      *
-     * @param QueryBuilder<AuditTrailModel> $query Results from query() method.
+     * @param QueryBuilder<TestimoniModel> $query Results from query() method.
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                $actionBtn = '<button type="button" onclick="showDetail(\'' . Crypt::encrypt($row->id) . '\')" class="btn btn-soft-primary btn-sm"><i class="ti ti-eye"></i></button>';
+                $actionBtn = '<button type="button" onclick="showEditModal(\'' . Crypt::encrypt($row->id) . '\')" class="btn btn-soft-warning btn-sm"><i class="ti ti-edit"></i></button>';
                 return $actionBtn;
             })
             ->editColumn('created_at', function ($row) {
                 return $row->created_at ? $row->created_at->format('d-m-Y H:i:s') : '';
             })
-            ->editColumn('user.name', function ($row) {
-                return $row->user->name ?? 'Sistem/Tidak Diketahui';
+            ->editColumn('updated_at', function ($row) {
+                return $row->updated_at ? $row->updated_at->format('d-m-Y H:i:s') : '';
             })
-            ->editColumn('payload', function ($row) {
-                return $row->payload;
-            })
+            ->rawColumns(['action'])
             ->setRowId('id');
     }
 
     /**
      * Get the query source of dataTable.
      *
-     * @return QueryBuilder<AuditTrailModel>
+     * @return QueryBuilder<TestimoniModel>
      */
-    public function query(AuditTrailModel $model): QueryBuilder
+    public function query(TestimoniModel $model): QueryBuilder
     {
         $tableName = $model->getTable();
-        $query = $model->with('user')->select($tableName . '.*')->orderBy($tableName . '.created_at', 'desc');
-
-        if (Auth::user()->role === 'User') {
-            $query->where('user_id', Auth::id());
-        }
+        $query = $model->with('user')->select($tableName . '.*');
         return $query;
     }
 
@@ -63,9 +53,9 @@ class AuditTrailDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-            ->setTableId('audittrail-table')
+            ->setTableId('testimoni-table')
             ->columns($this->getColumns())
-            ->ajax(route('audit-trail.index'))
+            ->ajax(route('testimoni.index'))
             ->orderBy(1)
             ->selectStyleSingle()
             ->processing(true)
@@ -83,16 +73,19 @@ class AuditTrailDataTable extends DataTable
                 ->orderable(false)
                 ->searchable(false)
                 ->width(30)
-                ->addClass('text-center')
-                ->title('No'),
-            Column::make('user.name')->title('Pengguna'),
-            Column::make('payload'),
-            Column::make('ip_address'),
+                ->addClass('text-center'),
+            Column::make('user.name')->title('Nama'),
+            Column::make('rating'),
+            Column::make('testimoni'),
+            Column::make('publish_at'),
             Column::make('created_at'),
+            Column::make('updated_at'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
-                ->width(60),
+                ->width(60)
+                ->addClass('text-center')
+                ->titleAttr(['class' => 'text-center']),
         ];
     }
 
@@ -101,6 +94,6 @@ class AuditTrailDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'AuditTrail_' . date('YmdHis');
+        return 'Testimoni_' . date('YmdHis');
     }
 }

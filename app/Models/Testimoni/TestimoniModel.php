@@ -17,7 +17,7 @@ class TestimoniModel extends Model
         'user_id',
         'rating',
         'testimoni',
-        'publish'
+        'publish_at'
     ];
 
     public $timestamps = true;

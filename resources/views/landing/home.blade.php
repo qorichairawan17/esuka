@@ -15,7 +15,7 @@
                             Proses mudah, hemat waktu, biaya ringan.
                         </p>
                         <a href="{{ route('app.signin') }}" class="btn btn-pills btn-primary">
-                            Daftar Sekarang <i data-feather="arrow-right"></i>
+                            Akses Sekarang <i data-feather="arrow-right"></i>
                         </a>
                         <p class="text-muted mb-0 mt-3">
                             Powered by <a href="https://pn-lubukpakam.go.id" target="_blank" class="text-primary">{{ $infoApp->pengadilan_negeri }}

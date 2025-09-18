@@ -62,7 +62,8 @@
                  </li>
              @endif
              <li class="sidebar">
-                 <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();" href="javascript:void(0)" class="text-danger"><i class="ti ti-arrow-right me-2"></i>Keluar</a>
+                 <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();" href="javascript:void(0)" class="text-danger"><i
+                         class="ti ti-arrow-right me-2 bg-soft-danger"></i>Keluar</a>
              </li>
 
          </ul>

@@ -58,7 +58,7 @@
                                             <h6>Perihal Surat Kuasa</h6>
                                             <p>{{ $suratKuasa->perihal }}</p>
                                             <h6>Jenis Surat Kuasa</h6>
-                                            <p>{{ $suratKuasa->klasifikasi . '(' . $suratKuasa->jenis_surat . ')' }}</p>
+                                            <p>{{ $suratKuasa->klasifikasi . ' (' . $suratKuasa->jenis_surat . ')' }}</p>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <!-- Notif Informasi Verifikasi Surat Kuasa -->
@@ -169,7 +169,6 @@
                                                     </a>
                                                 </div>
                                             </div>
-
                                             <div class="row">
                                                 @if ($isAdvokat)
                                                     <div class="col-md-6 col-sm-12">
@@ -303,12 +302,12 @@
                                             @if ($suratKuasa->tahapan == \App\Enum\TahapanSuratKuasaEnum::PerbaikanData->value)
                                                 <a href="{{ route('surat-kuasa.form', ['param' => 'edit', 'klasifikasi' => $suratKuasa->klasifikasi, 'id' => Crypt::encrypt($suratKuasa->id)]) }}"
                                                     class="btn btn-warning btn-sm">
-                                                    <i class="uil uil-edit"></i> Perbaiki Data Pendaftaran
+                                                    Perbaiki Data Pendaftaran
                                                 </a>
                                             @endif
                                             @if ($suratKuasa->tahapan == \App\Enum\TahapanSuratKuasaEnum::PerbaikanPembayaran->value)
                                                 <a href="{{ route('surat-kuasa.pembayaran', ['id' => Crypt::encrypt($suratKuasa->id)]) }}" class="btn btn-warning btn-sm">
-                                                    <i class="uil uil-wallet"></i> Perbaiki Pembayaran
+                                                    Perbaiki Pembayaran
                                                 </a>
                                             @endif
                                         </div>

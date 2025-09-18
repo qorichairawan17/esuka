@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('nama_depan');
             $table->string('nama_belakang');
-            $table->date('tanggal_lahir')->nullable();
+            $table->text('tanggal_lahir')->nullable();
             $table->enum('jenis_kelamin', ['Perempuan', 'Laki-Laki'])->nullable();
-            $table->string('kontak')->nullable();
+            $table->text('kontak')->nullable();
             $table->text('alamat')->nullable();
             $table->text('foto')->nullable();
             $table->timestamps();
@@ -35,6 +35,7 @@ return new class extends Migration
             $table->enum('reactivation', ['1', '0'])->default('0');
             $table->unsignedBigInteger('profile_id');
             $table->enum('profile_status', ['1', '0'])->default('0')->comment('1 = Verified, 0 = Unverified');
+            $table->timestamp('privacy_policy_agreed_at')->nullable();
             $table->timestamps();
 
             $table->foreign('profile_id')->references('id')->on('sk_user_profiles')->onUpdate('cascade')->onDelete('cascade');
@@ -61,7 +62,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sk_profiles');
+        Schema::dropIfExists('sk_user_profiles');
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');

@@ -28,7 +28,7 @@ class LandingController extends Controller
         });
 
         $testimoni = Cache::memo()->remember('testimoni', 60, function () {
-            return TestimoniModel::where('publish', '=', '1')->with('user.profile')->orderBy('created_at', 'desc')->get();
+            return TestimoniModel::where('publish_at', '!=', null)->with('user.profile')->orderBy('created_at', 'desc')->get();
         });
 
         $data = [

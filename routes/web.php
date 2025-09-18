@@ -18,7 +18,6 @@ use App\Http\Middleware\Profile\CompleteProfileMiddleware;
 use App\Http\Controllers\Suratkuasa\CetakBarcodeController;
 use App\Http\Controllers\Pengguna\AdvokatNonAdvokatController;
 
-
 foreach (glob(__DIR__ . '/auth/*.php') as $routeFile) {
     require $routeFile;
 }
@@ -79,7 +78,6 @@ Route::prefix('surat-kuasa')->middleware([AuthMiddleware::class, CompleteProfile
     });
 });
 
-
 Route::prefix('pengguna')->middleware(AuthMiddleware::class)->group(function () {
     Route::controller(AdvokatNonAdvokatController::class)->group(function () {
         Route::get('/advokat-non-advokat', 'index')->name('advokat.index');
@@ -119,7 +117,9 @@ Route::prefix('pengaturan')->middleware(AuthMiddleware::class)->group(function (
 
     Route::controller(TestimoniController::class)->group(function () {
         Route::get('/testimoni', 'index')->name('testimoni.index');
-        Route::get('/testimoni/store', 'store')->name('testimoni.store');
+        Route::post('/testimoni/store', 'store')->name('testimoni.store');
+        Route::get('/testimoni/edit/{id}', 'edit')->name('testimoni.edit');
+        Route::post('/testimoni/update/{id}', 'update')->name('testimoni.update');
     });
 });
 

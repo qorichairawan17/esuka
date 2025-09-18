@@ -22,12 +22,17 @@ class ProfileModel extends Model
         'foto',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'tanggal_lahir' => 'encrypted',
+            'kontak' => 'encrypted',
+            'alamat' => 'encrypted',
+        ];
+    }
+
     public $timestamps = true;
 
-    /**
-     * Get the user associated with the profile.
-     * Based on the schema (users.profile_id), a Profile has one User.
-     */
     public function user(): HasOne
     {
         return $this->hasOne(User::class, 'profile_id');

@@ -86,7 +86,7 @@
                             </span>
                             Profil
                         </a>
-                        <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="dropdown-item text-dark" href="#">
+                        <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="dropdown-item text-danger" href="javascript:void(0)">
                             <span class="mb-0 d-inline-block me-1">
                                 <i class="ti ti-arrow-right"></i>
                             </span>

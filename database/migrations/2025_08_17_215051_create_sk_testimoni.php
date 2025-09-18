@@ -16,8 +16,10 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->integer('rating');
             $table->text('testimoni');
-            $table->enum('publish', ['1', '0'])->default('0')->comment('1 = Yes, 0 = No');
+            $table->timestamp('publish_at')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

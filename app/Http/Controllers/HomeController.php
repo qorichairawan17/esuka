@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\HomeHelper;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Pengaturan\AplikasiModel;
 
@@ -64,7 +65,11 @@ class HomeController extends Controller
             'title' => 'Home - ' . config('app.name'),
             'pageTitle' => config('app.name'),
             'breadCumb' => $breadCumb,
-            'infoApp' => $this->infoApp
+            'infoApp' => $this->infoApp,
+            'pembayaranSuratKuasa' => $this->homeHelper->getPembayaranSuratKuasa(),
+            'pendaftaranSuratKuasa' => $this->homeHelper->pendaftaranSuratKuasaByUser(Auth::user()->id),
+            'testimoniUser' => $this->homeHelper->getTestimoniByUser(),
+            'chartData' => $this->homeHelper->getChartForUser()
         ];
 
         return view('admin.home.home-pengguna', $data);

@@ -22,11 +22,6 @@ class PihakSuratKuasaModel extends Model
 
     public $timestamps = true;
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [

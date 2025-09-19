@@ -21,10 +21,24 @@
             border-style: solid;
             border-color: black;
             justify-content: center;
+            font-size: 13px;
+        }
+
+        .table-ttd {
+            width: 100%;
+            margin: 0 auto;
+            border: 0.2px;
+            justify-content: center;
+            font-size: 13px;
+        }
+
+        .img-logo {
+            max-width: 60px;
         }
 
         .img-barcode {
             max-width: 250px;
+            text-align: center;
         }
 
         .qr-barcode {
@@ -59,25 +73,32 @@
 <body>
     <table class="table-barcode" border="1" cellpadding="5">
         <tr>
-            <td width="150px;">
+            <td style="text-align: center;">
                 {{-- Menggunakan public_path() lebih andal untuk gambar di PDF --}}
-                <img class="img-barcode" src="{{ public_path('icons/horizontal-e-suka.png') }}" alt="Logo e-Suka">
+                <img class="img-logo" src="{{ public_path('storage/' . $infoApp->logo) }}" alt="Logo e-Suka">
+                {{-- <img class="img-barcode" src="{{ public_path('icons/horizontal-e-suka.png') }}" alt="Logo e-Suka"> --}}
             </td>
             <td style="text-align:center;">
-                <h3 style="text-transform:uppercase; margin:0;">{{ $infoApp->pengadilan_negeri }}</h3>
-                <p class="address-text">Jalan Jenderal Sudirman No 58 Lubuk Pakam
+                <h2 style="text-transform:uppercase; margin:0;">{{ $infoApp->pengadilan_negeri }}</h2>
+                <p class="address-text">{{ $infoApp->alamat . ' ' . $infoApp->kabupaten . ' ' . $infoApp->provinsi . ' ' . $infoApp->kode_pos }}
                     <br>
-                    {{ $infoApp->website }} | {{ $infoApp->kontak }} | {{ $infoApp->email }}
+                    {{ $infoApp->website }} {{ $infoApp->kontak }} {{ $infoApp->email }}
                 </p>
             </td>
         </tr>
+    </table>
+
+    <table class="table-barcode" cellpadding="5" style="margin-top: 10px;">
         <tr>
             <td colspan="2">
-                <h2 class="bukti-text">Bukti Pendaftaran Surat Kuasa Elektronik</h2>
+                <h3 class="bukti-text">Bukti Pendaftaran Surat Kuasa Elektronik</h3>
             </td>
         </tr>
         <tr>
             <td colspan="2">
+                <h4 class="kuasa-text">ID Pendaftaran</h4>
+                <p class="fill-text">{{ $pendaftaran->id_daftar }}</p>
+                <br>
                 <h4 class="kuasa-text">Tanggal Pendaftaran</h4>
                 <p class="fill-text">{{ \Carbon\Carbon::parse($pendaftaran->tanggal_daftar)->isoFormat('dddd, D MMMM Y') }} ({{ $pendaftaran->created_at }})</p>
                 <br>
@@ -91,29 +112,30 @@
                 <p class="fill-text">{{ $pendaftaran->pihak->where('jenis', 'Penerima')->pluck('nama')->join(', ') }}</p>
             </td>
         </tr>
-        <tr>
-            <td style="text-align:center;">
-                <h4 class="fill-text">Panitera <br> {{ $infoApp->pengadilan_negeri }}</h4>
-                {{-- Embed QR Code dari base64 string --}}
-                <img class="qr-barcode" src="data:image/svg+xml;base64,{{ $qrCode }}" alt="QR Code">
-                <p class="fill-text">
-                    <span style="text-decoration: underline;">{{ $register->panitera->nama }}</span>
-                    <br>
-                    NIP. {{ $register->panitera->nip }}
-                </p>
-            </td>
-            <td>
-                <p>Scan QRCode disamping untuk melihat bukti Pendaftaran Surat Kuasa melalui {{ config('app.name') }}
-                    <br>
-                    Atau melalui link : <a href="{{ $qrCodeUrl }}">{{ $qrCodeUrl }}</a>
-                </p>
-                <p class="danger-text">
-                    Cetak lembar ini dan satukan dengan surat kuasa yang didaftarkan !
-                </p>
+
+        <tr style="border-top: 1px solid black;">
+            <td colspan="2">
+                <div style="padding-top: 10px; text-align:center;">
+                    <h4 class="fill-text">Panitera <br> {{ $infoApp->pengadilan_negeri }}</h4>
+                    {{-- Embed QR Code dari base64 string --}}
+                    <img class="qr-barcode" src="data:image/svg+xml;base64,{{ $qrCode }}" alt="QR Code">
+                    <p class="fill-text">
+                        <span style="text-decoration: underline;">{{ $register->panitera->nama }}</span>
+                        <br>
+                        NIP. {{ $register->panitera->nip }}
+                    </p>
+                </div>
             </td>
         </tr>
-        <tr>
+        <tr style="text-align: center;">
             <td colspan="2">
+                <p>
+                    Silakan pindai QR Code di atas untuk melihat bukti Pendaftaran Surat Kuasa melalui {{ config('app.name') }}, atau kunjungi tautan ini:
+                    <a href="{{ $qrCodeUrl }}">{{ $qrCodeUrl }}</a>
+                </p>
+                <p class="danger-text">
+                    "Cetak lembar ini dan gabungkan dengan Surat Kuasa yang didaftarkan !."
+                </p>
                 <p style="font-size: 10px; margin:0;">
                     Dicetak : {{ \Carbon\Carbon::now()->isoFormat('D MMMM Y HH:mm:ss') }} | <i>Powered by : {{ $infoApp->pengadilan_negeri }}</i>
                 </p>

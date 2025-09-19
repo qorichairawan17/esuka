@@ -26,13 +26,6 @@ Route::get('/', function () {
     return redirect()->route('app.home');
 });
 
-Route::get('/email', function () {
-    // return view('mail.aktivasi-akun');
-    // return view('mail.reset-password-akun');
-    // return view('mail.approve-surat-kuasa');
-    return view('mail.reject-surat-kuasa');
-});
-
 Route::prefix('index')->controller(LandingController::class)->group(function () {
     Route::get('/', 'index')->name('app.home');
     Route::get('/about', 'about')->name('app.about');

@@ -30,7 +30,7 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive" style="border-color: #f1f1f1;">
-                                {!! $dataTable->table(['class' => 'table table-bordered', 'style' => 'width:100%;font-size:15px;']) !!}
+                                {!! $dataTable->table(['class' => 'table table-bordered table-hover', 'style' => 'width:100%;font-size:15px;']) !!}
                             </div>
                         </div>
                     </div>

@@ -30,7 +30,7 @@
                      <ul>
                          <li><a href="{{ route('surat-kuasa.index') }}">Pendaftaran</a></li>
                          @if (Auth::user()->role == \App\Enum\RoleEnum::Superadmin->value)
-                             <li><a href="">Laporan</a></li>
+                             <li><a href="{{ route('surat-kuasa.laporan') }}">Laporan</a></li>
                          @endif
                      </ul>
                  </div>
@@ -62,8 +62,9 @@
                  </li>
              @endif
              <li class="sidebar">
-                 <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();" href="javascript:void(0)" class="text-danger"><i
-                         class="ti ti-arrow-right me-2 bg-soft-danger"></i>Keluar</a>
+                 <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();" href="javascript:void(0)" class="text-danger">
+                     <i class="ti ti-arrow-right me-2 bg-soft-danger"></i>Keluar
+                 </a>
              </li>
 
          </ul>

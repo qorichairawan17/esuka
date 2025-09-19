@@ -12,11 +12,12 @@ use App\Http\Controllers\Pengaturan\AplikasiController;
 use App\Http\Controllers\Pengaturan\TestimoniController;
 use App\Http\Controllers\Suratkuasa\PembayaranController;
 use App\Http\Controllers\Suratkuasa\SuratkuasaController;
-use App\Http\Controllers\Suratkuasa\VerifikasiSuratKuasaController;
 use App\Http\Controllers\Pengguna\AdministratorController;
 use App\Http\Middleware\Profile\CompleteProfileMiddleware;
 use App\Http\Controllers\Suratkuasa\CetakBarcodeController;
 use App\Http\Controllers\Pengguna\AdvokatNonAdvokatController;
+use App\Http\Controllers\Suratkuasa\LaporanSuratKuasaController;
+use App\Http\Controllers\Suratkuasa\VerifikasiSuratKuasaController;
 
 foreach (glob(__DIR__ . '/auth/*.php') as $routeFile) {
     require $routeFile;
@@ -68,6 +69,10 @@ Route::prefix('surat-kuasa')->middleware([AuthMiddleware::class, CompleteProfile
 
     Route::controller(CetakBarcodeController::class)->group(function () {
         Route::get('/barcode/{id?}', 'index')->name('surat-kuasa.barcode');
+    });
+
+    Route::controller(LaporanSuratKuasaController::class)->group(function () {
+        Route::get('/laporan', 'index')->name('surat-kuasa.laporan');
     });
 });
 

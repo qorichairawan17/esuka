@@ -40,7 +40,7 @@
                                         <div class="flex-1 ms-3">
                                             <h6 class="mb-0 text-muted">Surat Kuasa</h6>
                                             <p class="fs-5 text-dark fw-bold mb-0">
-                                                <span class="counter-value" data-target="48575">1200</span>
+                                                <span class="counter-value" data-target="{{ $totalSuratKuasa }}">{{ $totalSuratKuasa }}</span>
                                             </p>
                                         </div>
                                     </div>
@@ -57,10 +57,10 @@
                                         <h6 class="title fw-normal text-muted">Terdaftar</h6>
                                         <div class="progress">
                                             <div class="progress-bar position-relative bg-primary" style="width:84%;">
-                                                <div class="progress-value d-block text-muted h6 mt-1">1200</div>
+                                                <div class="progress-value d-block text-muted h6 mt-1">{{ $totalUser }}</div>
                                             </div>
                                         </div>
-                                    </div><!--end process box-->
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LandingHelper;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
@@ -13,12 +14,14 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class LandingController extends Controller
 {
-    protected $infoApp;
+    protected $infoApp, $landingHelper;
     public function __construct()
     {
         $this->infoApp = Cache::memo()->remember('infoApp', 60, function () {
             return AplikasiModel::first();
         });
+
+        $this->landingHelper = new LandingHelper();
     }
 
     public function index()
@@ -35,7 +38,9 @@ class LandingController extends Controller
             'title' => config('app.name') . ' - ' . config('app.author'),
             'infoApp' => $this->infoApp,
             'pejabatStruktural' => $pejabatStruktural,
-            'testimoni' => $testimoni
+            'testimoni' => $testimoni,
+            'totalSuratKuasa' => $this->landingHelper->getTotalSuratKuasa(),
+            'totalUser' => $this->landingHelper->getTotalUser()
         ];
 
         return view('landing.home', $data);
@@ -81,10 +86,10 @@ class LandingController extends Controller
     {
         try {
             $suratKuasa = RegisterSuratKuasaModel::with([
-                'pendaftaran.pihak', // Pihak
-                'pendaftaran.user', // User pendaftar
-                'panitera', // Panitera yang mensahkan
-                'approval' // Petugas yang memverifikasi
+                'pendaftaran.pihak',
+                'pendaftaran.user',
+                'panitera',
+                'approval'
             ])->where('uuid', $uuid)->firstOrFail();
 
             $data = [

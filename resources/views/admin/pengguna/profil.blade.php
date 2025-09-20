@@ -19,26 +19,38 @@
                                     <img class="avatar float-md-left avatar-medium rounded-circle shadow me-md-4"
                                         src="{{ $user->profile->foto ? asset('storage/' . $user->profile->foto) : asset('assets/images/user/user-none.png') }}" alt="profile">
                                     <h6 class="mt-3 mb-0">{{ $user->name }}</h6>
-                                    <p class="m-0" style="font-size: 12px;">Terdaftar pada : {{ \Carbon\Carbon::parse($user->created_at)->diffForHumans() }}</p>
+                                    <p class="m-0" style="font-size: 12px;">Terdaftar pada : {{ \Carbon\Carbon::parse($user->created_at)->isoFormat('DD MMMM YYYY') }}</p>
                                     <button class="btn btn-sm btn-success w-100 mt-2" data-bs-toggle="modal" data-bs-target="#uploadFoto">
                                         Ubah Foto
                                     </button>
+
+                                    <p class="m-0 mt-2 border-top pt-2" style="font-size: 13px;">
+                                        Hapus akun beserta seluruh informasi yang tersimpan di aplikasi
+                                    </p>
+                                    <button class="btn btn-sm btn-soft-danger w-100 mt-2" id="btn-delete-account">
+                                        Hapus Akun
+                                    </button>
                                 </div>
                             </div>
-                            <div class="card border-0 rounded shadow p-4 mb-3">
-                                <h6 class="mb-0">Aktivitas Terbaru</h6>
 
-                                <div class="mt-3">
-                                    @foreach ($auditTrail as $aktivitas)
-                                        <div class="d-flex flex-column justify-content-between border-bottom mb-3">
-                                            <h6 class="mb-0">
-                                                {{ $aktivitas->created_at->diffForHumans() }}
-                                            </h6>
-                                            <p style="text-align: justify; font-size: 12px;">
-                                                {{ $aktivitas->payload }}
-                                            </p>
-                                        </div>
-                                    @endforeach
+                            <div class="card shadow mb-3">
+                                <div class="card-body">
+                                    <div class="flex flex-wrap flex-row gap-3">
+                                        <h6>Layanan Kontak Informasi</h6>
+                                        <ul class="list-unstyled ms-auto">
+                                            <li><i class="uil uil-phone me-1"></i> {{ $infoApp->kontak }}</li>
+                                            <li><i class="uil uil-envelope me-1"></i> {{ $infoApp->email }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card shadow mb-3">
+                                <div class="card-body">
+                                    <div class="flex flex-wrap flex-row gap-3">
+                                        <h6>Panduan Penggunaan</h6>
+                                        <a href="javascript:void(0);"><i class="uil uil-external-link-alt"></i> Klik Disini</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -286,7 +298,6 @@
                         body
                     }) => {
                         if (status === 422) {
-                            // Validation error
                             if (body.errors && body.errors.foto) {
                                 fotoInput.addClass('is-invalid');
                                 errorDiv.text(body.errors.foto[0]);
@@ -297,7 +308,6 @@
                                 text: body.message || 'Periksa kembali file Anda.',
                             });
                         } else if (status >= 200 && status < 300) {
-                            // Success
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil!',
@@ -306,7 +316,6 @@
                                 location.reload();
                             });
                         } else {
-                            // Other server error
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Terjadi Kesalahan',
@@ -334,7 +343,7 @@
             $('#updatePasswordForm').on('submit', function(e) {
                 e.preventDefault();
 
-                // Hapus error sebelumnya
+                // Clear previous errors
                 $('.form-control').removeClass('is-invalid');
                 $('.invalid-feedback').text('');
 
@@ -362,7 +371,6 @@
                         body
                     }) => {
                         if (status === 422) {
-                            // Tangani error validasi
                             $.each(body.errors, function(key, value) {
                                 $('#' + key).addClass('is-invalid');
                                 $('#' + key + '-error').text(value[0]);
@@ -373,15 +381,13 @@
                                 text: 'Silakan periksa kembali isian Anda.',
                             });
                         } else if (status >= 200 && status < 300) {
-                            // Tangani sukses
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil!',
                                 text: body.message,
                             });
-                            form[0].reset(); // Reset form
+                            form[0].reset();
                         } else {
-                            // Tangani error lainnya
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Terjadi Kesalahan',
@@ -431,7 +437,6 @@
                         body
                     }) => {
                         if (status === 422) {
-                            // Handle validation errors
                             $.each(body.errors, function(key, value) {
                                 const el = $('#' + key);
                                 el.addClass('is-invalid');
@@ -443,7 +448,6 @@
                                 text: 'Silakan periksa kembali isian Anda.',
                             });
                         } else if (status >= 200 && status < 300) {
-                            // Handle success
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil!',
@@ -455,7 +459,6 @@
                                 window.location.reload(); // Reload page to show new data
                             });
                         } else {
-                            // Handle other errors
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Terjadi Kesalahan',
@@ -472,6 +475,79 @@
                     }).finally(() => {
                         button.html(originalButtonText).prop('disabled', false);
                     });
+            });
+
+            $('#btn-delete-account').on('click', function(e) {
+                e.preventDefault();
+
+                Swal.fire({
+                    title: 'Apakah Anda Yakin?',
+                    html: `
+                        <p class="text-danger fw-bold">Tindakan ini tidak dapat diurungkan!</p>
+                        <p>Seluruh data Anda, termasuk riwayat pendaftaran surat kuasa dan file terkait, akan dihapus secara permanen.</p>
+                        <p class="mt-3">Untuk melanjutkan, ketik "<b class="text-danger">hapus akun saya</b>" di bawah ini:</p>
+                        <input type="text" id="confirmation-text" class="form-control" placeholder="hapus akun saya">
+                    `,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, Hapus Akun Saya!',
+                    cancelButtonText: 'Batal',
+                    preConfirm: () => {
+                        const confirmationText = Swal.getPopup().querySelector('#confirmation-text').value;
+                        if (confirmationText.toLowerCase() !== 'hapus akun saya') {
+                            Swal.showValidationMessage(`Silakan ketik "hapus akun saya" untuk konfirmasi.`);
+                            return false;
+                        }
+                        return true;
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Show loading state
+                        Swal.fire({
+                            title: 'Menghapus Akun...',
+                            text: 'Mohon tunggu sebentar, proses ini akan menghapus semua data Anda.',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+
+                        fetch("{{ route('profile.destroy') }}", {
+                                method: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    'Accept': 'application/json',
+                                }
+                            })
+                            .then(response => response.json().then(data => ({
+                                status: response.status,
+                                body: data
+                            })))
+                            .then(({
+                                status,
+                                body
+                            }) => {
+                                if (status === 200) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Berhasil!',
+                                        text: body.message,
+                                    }).then(() => {
+                                        // Redirect to login page after deletion
+                                        window.location.href = "{{ route('app.signin') }}";
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Gagal!',
+                                        text: body.message || 'Terjadi kesalahan saat menghapus akun.',
+                                    });
+                                }
+                            })
+                    }
+                });
             });
         });
     </script>

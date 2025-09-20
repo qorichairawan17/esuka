@@ -2,12 +2,12 @@
 
 namespace App\Helpers;
 
-use App\Models\AuditTrail\AuditTrailModel;
-use Illuminate\Support\Facades\Cache;
-use App\Models\Suratkuasa\PendaftaranSuratKuasaModel;
-use App\Models\Testimoni\TestimoniModel;
-use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
+use App\Models\Testimoni\TestimoniModel;
+use App\Models\AuditTrail\AuditTrailModel;
+use App\Models\Suratkuasa\PendaftaranSuratKuasaModel;
 
 class HomeHelper
 {
@@ -50,11 +50,6 @@ class HomeHelper
         return $suratKuasa;
     }
 
-    /**
-     * Get monthly data for approved power of attorney registrations for the current year.
-     *
-     * @return array
-     */
     public function getChart(): array
     {
         $currentYear = date('Y');
@@ -92,8 +87,6 @@ class HomeHelper
 
     public function getPembayaranSuratKuasa()
     {
-        // Mengambil surat kuasa milik user yang sedang login,
-        // yang berada di tahap 'Pendaftaran' (belum bayar) atau 'Perbaikan Pembayaran'.
         return PendaftaranSuratKuasaModel::where('user_id', auth()->id())
             ->where(function ($query) {
                 $query->where('tahapan', \App\Enum\TahapanSuratKuasaEnum::Pendaftaran->value)
@@ -107,11 +100,6 @@ class HomeHelper
         return TestimoniModel::where('user_id', auth()->id())->first();
     }
 
-    /**
-     * Get monthly data for the logged-in user's approved power of attorney registrations for the current year.
-     *
-     * @return array
-     */
     public function getChartForUser(): array
     {
         $userId = auth()->id();

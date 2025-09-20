@@ -127,6 +127,7 @@ Route::prefix('profil')->middleware(AuthMiddleware::class)->group(function () {
         Route::post('/update', 'update')->name('profile.update');
         Route::post('/change-photo', 'updatePhoto')->name('profile.updatePhoto');
         Route::post('/change-password', 'updatePassword')->name('profile.updatePassword');
+        Route::delete('/destroy', 'destroy')->name('profile.destroy');
     });
 });
 
@@ -134,7 +135,6 @@ Route::prefix('audit-trail')->middleware(AuthMiddleware::class)->group(function 
     Route::controller(AuditTrailController::class)->group(function () {
         Route::get('/', 'index')->name('audit-trail.index');
         Route::get('/{id}', 'show')->name('audit-trail.show');
-        Route::delete('/destroy/{id}', 'destroy')->name('audit-trail.destroy');
     });
 });
 

@@ -188,7 +188,8 @@ class ProfileController extends Controller
 
     public function destroy(): JsonResponse
     {
-        $user = Auth::user()->load('profile');
+        /** @var \App\Models\User $user */
+        $user = Auth::user()->load('profile'); // Eager load profile
         if (!$user) {
             return response()->json(['success' => false, 'message' => 'Data pengguna tidak ditemukan.'], 404);
         }
@@ -199,6 +200,19 @@ class ProfileController extends Controller
             $pendaftarans = PendaftaranSuratKuasaModel::with(['pihak', 'register', 'pembayaran'])
                 ->where('user_id', $user->id)
                 ->get();
+
+            // 2. Prepare detailed data for the audit trail BEFORE deletion
+            $oldDataForAudit = [
+                'user_details' => $user->toArray(), // Includes profile data
+                'registrations_data' => $pendaftarans->toArray(), // Includes all related registration data
+            ];
+            $context = [
+                'old' => $oldDataForAudit,
+                'new' => [], // 'new' is empty for a delete action
+            ];
+
+            // Record the audit trail. We pass the user object explicitly as it's the subject of the action.
+            AuditTrailService::record('telah menghapus akunnya sendiri secara permanen', $context, $user);
 
             $localDirectoriesToDelete = [];
             $publicFilesToDelete = [];
@@ -267,11 +281,11 @@ class ProfileController extends Controller
 
             DB::commit();
 
-            Log::info('User account and all related data have been successfully deleted.', ['user_id' => $user->id]);
+            Log::info('User account and all related data have been successfully deleted and audited.', ['user_id' => $user->id]);
             return response()->json(['success' => true, 'message' => 'Akun berhasil dihapus.'], 200);
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error deleting user account: ' . $e->getMessage(), ['user_id' => Auth::user()->id, 'trace' => $e->getTraceAsString()]);
+            Log::error('Error deleting user account: ' . $e->getMessage(), ['user_id' => $user->id, 'trace' => $e->getTraceAsString()]);
             return response()->json(['success' => false, 'message' => 'Terjadi kesalahan saat menghapus akun.'], 500);
         }
     }

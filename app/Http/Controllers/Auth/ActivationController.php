@@ -32,7 +32,7 @@ class ActivationController extends Controller
         try {
             DB::transaction(function () use ($activation) {
                 $user = $activation->user;
-                $user->update(['block' => '0', 'reactivation' => '0']);
+                $user->update(['email_verified_at' => now(), 'block' => '0', 'reactivation' => '0']);
 
                 // Delete the activation token so it cannot be used again.
                 $activation->delete();

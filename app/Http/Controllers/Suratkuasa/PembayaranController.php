@@ -106,7 +106,7 @@ class PembayaranController extends Controller
             }
 
             // Store the new file
-            $uploadPath = 'pembayaran/' . date('m') . '/' . date('Y') . '/' . $suratKuasa->id_daftar;
+            $uploadPath = 'pembayaran/' . date('Y') . '/' . date('m') . '/' . $suratKuasa->id_daftar;
             $file = $request->file('bukti_pembayaran');
             $fileName = \Illuminate\Support\Str::random(40) . '.' . $file->getClientOriginalExtension();
             $filePath = "{$uploadPath}/{$fileName}";

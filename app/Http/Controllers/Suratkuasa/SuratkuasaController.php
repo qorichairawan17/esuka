@@ -266,7 +266,7 @@ class SuratkuasaController extends Controller
             $validated = $request->validate($formRequest->rules(false), $formRequest->messages());
 
             // 2. Handle File Uploads
-            $uploadPath = 'surat-kuasa/' . date('m') . '/' . date('Y') . '/' . $idDaftar;
+            $uploadPath = 'surat-kuasa/' . date('Y') . '/' . date('m') . '/' . $idDaftar;
             $filePaths = $this->storePendaftaranFiles($request, $klasifikasi, $uploadPath);
 
             // 3. Create Main Registration Record
@@ -539,7 +539,7 @@ class SuratkuasaController extends Controller
     private function updatePendaftaranFiles(Request $request, PendaftaranSuratKuasaModel $pendaftaran, string $klasifikasi): array
     {
         $filePaths = [];
-        $uploadPath = 'surat-kuasa/' . date('m') . '/' . date('Y') . '/' . $pendaftaran->id_daftar;
+        $uploadPath = 'surat-kuasa/' . date('Y') . '/' . date('m') . '/' . $pendaftaran->id_daftar;
 
         $fileFields = ($klasifikasi === SuratKuasaEnum::Advokat->value)
             ? ['ktp' => 'edoc_kartu_tanda_penduduk', 'kta' => 'edoc_kartu_tanda_anggota', 'bas' => 'edoc_berita_acara_sumpah', 'suratKuasa' => 'edoc_surat_kuasa']

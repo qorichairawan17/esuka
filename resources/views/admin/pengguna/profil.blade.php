@@ -24,12 +24,34 @@
                                         Ubah Foto
                                     </button>
 
-                                    <p class="m-0 mt-2 border-top pt-2" style="font-size: 13px;">
-                                        Hapus akun beserta seluruh informasi yang tersimpan di aplikasi
-                                    </p>
-                                    <button class="btn btn-sm btn-soft-danger w-100 mt-2" id="btn-delete-account">
-                                        Hapus Akun
-                                    </button>
+                                    @if (Auth::user()->role == \App\Enum\RoleEnum::User->value)
+                                        <p class="m-0 mt-2 border-top pt-2" style="font-size: 13px;">
+                                            Hapus akun beserta seluruh informasi yang tersimpan di aplikasi
+                                        </p>
+                                        <button class="btn btn-sm btn-soft-danger w-100 mt-2" id="btn-delete-account">
+                                            Hapus Akun
+                                        </button>
+                                    @endif
+
+                                </div>
+                            </div>
+
+                            <div class="card shadow mb-3">
+                                <div class="card-body">
+                                    <div class="flex flex-wrap flex-row gap-3">
+                                        <h6>Tautkan Akun Dengan Google</h6>
+                                        @if (Auth::user()->google_id != null)
+                                            <form id="unlink-google-form" action="{{ route('google.unlink') }}" method="POST" class="w-100">
+                                                @csrf
+                                                <button type="submit" class="btn btn-success btn-sm w-100">
+                                                    <i class="uil uil-google"></i> Akun Tertaut
+                                                </button>
+                                                <small class="text-muted d-block mt-1">Klik untuk memutuskan tautan.</small>
+                                            </form>
+                                        @else
+                                            <a href="{{ route('google.redirect', ['action' => 'link']) }}" class="btn btn-danger btn-sm w-100"><i class="uil uil-google"></i> Tautkan dengan Google</a>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
 
@@ -106,7 +128,8 @@
                                                     <label for="email">
                                                         Email <span class="text-danger">*</span>
                                                     </label>
-                                                    <input type="email" name="email" class="form-control" id="email" required value="{{ $user->email ?? '' }}" placeholder="qori@example.com">
+                                                    <input type="email" name="email" class="form-control" id="email" required value="{{ $user->email ?? '' }}"
+                                                        placeholder="qori@example.com">
                                                     <div class="invalid-feedback" id="email-error"></div>
                                                 </div>
                                                 <div class="form-group mb-3">
@@ -549,6 +572,43 @@
                     }
                 });
             });
+
+            $('#unlink-google-form').on('submit', function(e) {
+                e.preventDefault();
+                const form = this;
+
+                Swal.fire({
+                    title: 'Putuskan Tautan Akun Google?',
+                    text: "Anda masih bisa login menggunakan email dan password Anda. Anda dapat menautkannya kembali kapan saja.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, putuskan!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: 'Memproses...',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                        // Submit the form to the backend
+                        form.submit();
+                    }
+                })
+            });
+
+            // Display success/error messages from session
+            @if (session('success'))
+                Swal.fire('Berhasil!', '{{ session('success') }}', 'success');
+            @endif
+
+            @if (session('error'))
+                Swal.fire('Gagal!', '{{ session('error') }}', 'error');
+            @endif
         });
     </script>
 @endpush

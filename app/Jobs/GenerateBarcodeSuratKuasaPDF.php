@@ -60,7 +60,7 @@ class GenerateBarcodeSuratKuasaPDF implements ShouldQueue
 
             // Generate file name
             $fileName = 'barcode-surat-kuasa-' . str_replace('#', '', $pendaftaran->id_daftar) . '.pdf';
-            $filePath = 'barcode/' . date('Y/m') . '/' . $fileName;
+            $filePath = 'barcode/' . date('Y') . '/' . date('m') . '/' . $fileName;
 
             // Save PDF to storage
             Storage::disk('local')->put($filePath, $pdf->output());

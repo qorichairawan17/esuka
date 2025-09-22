@@ -219,6 +219,9 @@
                                                     </label>
                                                     <input type="password" name="passwordBaru_confirmation" class="form-control" id="passwordBaru_confirmation" required placeholder="********">
                                                 </div>
+                                                <p>
+                                                    Lupa password? <a href="{{ route('auth.forgot-password') }}">Klik Disini</a>
+                                                </p>
                                                 <button class="btn btn-sm btn-primary" type="submit" id="btn-save-password">
                                                     Simpan
                                                 </button>

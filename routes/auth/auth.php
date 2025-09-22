@@ -22,7 +22,7 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
 
 Route::get('/activate-account/{token}', [ActivationController::class, 'activate'])->name('auth.activate-account');
 
-Route::middleware(NonAuthMiddleware::class)->controller(ResetPasswordController::class)->group(function () {
+Route::controller(ResetPasswordController::class)->group(function () {
     Route::get('app/forgot-password', 'index')->name('auth.forgot-password');
     Route::post('/send', 'send')->name('auth.forgot-password.send');
     Route::post('/save', 'save')->name('auth.forgot-password.save');

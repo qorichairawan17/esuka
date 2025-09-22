@@ -1,12 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\HomeMiddleware;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\Auth\AuthMiddleware;
 use App\Http\Controllers\AuditTrailController;
 use App\Http\Middleware\Auth\NonAuthMiddleware;
+use App\Http\Middleware\ForbiddenForUserMiddleware;
 use App\Http\Controllers\Pengguna\PaniteraController;
 use App\Http\Controllers\Pengaturan\AplikasiController;
 use App\Http\Controllers\Pengaturan\TestimoniController;
@@ -38,7 +40,7 @@ Route::prefix('index')->controller(LandingController::class)->group(function () 
     Route::get('/surat-kuasa/verify/{uuid}', 'verify')->name('app.surat-kuasa.verify');
 });
 
-Route::prefix('dashboard')->middleware([AuthMiddleware::class, CompleteProfileMiddleware::class])->controller(HomeController::class)->group(function () {
+Route::prefix('dashboard')->middleware([AuthMiddleware::class, CompleteProfileMiddleware::class, HomeMiddleware::class])->controller(HomeController::class)->group(function () {
     Route::get('/panel-admin', 'index')->name('dashboard.admin');
     Route::get('/panel-pengguna', 'pengguna')->name('dashboard.pengguna');
 });
@@ -62,7 +64,7 @@ Route::prefix('surat-kuasa')->middleware([AuthMiddleware::class, CompleteProfile
         Route::get('/pembayaran/preview/{id}', 'preview')->name('surat-kuasa.pembayaran-preview');
     });
 
-    Route::controller(VerifikasiSuratKuasaController::class)->group(function () {
+    Route::controller(VerifikasiSuratKuasaController::class)->middleware(ForbiddenForUserMiddleware::class)->group(function () {
         Route::post('/approve', 'approve')->name('surat-kuasa.verifikasi.approve');
         Route::post('/reject', 'reject')->name('surat-kuasa.verifikasi.reject');
     });
@@ -71,12 +73,12 @@ Route::prefix('surat-kuasa')->middleware([AuthMiddleware::class, CompleteProfile
         Route::get('/barcode/{id?}', 'index')->name('surat-kuasa.barcode');
     });
 
-    Route::controller(LaporanSuratKuasaController::class)->group(function () {
+    Route::controller(LaporanSuratKuasaController::class)->middleware(ForbiddenForUserMiddleware::class)->group(function () {
         Route::get('/laporan', 'index')->name('surat-kuasa.laporan');
     });
 });
 
-Route::prefix('pengguna')->middleware(AuthMiddleware::class)->group(function () {
+Route::prefix('pengguna')->middleware([AuthMiddleware::class, ForbiddenForUserMiddleware::class])->group(function () {
     Route::controller(AdvokatNonAdvokatController::class)->group(function () {
         Route::get('/advokat-non-advokat', 'index')->name('advokat.index');
         Route::get('/advokat-non-advokat/form/{param}/{id?}', 'form')->name('advokat.form');
@@ -102,7 +104,7 @@ Route::prefix('pengguna')->middleware(AuthMiddleware::class)->group(function () 
 });
 
 Route::prefix('pengaturan')->middleware(AuthMiddleware::class)->group(function () {
-    Route::controller(AplikasiController::class)->group(function () {
+    Route::controller(AplikasiController::class)->middleware(ForBiddenForUserMiddleware::class)->group(function () {
         Route::get('/aplikasi', 'index')->name('aplikasi.index');
         Route::post('/aplikasi/store', 'storeAplikasi')->name('aplikasi.store');
 
@@ -114,10 +116,12 @@ Route::prefix('pengaturan')->middleware(AuthMiddleware::class)->group(function (
     });
 
     Route::controller(TestimoniController::class)->group(function () {
-        Route::get('/testimoni', 'index')->name('testimoni.index');
+        Route::middleware(ForBiddenForUserMiddleware::class)->group(function () {
+            Route::get('/testimoni', 'index')->name('testimoni.index');
+            Route::get('/testimoni/edit/{id}', 'edit')->name('testimoni.edit');
+            Route::post('/testimoni/update/{id}', 'update')->name('testimoni.update');
+        });
         Route::post('/testimoni/store', 'store')->name('testimoni.store');
-        Route::get('/testimoni/edit/{id}', 'edit')->name('testimoni.edit');
-        Route::post('/testimoni/update/{id}', 'update')->name('testimoni.update');
     });
 });
 
@@ -131,7 +135,7 @@ Route::prefix('profil')->middleware(AuthMiddleware::class)->group(function () {
     });
 });
 
-Route::prefix('audit-trail')->middleware(AuthMiddleware::class)->group(function () {
+Route::prefix('audit-trail')->middleware([AuthMiddleware::class, ForBiddenForUserMiddleware::class])->group(function () {
     Route::controller(AuditTrailController::class)->group(function () {
         Route::get('/', 'index')->name('audit-trail.index');
         Route::get('/{id}', 'show')->name('audit-trail.show');

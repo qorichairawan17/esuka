@@ -136,7 +136,7 @@
                                                 @endif
                                                 @if ($suratKuasa->register && $suratKuasa->register->panitera)
                                                     <div class="col-md-12 col-sm-12">
-                                                        <h6>Disahkan</h6>
+                                                        <h6>Disetujui Oleh</h6>
                                                         <p>
                                                             <span class="fw-bold text-primary">
                                                                 {{ $suratKuasa->register->panitera->nama }}

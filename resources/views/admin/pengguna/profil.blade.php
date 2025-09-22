@@ -71,7 +71,7 @@
                                 <div class="card-body">
                                     <div class="flex flex-wrap flex-row gap-3">
                                         <h6>Panduan Penggunaan</h6>
-                                        <a href="javascript:void(0);"><i class="uil uil-external-link-alt"></i> Klik Disini</a>
+                                        <a href="{{ route('panduan.show') }}" target="_blank"><i class="uil uil-external-link-alt"></i> Klik Disini</a>
                                     </div>
                                 </div>
                             </div>

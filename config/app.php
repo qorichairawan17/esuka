@@ -18,6 +18,8 @@ return [
     'author' => env('APP_AUTHOR', 'Laravel'),
     'description' => env('APP_DESCRIPTION', 'Laravel Application'),
     'keywords' => env('APP_KEYWORDS', 'Laravel'),
+    'developer' => env('APP_DEVELOPER', 'Developer'),
+
 
     /*
     |--------------------------------------------------------------------------

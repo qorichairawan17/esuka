@@ -8,7 +8,6 @@ use App\Http\Controllers\Auth\ActivationController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 
-
 Route::prefix('auth')->controller(GoogleAuthController::class)->group(function () {
     Route::get('google/', 'redirect')->name('google.redirect');
     Route::get('google/callback', 'callback')->name('google.callback');

@@ -25,6 +25,10 @@ foreach (glob(__DIR__ . '/auth/*.php') as $routeFile) {
     require $routeFile;
 }
 
+foreach (glob(__DIR__ . '/panduan/*.php') as $routeFile) {
+    require $routeFile;
+}
+
 Route::get('/', function () {
     return redirect()->route('app.home');
 });

@@ -73,7 +73,7 @@
      <!-- Sidebar Footer -->
      <ul class="sidebar-footer list-unstyled mb-0">
          <li class="list-inline-item mb-0">
-             <a href="https://1.envato.market/landrick" target="_blank" class="btn btn-icon btn-soft-light">
+             <a href="https://wa.me/{{ $infoApp->kontak }}" target="_blank" class="btn btn-icon btn-soft-light">
                  <i class="ti ti-headphone-alt"></i>
              </a>
              <small class="text-muted fw-medium ms-1">

@@ -41,4 +41,9 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
 
+    'sync_api' => [
+        'url' => env('SYNC_API_URL'),
+        'token' => env('SYNC_API_TOKEN'),
+    ],
+
 ];

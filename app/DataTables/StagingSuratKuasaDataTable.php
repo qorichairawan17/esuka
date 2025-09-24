@@ -3,20 +3,19 @@
 namespace App\DataTables;
 
 use Yajra\DataTables\Html\Column;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Crypt;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Services\DataTable;
-use App\Models\AuditTrail\AuditTrailModel;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
+use Illuminate\Support\Facades\Crypt;
+use App\Models\Sync\StagingSyncSuratKuasaModel;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 
-class AuditTrailDataTable extends DataTable
+class StagingSuratKuasaDataTable extends DataTable
 {
     /**
      * Build the DataTable class.
      *
-     * @param QueryBuilder<AuditTrailModel> $query Results from query() method.
+     * @param QueryBuilder<StagingSyncSuratKuasaModel> $query Results from query() method.
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
@@ -26,32 +25,33 @@ class AuditTrailDataTable extends DataTable
                 $actionBtn = '<button type="button" onclick="showDetail(\'' . Crypt::encrypt($row->id) . '\')" class="btn btn-soft-primary btn-sm"><i class="ti ti-eye"></i></button>';
                 return $actionBtn;
             })
+            ->editColumn('status', function ($row) {
+                if ($row->status == \App\Enum\StatusSuratKuasaEnum::Ditolak->value) {
+                    $badgeClass = 'bg-danger';
+                } elseif ($row->status == \App\Enum\StatusSuratKuasaEnum::Disetujui->value) {
+                    $badgeClass = 'bg-success';
+                } else {
+                    $badgeClass = 'bg-warning';
+                }
+                return '<span class="badge ' . $badgeClass . '">' . $row->status . '</span>';
+            })
             ->editColumn('created_at', function ($row) {
-                return $row->created_at ? $row->created_at->format('d-m-Y H:i:s') : '';
+                return $row->created_at->format('d-m-Y H:i:s');
+            })->editColumn('updated_at', function ($row) {
+                return $row->updated_at->format('d-m-Y H:i:s');
             })
-            ->editColumn('user.name', function ($row) {
-                return $row->user->name ?? 'Sistem/Tidak Diketahui';
-            })
-            ->editColumn('payload', function ($row) {
-                return $row->payload;
-            })
+            ->rawColumns(['action', 'status'])
             ->setRowId('id');
     }
 
     /**
      * Get the query source of dataTable.
      *
-     * @return QueryBuilder<AuditTrailModel>
+     * @return QueryBuilder<StagingSyncSuratKuasaModel>
      */
-    public function query(AuditTrailModel $model): QueryBuilder
+    public function query(StagingSyncSuratKuasaModel $model): QueryBuilder
     {
-        $tableName = $model->getTable();
-        $query = $model->with('user')->select($tableName . '.*')->orderBy($tableName . '.created_at', 'desc');
-
-        if (Auth::user()->role === 'User') {
-            $query->where('user_id', Auth::id());
-        }
-        return $query;
+        return $model->newQuery();
     }
 
     /**
@@ -60,9 +60,9 @@ class AuditTrailDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-            ->setTableId('audittrail-table')
+            ->setTableId('stagingsuratkuasa-table')
             ->columns($this->getColumns())
-            ->ajax(route('audit-trail.index'))
+            ->ajax(route('sync.index'))
             ->orderBy(1)
             ->selectStyleSingle()
             ->processing(true)
@@ -81,10 +81,16 @@ class AuditTrailDataTable extends DataTable
                 ->searchable(false)
                 ->width(30)
                 ->addClass('text-center'),
-            Column::make('user.name')->title('Pengguna'),
-            Column::make('payload'),
-            Column::make('ip_address'),
+            Column::make('user_id')->title('User ID'),
+            Column::make('email')->title('Email'),
+            Column::make('nama_lengkap')->title('Nama Lengkap'),
+            Column::make('perihal')->title('Perihal'),
+            Column::make('jenis_surat')->title('Jenis Surat'),
+            Column::make('nomor_surat_kuasa')->title('No. Surat Kuasa'),
+            Column::make('klasifikasi')->title('Klasifikasi'),
+            Column::make('status')->title('Status'),
             Column::make('created_at'),
+            Column::make('updated_at'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
@@ -99,6 +105,6 @@ class AuditTrailDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'AuditTrail_' . date('YmdHis');
+        return 'StagingSuratKuasa_' . date('YmdHis');
     }
 }

@@ -20,6 +20,8 @@ return [
     'keywords' => env('APP_KEYWORDS', 'Laravel'),
     'developer' => env('APP_DEVELOPER', 'Developer'),
 
+    'api_token' => env('API_TOKEN', ''),
+
 
     /*
     |--------------------------------------------------------------------------

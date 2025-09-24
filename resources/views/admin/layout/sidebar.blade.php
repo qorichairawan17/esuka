@@ -31,6 +31,7 @@
                          <li><a href="{{ route('surat-kuasa.index') }}">Pendaftaran</a></li>
                          @if (Auth::user()->role == \App\Enum\RoleEnum::Superadmin->value)
                              <li><a href="{{ route('surat-kuasa.laporan') }}">Laporan</a></li>
+                             <li><a href="{{ route('sync.index') }}">Staging Sync</a></li>
                          @endif
                      </ul>
                  </div>

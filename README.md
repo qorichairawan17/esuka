@@ -69,7 +69,7 @@ Proyek ini dibangun menggunakan tumpukan teknologi modern dan andal:
 | **Bahasa Pemrograman** | [PHP 8.2](https://www.php.net/) |
 | **Database** | [MySQL](https://www.mysql.com/) |
 | **Frontend Bundler** | [Vite](https://vitejs.dev/) |
-| **CSS Framework** | [Tailwind CSS](https://tailwindcss.com/) |
+| **CSS Framework** | [Bootstrap](https://getbootstrap.com/)
 | **JavaScript** | [jQuery](https://jquery.com/) & AJAX |
 | **Paket Utama** | |
 | &nbsp; &nbsp; ↳ Tabel Data | [Yajra DataTables](https://yajrabox.com/docs/laravel-datatables/master) |

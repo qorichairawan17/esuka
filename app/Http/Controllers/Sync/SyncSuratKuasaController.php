@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Crypt;
-use App\Models\Sync\StagingSyncSuratKuasaModel;
 use App\Models\Pengaturan\AplikasiModel;
 
 class SyncSuratKuasaController extends Controller
@@ -49,9 +47,12 @@ class SyncSuratKuasaController extends Controller
         return $datatable->render('admin.sync.data-sync', $data);
     }
 
-    public function show($id): JsonResponse
+    public function show(Request $request): JsonResponse
     {
-        return $this->syncService->fetchShow($id);
+        if (!$request->route('id')) {
+            return response()->json(['message' => 'ID parameter is missing.'], 400);
+        }
+        return $this->syncService->fetchShow($request->route('id'));
     }
 
     public function fetchDataOnDB(Request $request): JsonResponse
@@ -67,5 +68,33 @@ class SyncSuratKuasaController extends Controller
     public function destroy()
     {
         return $this->syncService->fetchDelete();
+    }
+
+    public function migrate(): JsonResponse
+    {
+        try {
+            $results = $this->syncService->migrateStagingData();
+
+            if ($results['failed_count'] > 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Migrasi selesai dengan {$results['migrated_count']} data berhasil dan {$results['failed_count']} data gagal. Silakan cek log untuk detail.",
+                    'results' => $results
+                ], 500);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => "Migrasi {$results['migrated_count']} data berhasil diselesaikan.",
+                'results' => $results
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error during bulk staging data migration: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan pada server saat melakukan migrasi data.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

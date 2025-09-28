@@ -227,11 +227,19 @@
                                                                 <td class="fw-bold {{ $pihak->jenis == 'Pemberi' ? 'text-primary' : 'text-warning' }}">{{ $pihak->jenis }} Kuasa</td>
                                                                 <td>{{ $pihak->nama }}</td>
                                                                 <td>
-                                                                    {{ Auth::user()->role == \App\Enum\RoleEnum::Administrator->value || Auth::user()->role == \App\Enum\RoleEnum::Superadmin->value ? \App\Helpers\StringHelper::censorData($pihak->nik) : $pihak->nik }}
+                                                                    @if (Auth::user()->role == \App\Enum\RoleEnum::Administrator->value || Auth::user()->role == \App\Enum\RoleEnum::Superadmin->value)
+                                                                        {{ is_numeric($pihak->nik) ? \App\Helpers\StringHelper::censorData($pihak->nik) : $pihak->nik }}
+                                                                    @else
+                                                                        {{ $pihak->nik }}
+                                                                    @endif
                                                                 </td>
                                                                 <td>{{ $pihak->pekerjaan }}</td>
                                                                 <td>
-                                                                    {{ Auth::user()->role == \App\Enum\RoleEnum::Administrator->value || Auth::user()->role == \App\Enum\RoleEnum::Superadmin->value ? Str::limit(\App\Helpers\StringHelper::censorData($pihak->alamat), 20) : Str::limit($pihak->alamat, 20) }}
+                                                                    @if (Auth::user()->role == \App\Enum\RoleEnum::Administrator->value || Auth::user()->role == \App\Enum\RoleEnum::Superadmin->value)
+                                                                        {{ strlen($pihak->alamat) > 4 ? Str::limit(\App\Helpers\StringHelper::censorData($pihak->alamat), 20) : $pihak->alamat }}
+                                                                    @else
+                                                                        {{ Str::limit($pihak->alamat, 20) }}
+                                                                    @endif
                                                                 </td>
                                                             </tr>
                                                             @php

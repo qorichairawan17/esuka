@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\Pengguna\PaniteraModel;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Pengaturan\AplikasiModel;
 use App\Models\Suratkuasa\PihakSuratKuasaModel;
@@ -31,6 +32,7 @@ use App\Http\Requests\SuratKuasa\SuratKuasaNonAdvokatRequest;
 class SuratkuasaController extends Controller
 {
     protected $infoApp;
+
     public function __construct()
     {
         $this->infoApp = Cache::memo()->remember('infoApp', 60, function () {
@@ -265,6 +267,9 @@ class SuratkuasaController extends Controller
             $formRequest = $this->getFormRequestForKlasifikasi($klasifikasi);
             $validated = $request->validate($formRequest->rules(false), $formRequest->messages());
 
+            // 1.5. Validate Pihak (Pemberi & Penerima)
+            $this->validatePihak($request);
+
             // 2. Handle File Uploads
             $uploadPath = 'surat-kuasa/' . date('Y') . '/' . date('m') . '/' . $idDaftar;
             $filePaths = $this->storePendaftaranFiles($request, $klasifikasi, $uploadPath);
@@ -317,6 +322,58 @@ class SuratkuasaController extends Controller
             Log::error('Error saving power attorney registration: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return response()->json(['success' => false, 'message' => 'Terjadi kesalahan pada server saat menyimpan data.'], 500);
         }
+    }
+
+    /**
+     * Validates the 'pemberi_kuasa' and 'penerima_kuasa' JSON data from the request.
+     *
+     * @param Request $request
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    private function validatePihak(Request $request): void
+    {
+        $pemberiKuasa = json_decode($request->input('pemberi_kuasa'), true) ?? [];
+        $penerimaKuasa = json_decode($request->input('penerima_kuasa'), true) ?? [];
+
+        $pihakData = [
+            'pemberi_kuasa' => $pemberiKuasa,
+            'penerima_kuasa' => $penerimaKuasa,
+        ];
+
+        $rules = [
+            'pemberi_kuasa' => 'required|array|min:1',
+            'pemberi_kuasa.*.nama' => 'required|string|max:255',
+            'pemberi_kuasa.*.nik' => 'required|numeric',
+            'pemberi_kuasa.*.pekerjaan' => 'required|string|max:255',
+            'pemberi_kuasa.*.alamat' => 'required|string',
+            'penerima_kuasa' => 'required|array|min:1',
+            'penerima_kuasa.*.nama' => 'required|string|max:255',
+            'penerima_kuasa.*.nik' => 'required|numeric',
+            'penerima_kuasa.*.pekerjaan' => 'required|string|max:255',
+            'penerima_kuasa.*.alamat' => 'required|string',
+        ];
+
+        $messages = [
+            'pemberi_kuasa.required' => 'Data Pemberi Kuasa wajib diisi.',
+            'pemberi_kuasa.min'      => 'Minimal harus ada satu Pemberi Kuasa.',
+            'pemberi_kuasa.*.nama.required' => 'Nama Pemberi Kuasa wajib diisi.',
+            'pemberi_kuasa.*.nik.required'  => 'NIK Pemberi Kuasa wajib diisi.',
+            'pemberi_kuasa.*.nik.numeric'   => 'NIK Pemberi Kuasa harus berupa angka.',
+            'pemberi_kuasa.*.pekerjaan.required' => 'Pekerjaan Pemberi Kuasa wajib diisi.',
+            'pemberi_kuasa.*.alamat.required'    => 'Alamat Pemberi Kuasa wajib diisi.',
+
+            'penerima_kuasa.required' => 'Data Penerima Kuasa wajib diisi.',
+            'penerima_kuasa.min'      => 'Minimal harus ada satu Penerima Kuasa.',
+            'penerima_kuasa.*.nama.required' => 'Nama Penerima Kuasa wajib diisi.',
+            'penerima_kuasa.*.nik.required'  => 'NIK Penerima Kuasa wajib diisi.',
+            'penerima_kuasa.*.nik.numeric'   => 'NIK Penerima Kuasa harus berupa angka.',
+            'penerima_kuasa.*.pekerjaan.required' => 'Pekerjaan Penerima Kuasa wajib diisi.',
+            'penerima_kuasa.*.alamat.required'    => 'Alamat Penerima Kuasa wajib diisi.',
+        ];
+
+        $validator = Validator::make($pihakData, $rules, $messages);
+
+        $validator->validate();
     }
 
     /**
@@ -458,6 +515,9 @@ class SuratkuasaController extends Controller
             // 1. Validate request
             $formRequest = $this->getFormRequestForKlasifikasi($klasifikasi);
             $validated = $request->validate($formRequest->rules(true), $formRequest->messages());
+
+            // 1.5. Validate Pihak (Pemberi & Penerima)
+            $this->validatePihak($request);
 
             // 2. Handle file updates
             $filePaths = $this->updatePendaftaranFiles($request, $pendaftaran, $klasifikasi);

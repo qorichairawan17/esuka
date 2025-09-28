@@ -26,6 +26,7 @@
                                         <option value="{{ \App\Enum\SuratKuasaEnum::NonAdvokat->value }}">Sinkronisasi Surat Kuasa Non Advokat</option>
                                     </select>
                                     <button type="button" class="btn btn-sm btn-soft-danger mt-2" id="deleteSinkronisasi">Hapus Data Sinkronisasi</button>
+                                    <button type="button" class="btn btn-sm btn-success mt-2" id="migrasi">Migrasi Data Surat Kuasa</button>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <label for="klasifikasiFilter">Filter Pencarian</label>
@@ -103,7 +104,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         progressBar.show();
-                        $('#sinkronisasi').prop('disabled', true);
+                        $('#sinkronisasi, #deleteSinkronisasi, #migrasi').prop('disabled', true);
 
                         $.ajax({
                             url: '{{ route('sync.fetch-data') }}',
@@ -122,7 +123,8 @@
                             },
                             complete: function() {
                                 progressBar.hide();
-                                $('#sinkronisasi').prop('disabled', false).val('');
+                                $('#sinkronisasi, #deleteSinkronisasi, #migrasi').prop('disabled', false);
+                                $('#sinkronisasi').val('');
                             }
                         });
                     } else {
@@ -145,7 +147,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         progressBar.show();
-                        $(this).prop('disabled', true);
+                        $('#sinkronisasi, #deleteSinkronisasi, #migrasi').prop('disabled', true);
 
                         $.ajax({
                             url: '{{ route('sync.delete-data') }}',
@@ -163,7 +165,46 @@
                             },
                             complete: function() {
                                 progressBar.hide();
-                                $('#deleteSinkronisasi').prop('disabled', false);
+                                $('#sinkronisasi, #deleteSinkronisasi, #migrasi').prop('disabled', false);
+                            }
+                        });
+                    }
+                });
+            });
+
+            // 3. Handle Migrasi Data Surat Kuasa
+            $('#migrasi').on('click', function() {
+                Swal.fire({
+                    title: 'Konfirmasi Migrasi Data',
+                    text: "Anda yakin ingin memigrasi semua data dari tabel staging ke tabel utama? Proses ini mungkin memakan waktu dan tidak dapat dibatalkan.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Migrasi Sekarang!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        progressBar.show();
+                        $('#sinkronisasi, #deleteSinkronisasi, #migrasi').prop('disabled', true);
+
+                        $.ajax({
+                            url: '{{ route('sync.migrate') }}', // Memanggil route migrasi yang baru
+                            type: 'POST',
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                Swal.fire('Berhasil!', response.message, 'success');
+                                table.ajax.reload(); // Muat ulang tabel staging setelah migrasi
+                            },
+                            error: function(xhr) {
+                                const errorMsg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Terjadi kesalahan saat migrasi data.';
+                                Swal.fire('Gagal!', errorMsg, 'error');
+                            },
+                            complete: function() {
+                                progressBar.hide();
+                                $('#sinkronisasi, #deleteSinkronisasi, #migrasi').prop('disabled', false);
                             }
                         });
                     }

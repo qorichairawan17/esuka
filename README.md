@@ -1,14 +1,25 @@
-# Elektronik Surat Kuasa (e-SuKa)
+<div align="center">
 
-![e-Suka Landing Page](public/icons/horizontal-e-suka.png) <!-- Ganti dengan URL screenshot aplikasi Anda -->
+# ⚖️ Elektronik Surat Kuasa (e-SuKa)
 
-**e-SuKa** adalah aplikasi web inovatif yang dikembangkan oleh Pengadilan Negeri Lubuk Pakam untuk memodernisasi dan menyederhanakan proses pendaftaran layanan surat kuasa. Dengan asas **Mudah, Cepat, dan Biaya Ringan**, aplikasi ini memungkinkan para advokat dan masyarakat untuk mendaftarkan surat kuasa secara elektronik dari mana saja dan kapan saja, tanpa perlu datang langsung ke Pelayanan Terpadu Satu Pintu (PTSP).
+![e-Suka Landing Page](public/icons/horizontal-e-suka.png)
 
-Aplikasi ini telah meraih penghargaan dari Direktorat Jenderal Badan Peradilan Umum sebagai salah satu aplikasi terbaik dalam kategori **"Penerapan Aplikasi Pelayanan Publik"** pada tahun 2022.
+</div>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Laravel-12-FF2D20?style=for-the-badge&logo=laravel" alt="Laravel 12">
+  <img src="https://img.shields.io/badge/PHP-8.2-777BB4?style=for-the-badge&logo=php" alt="PHP 8.2">
+  <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL">
+  <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite">
+</p>
+
+**e-SuKa** adalah aplikasi web inovatif yang dikembangkan oleh **Pengadilan Negeri Lubuk Pakam** untuk memodernisasi proses pendaftaran surat kuasa. Dengan asas **Mudah, Cepat, dan Biaya Ringan**, aplikasi ini memungkinkan advokat dan masyarakat untuk mendaftarkan surat kuasa secara elektronik dari mana saja dan kapan saja.
+
+🏆 Aplikasi ini telah meraih penghargaan dari **Direktorat Jenderal Badan Peradilan Umum** sebagai salah satu aplikasi terbaik dalam kategori **"Penerapan Aplikasi Pelayanan Publik"** pada tahun 2022.
 
 ---
 
-## 📜 Daftar Isi
+### 📜 Daftar Isi
 
 - [Tentang Proyek](#-tentang-proyek)
 - [Fitur Utama](#-fitur-utama)
@@ -21,7 +32,7 @@ Aplikasi ini telah meraih penghargaan dari Direktorat Jenderal Badan Peradilan U
 
 ---
 
-## 🌟 Tentang Proyek
+### 🌟 Tentang Proyek
 
 Proyek e-SuKa lahir dari kebutuhan untuk mengatasi beban administrasi yang tinggi dalam pelayanan legalisasi pendaftaran surat kuasa di Pengadilan Negeri Lubuk Pakam. Proses manual yang memakan waktu dan mengharuskan kehadiran fisik kini ditransformasikan menjadi alur digital yang efisien.
 
@@ -33,7 +44,7 @@ Tujuan utama dari aplikasi ini adalah:
 
 ---
 
-## ✨ Fitur Utama
+### ✨ Fitur Utama
 
 - **Pendaftaran Online**: Pengguna dapat mengajukan pendaftaran surat kuasa baru dengan mengisi formulir dan mengunggah dokumen pendukung secara online.
 - **Otentikasi Pengguna**: Sistem login yang aman dengan registrasi mandiri, aktivasi akun melalui email, dan opsi login menggunakan **Google Socialite**.
@@ -48,27 +59,27 @@ Tujuan utama dari aplikasi ini adalah:
 
 ---
 
-## 🚀 Teknologi yang Digunakan
+### 🚀 Teknologi yang Digunakan
 
 Proyek ini dibangun menggunakan tumpukan teknologi modern dan andal:
 
-- **Backend**:
-  - [Laravel 12](https://laravel.com/)
-  - [PHP 8.2](https://www.php.net/)
-  - [MySQL](https://www.mysql.com/)
-- **Frontend**:
-  - [Vite](https://vitejs.dev/)
-  - [Tailwind CSS](https://tailwindcss.com/)
-  - [jQuery](https://jquery.com/) & AJAX
-- **Paket Utama**:
-  - [Yajra DataTables](https://yajrabox.com/docs/laravel-datatables/master) untuk tabel data yang interaktif.
-  - [Laravel Socialite](https://laravel.com/docs/11.x/socialite) untuk otentikasi Google.
-  - [Mews Captcha](https://github.com/mewebstudio/captcha) untuk keamanan form.
-  - [Intervention Image](https://image.intervention.io/) untuk manipulasi gambar.
+| Kategori | Teknologi |
+| :--- | :--- |
+| **Framework Backend** | [Laravel 12](https://laravel.com/) |
+| **Bahasa Pemrograman** | [PHP 8.2](https://www.php.net/) |
+| **Database** | [MySQL](https://www.mysql.com/) |
+| **Frontend Bundler** | [Vite](https://vitejs.dev/) |
+| **CSS Framework** | [Tailwind CSS](https://tailwindcss.com/) |
+| **JavaScript** | [jQuery](https://jquery.com/) & AJAX |
+| **Paket Utama** | |
+| &nbsp; &nbsp; ↳ Tabel Data | [Yajra DataTables](https://yajrabox.com/docs/laravel-datatables/master) |
+| &nbsp; &nbsp; ↳ Otentikasi Sosial | [Laravel Socialite](https://laravel.com/docs/11.x/socialite) |
+| &nbsp; &nbsp; ↳ Keamanan Form | [Mews Captcha](https://github.com/mewebstudio/captcha) |
+| &nbsp; &nbsp; ↳ Manipulasi Gambar | [Intervention Image](https://image.intervention.io/) |
 
 ---
 
-## 🛠️ Panduan Instalasi
+### 🛠️ Panduan Instalasi
 
 Ikuti langkah-langkah berikut untuk menjalankan proyek ini di lingkungan lokal Anda.
 
@@ -78,48 +89,48 @@ Ikuti langkah-langkah berikut untuk menjalankan proyek ini di lingkungan lokal A
 - Node.js & NPM
 - Database (MySQL/MariaDB)
 
-### Langkah-langkah Instalasi
+#### Langkah-langkah Instalasi
 
-1.  **Clone repository**
+1.  **Clone Repository**
     ```bash
     git clone https://github.com/username/esuka.git
     cd esuka
     ```
 
-2.  **Install dependensi PHP**
+2.  **Install Dependensi PHP**
     ```bash
     composer install
     ```
 
-3.  **Install dependensi JavaScript**
+3.  **Install Dependensi JavaScript**
     ```bash
     npm install
     ```
 
-4.  **Konfigurasi Environment**
+4.  **Konfigurasi Lingkungan (.env)**
     - Salin file `.env.example` menjadi `.env`.
       ```bash
       cp .env.example .env
       ```
-    - Buka file `.env` dan konfigurasikan koneksi database Anda (`DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`).
+    - Buka file `.env` dan atur koneksi database Anda (`DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`).
     - Atur `APP_URL` sesuai dengan URL lokal Anda.
 
-5.  **Generate Application Key**
+5.  **Generate Kunci Aplikasi**
     ```bash
     php artisan key:generate
     ```
 
-6.  **Jalankan Migrasi & Seeder Database**
+6.  **Jalankan Migrasi & Seeder**
     ```bash
     php artisan migrate --seed
     ```
 
-7.  **Buat Symbolic Link untuk Storage**
+7.  **Buat Symbolic Link**
     ```bash
     php artisan storage:link
     ```
 
-8.  **Build Aset Frontend**
+8.  **Build Aset Frontend (untuk produksi)**
     ```bash
     npm run build
     ```
@@ -142,9 +153,9 @@ Aplikasi sekarang seharusnya sudah bisa diakses di `http://127.0.0.1:8000`.
 
 ---
 
-## ⚙️ Alur Penggunaan
+### ⚙️ Alur Penggunaan
 
-### Alur Pengguna
+#### 👤 Alur Pengguna
 1.  **Registrasi**: Membuat akun baru melalui form pendaftaran.
 2.  **Aktivasi Akun**: Mengklik link aktivasi yang dikirimkan ke email.
 3.  **Login**: Masuk ke sistem menggunakan email dan password atau akun Google.
@@ -154,7 +165,7 @@ Aplikasi sekarang seharusnya sudah bisa diakses di `http://127.0.0.1:8000`.
 7.  **Tunggu Verifikasi**: Menunggu petugas memverifikasi data dan pembayaran.
 8.  **Unduh Barcode**: Jika disetujui, unduh barcode pendaftaran elektronik. Jika ditolak, perbaiki data sesuai catatan dari petugas.
 
-### Alur Admin/Petugas
+#### 👮 Alur Admin/Petugas
 1.  **Login**: Masuk ke panel administrator.
 2.  **Lihat Pengajuan**: Meninjau daftar surat kuasa yang masuk.
 3.  **Verifikasi**: Memeriksa kelengkapan dan keabsahan dokumen serta bukti pembayaran.
@@ -162,19 +173,19 @@ Aplikasi sekarang seharusnya sudah bisa diakses di `http://127.0.0.1:8000`.
 
 ---
 
-## 🤝 Kontribusi
+### 🤝 Kontribusi & Penggunaan
 
-Kontribusi sangat kami hargai. Jika Anda ingin berkontribusi, silakan fork repository ini dan buat pull request. Untuk perubahan besar, mohon buka issue terlebih dahulu untuk mendiskusikan apa yang ingin Anda ubah.
-
----
-
-## 📄 Lisensi
-
-Proyek ini dilisensikan di bawah Lisensi MIT.
+Proyek ini adalah perangkat lunak dengan hak milik **(proprietary software)**. Penggunaan, modifikasi, dan distribusi kode sumber hanya diizinkan dengan persetujuan tertulis dari pemilik hak cipta. Proyek ini tidak menerima kontribusi eksternal.
 
 ---
 
-## 🙏 Ucapan Terima Kasih
+### 📄 Lisensi
+
+Hak Cipta © 2021 Pengadilan Negeri Lubuk Pakam & Qori Chairawan. Semua Hak Dilindungi.
+
+---
+
+### 🙏 Ucapan Terima Kasih
 
 - **Pengadilan Negeri Lubuk Pakam** - Atas inisiasi dan dukungan penuh terhadap proyek ini.
 - **Direktorat Jenderal Badan Peradilan Umum** - Atas pengakuan dan penghargaan yang diberikan.

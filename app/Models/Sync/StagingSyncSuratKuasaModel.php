@@ -15,6 +15,7 @@ class StagingSyncSuratKuasaModel extends Model
     protected $fillable = [
         'source_id',
         'user_id',
+        'tanggal_daftar',
         'email',
         'nama_lengkap',
         'perihal',
@@ -37,9 +38,11 @@ class StagingSyncSuratKuasaModel extends Model
         'alamat_penerima',
         'photo_bukti',
         'status',
+        'tanggal_bayar',
         'keterangan',
         'panitera',
         'nomor_surat_kuasa',
+        'tanggal_disetujui',
         'klasifikasi',
     ];
 

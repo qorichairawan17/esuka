@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use App\Models\Profile\ProfileModel;
 use App\Models\Pengaturan\AplikasiModel;
+use App\Models\Pengguna\PaniteraModel;
 
 class DatabaseSeeder extends Seeder
 {
@@ -28,6 +29,7 @@ class DatabaseSeeder extends Seeder
             'tanggal_lahir' => '2000-07-17',
             'jenis_kelamin' => 'Laki-laki',
             'kontak' => '082366025464',
+            'alamat' => 'Jalan Jenderal Sudirman No. 58 Lubuk Pakam',
         ]);
 
         User::create([
@@ -37,7 +39,7 @@ class DatabaseSeeder extends Seeder
             'role' => \App\Enum\RoleEnum::Superadmin->value,
             'block' => '0',
             'profile_id' => $profile->id,
-            'profile_status' => '0'
+            'profile_status' => '1'
         ]);
 
         AplikasiModel::create([
@@ -56,6 +58,15 @@ class DatabaseSeeder extends Seeder
             'kontak' => '08238827272',
             'email' => 'pnlubukpakam@yahoo.co.id',
             'maintance' => '0',
+        ]);
+
+        PaniteraModel::create([
+            'nip' => '121441',
+            'nama' => 'Syawal Aswad Siregar, S.H.,M.Hum',
+            'jabatan' => 'Panitera',
+            'status' => \App\Enum\StatusPaniteraEnum::NonPlh->value,
+            'aktif' => '1',
+            'created_by' => '1'
         ]);
     }
 }

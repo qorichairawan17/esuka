@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('source_id')->unique();
             $table->unsignedBigInteger('user_id');
+            $table->timestamp('tanggal_daftar')->nullable();
             $table->string('email');
             $table->string('nama_lengkap')->nullable();
             $table->text('perihal');
@@ -35,11 +36,13 @@ return new class extends Migration
             $table->text('nama_penerima');
             $table->text('pekerjaan_penerima')->nullable();
             $table->text('alamat_penerima')->nullable();
-            $table->text('photo_bukti')->nullable();
+            $table->text('bukti_pembayaran')->nullable();
             $table->string('status')->nullable();
+            $table->timestamp('tanggal_bayar')->nullable();
             $table->text('keterangan')->nullable();
             $table->string('panitera')->nullable();
             $table->string('nomor_surat_kuasa')->nullable();
+            $table->timestamp('tanggal_disetujui')->nullable();
             $table->string('klasifikasi')->nullable();
             $table->timestamps();
         });

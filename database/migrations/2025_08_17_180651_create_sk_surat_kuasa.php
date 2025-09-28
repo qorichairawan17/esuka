@@ -38,7 +38,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('surat_kuasa_id');
             $table->uuid('uuid');
-            $table->string('tanggal_register');
+            $table->date('tanggal_register');
             $table->string('nomor_surat_kuasa');
             $table->unsignedBigInteger('approval_id');
             $table->unsignedBigInteger('panitera_id');
@@ -53,7 +53,7 @@ return new class extends Migration
         Schema::create('sk_pembayaran_surat_kuasa', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('surat_kuasa_id');
-            $table->string('tanggal_pembayaran');
+            $table->date('tanggal_pembayaran');
             $table->string('jenis_pembayaran');
             $table->text('bukti_pembayaran');
             $table->unsignedBigInteger('user_payment_id');

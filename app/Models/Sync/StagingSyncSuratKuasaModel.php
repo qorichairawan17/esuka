@@ -36,7 +36,7 @@ class StagingSyncSuratKuasaModel extends Model
         'nama_penerima',
         'pekerjaan_penerima',
         'alamat_penerima',
-        'photo_bukti',
+        'bukti_pembayaran',
         'status',
         'tanggal_bayar',
         'keterangan',

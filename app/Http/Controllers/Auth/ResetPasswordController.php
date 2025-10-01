@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auth;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Services\AuditTrailService;
 use App\Mail\ResetPasswordMail;
 use Illuminate\Http\JsonResponse;

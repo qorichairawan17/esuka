@@ -7,8 +7,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-5 col-md-5 mt-4 pt-2 mt-sm-0 pt-sm-0">
                     <div class="position-relative">
-                        <img src="{{ asset('assets/images/laptop.png') }}" class="rounded img-fluid mx-auto d-block"
-                            alt="">
+                        <img src="{{ asset('assets/images/dashboard-app.png') }}" class="rounded img-fluid mx-auto d-block" alt="">
                     </div>
                 </div>
 
@@ -57,8 +56,7 @@
 
                 <div class="col-lg-5 col-md-5 mt-4 pt-2 mt-sm-0 pt-sm-0">
                     <div class="position-relative">
-                        <img src="{{ asset('assets/images/sk-penetapan.jpg') }}" class="rounded img-fluid mx-auto d-block"
-                            alt="">
+                        <img src="{{ asset('assets/images/sk-penetapan.jpg') }}" class="rounded img-fluid mx-auto d-block" alt="">
                     </div>
                 </div>
 

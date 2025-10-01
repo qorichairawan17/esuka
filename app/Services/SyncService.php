@@ -14,7 +14,6 @@ use App\Enum\TahapanSuratKuasaEnum;
 use Illuminate\Support\Facades\Log;
 use App\Models\Profile\ProfileModel;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\Pengguna\PaniteraModel;
@@ -215,7 +214,7 @@ class SyncService
     /**
      * Reads a file from a local path, encrypts its content, and stores it in a new location.
      *
-     * @param string|null $sourcePath The relative path within the storage/app directory (e.g., 'private/staging/pdf/file.pdf').
+     * @param string|null $sourcePath The relative path within the storage/app directory (e.g., '/staging/pdf/file.pdf').
      * @param string $destinationPath The desired local path for the stored file (e.g., 'migrated_edocs/2023/10/file.pdf').
      * @return string|null The full local path to the stored file, or null if the source file doesn't exist or storage failed.
      */
@@ -309,13 +308,13 @@ class SyncService
                 // 2. Move and encrypt file from local storage
                 $filePaths = [];
                 $docMap = [
-                    'edoc_kartu_tanda_penduduk' => ['source_dir' => 'private/staging/pdf', 'prefix' => 'ktp'],
-                    'edoc_kartu_tanda_anggota' => ['source_dir' => 'private/staging/pdf', 'prefix' => 'kta'],
-                    'edoc_kartu_tanda_pegawai' => ['source_dir' => 'private/staging/pdf', 'prefix' => 'ktpp'],
-                    'edoc_berita_acara_sumpah' => ['source_dir' => 'private/staging/pdf', 'prefix' => 'bas'],
-                    'edoc_surat_tugas' => ['source_dir' => 'private/staging/pdf', 'prefix' => 'surat_tugas'],
-                    'edoc_surat_kuasa' => ['source_dir' => 'private/staging/pdf', 'prefix' => 'surat_kuasa'],
-                    'bukti_pembayaran' => ['source_dir' => 'private/staging/pembayaran', 'prefix' => 'bukti_pembayaran'],
+                    'edoc_kartu_tanda_penduduk' => ['source_dir' => 'staging/pdf', 'prefix' => 'ktp'],
+                    'edoc_kartu_tanda_anggota' => ['source_dir' => 'staging/pdf', 'prefix' => 'kta'],
+                    'edoc_kartu_tanda_pegawai' => ['source_dir' => 'staging/pdf', 'prefix' => 'ktpp'],
+                    'edoc_berita_acara_sumpah' => ['source_dir' => 'staging/pdf', 'prefix' => 'bas'],
+                    'edoc_surat_tugas' => ['source_dir' => 'staging/pdf', 'prefix' => 'surat_tugas'],
+                    'edoc_surat_kuasa' => ['source_dir' => 'staging/pdf', 'prefix' => 'surat_kuasa'],
+                    'bukti_pembayaran' => ['source_dir' => 'staging/pembayaran', 'prefix' => 'bukti_pembayaran'],
                 ];
 
                 foreach ($docMap as $field => $config) {
@@ -363,7 +362,7 @@ class SyncService
                         'tahapan' => $newStatus === StatusSuratKuasaEnum::Disetujui->value ? TahapanSuratKuasaEnum::Verifikasi->value : TahapanSuratKuasaEnum::Pendaftaran->value,
                         'status' => $newStatus,
                         'keterangan' => $item->keterangan,
-                        'pemohon' => $item->nama_lengkap,
+                        'pemohon' => $item->nama_lengkap ?? $item->email,
                         'created_at' => $item->tanggal_daftar ?? Carbon::now(), // Preserve original creation date
                         'updated_at' => $item->tanggal_daftar ?? Carbon::now(), // Preserve original update date
                     ]

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Pengguna;
 
 use Illuminate\Http\Request;
+use App\Services\PaniteraService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Services\AuditTrailService;
@@ -19,12 +20,13 @@ use Illuminate\Contracts\Encryption\DecryptException;
 
 class PaniteraController extends Controller
 {
-    protected $infoApp;
+    protected $infoApp, $paniteraService;
     public function __construct()
     {
         $this->infoApp = Cache::memo()->remember('infoApp', 60, function () {
             return AplikasiModel::first();
         });
+        $this->paniteraService = new PaniteraService();
     }
 
     private function breadCumb($parameters)
@@ -81,93 +83,13 @@ class PaniteraController extends Controller
         return view('admin.pengguna.panitera.form-panitera', $data);
     }
 
-    public function store(PaniteraRequest $request): JsonResponse
+    public function store(PaniteraRequest $request)
     {
-        $validatedData = $request->validated();
-        $id = null;
-
-        if ($request->filled('id')) {
-            try {
-                $id = Crypt::decrypt($request->input('id'));
-            } catch (DecryptException $e) {
-                return response()->json(['success' => false, 'message' => 'ID data tidak valid.'], 400);
-            }
-        }
-
-        DB::beginTransaction();
-        try {
-            if ($id) {
-                // Update existing record
-                $panitera = PaniteraModel::find($id);
-                if (!$panitera) {
-                    return response()->json(['success' => false, 'message' => 'Data panitera tidak ditemukan.'], 404);
-                }
-
-                // 1. Ambil data lama untuk audit trail
-                $oldData = $panitera->toArray();
-
-                // 2. Update data
-                $panitera->update($validatedData);
-
-                // 3. Catat audit trail dengan detail
-                $context = ['old' => $oldData, 'new' => $validatedData];
-                AuditTrailService::record('telah memperbarui data panitera: ' . $validatedData['nama'], $context);
-
-                $message = 'Data panitera berhasil diubah.';
-            } else {
-                // Create new record
-                $validatedData['created_by'] = Auth::id();
-                PaniteraModel::create($validatedData);
-
-                // Catat audit trail dengan detail
-                $context = ['old' => [], 'new' => $validatedData];
-                AuditTrailService::record('telah menambahkan data panitera: ' . $validatedData['nama'], $context);
-
-                $message = 'Data panitera berhasil ditambahkan.';
-            }
-
-            DB::commit();
-            return response()->json(['success' => true, 'message' => $message]);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Error saving panitera: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan pada server.'], 500);
-        }
+        return $this->paniteraService->store($request);
     }
 
-    public function destroy($id): JsonResponse
+    public function destroy($id)
     {
-        DB::beginTransaction();
-        try {
-            try {
-                $decryptedId = Crypt::decrypt($id);
-            } catch (DecryptException $e) {
-                Log::warning('Gagal mendekripsi ID panitera untuk dihapus: ' . $id, ['error' => $e->getMessage()]);
-                return response()->json(['success' => false, 'message' => 'ID data tidak valid.'], 400);
-            }
-
-            $panitera = PaniteraModel::find($decryptedId);
-
-            if (!$panitera) {
-                return response()->json(['success' => false, 'message' => 'Data panitera tidak ditemukan.'], 404);
-            }
-
-            // Ambil data sebelum dihapus untuk audit trail
-            $oldData = $panitera->toArray();
-            $paniteraName = $panitera->nama;
-
-            // Catat audit trail dengan detail
-            $context = ['old' => $oldData, 'new' => []];
-            AuditTrailService::record('telah menghapus data panitera: ' . $paniteraName, $context);
-
-            $panitera->delete();
-            DB::commit();
-
-            return response()->json(['success' => true, 'message' => 'Data panitera berhasil dihapus.']);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Error deleting panitera: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan pada server.'], 500);
-        }
+        return $this->paniteraService->destroy($id);
     }
 }

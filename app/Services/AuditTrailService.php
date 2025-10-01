@@ -23,13 +23,10 @@ class AuditTrailService
             $currentUser = $user ?? Auth::user();
 
             if (!$currentUser) {
-                // Log a warning if no user context can be determined.
-                // This might happen for system actions or unauthenticated routes where a user isn't passed.
                 Log::warning('AuditTrailService::record called without a user context.');
                 return null;
             }
 
-            // Build a detailed payload message
             $payload = "{$currentUser->name} {$action} pada " . now()->format('d F Y, h:i A') . ".";
 
             $oldValues = $context['old'] ?? [];

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pengaturan;
 
+use App\Services\AplikasiService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Services\AuditTrailService;
@@ -19,9 +20,10 @@ use App\Http\Requests\Pengaturan\PejabatStrukturalRequest;
 
 class AplikasiController extends Controller
 {
-    protected $infoApp;
+    protected $infoApp, $aplikasiService;
     public function __construct()
     {
+        $this->aplikasiService = new AplikasiService();
         $this->infoApp = Cache::memo()->remember('infoApp', 60, function () {
             return AplikasiModel::first();
         });
@@ -50,58 +52,10 @@ class AplikasiController extends Controller
         return view('admin.pengaturan.aplikasi', $data);
     }
 
-    public function storeAplikasi(AplikasiRequest $request): JsonResponse|RedirectResponse
+    public function storeAplikasi(AplikasiRequest $request)
     {
-        $validatedData = $request->validated();
-        $aplikasi = AplikasiModel::find(1);
-        $oldData = $aplikasi ? $aplikasi->toArray() : [];
-        $newLogoPath = null;
-
-        DB::beginTransaction();
-        try {
-            if ($request->hasFile('logo')) {
-                $newLogoPath = $request->file('logo')->store('logo', 'public');
-                $validatedData['logo'] = $newLogoPath;
-            }
-
-            $record = AplikasiModel::updateOrCreate(['id' => 1], $validatedData);
-
-            if ($newLogoPath && ($oldData['logo'] ?? null)) {
-                Storage::disk('public')->delete($oldData['logo']);
-            }
-
-            DB::commit();
-
-            Cache::forget('infoApp');
-
-            $action = $record->wasRecentlyCreated ? 'menambahkan' : 'memperbarui';
-            $message = $record->wasRecentlyCreated ? 'Data berhasil disimpan.' : 'Data berhasil diubah.';
-
-            if ($request->wantsJson()) {
-                return response()->json(['success' => true, 'message' => $message]);
-            }
-
-            $context = [
-                'old' => $oldData,
-                'new' => $record->toArray(),
-            ];
-            AuditTrailService::record("telah {$action} pengaturan aplikasi", $context);
-            return back()->with('success', $message);
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            if ($newLogoPath) {
-                Storage::disk('public')->delete($newLogoPath);
-            }
-
-            Log::error('Gagal menyimpan pengaturan aplikasi: ' . $e->getMessage());
-
-            if ($request->wantsJson()) {
-                return response()->json(['success' => false, 'message' => 'Terjadi kesalahan saat menyimpan data.'], 500);
-            }
-
-            return back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
-        }
+        $request->validated();
+        return $this->aplikasiService->storeApp($request);
     }
 
     public function pembayaran()
@@ -121,74 +75,9 @@ class AplikasiController extends Controller
         return view('admin.pengaturan.pembayaran-pnbp', $data);
     }
 
-    public function storePembayaran(PembayaranPnbpRequest $request): JsonResponse|RedirectResponse
+    public function storePembayaran(PembayaranPnbpRequest $request)
     {
-        $validatedData = $request->validated();
-        $pembayaran = PembayaranPnbpModel::find(1);
-        $oldData = $pembayaran ? $pembayaran->toArray() : [];
-        $newLogoBankPath = null;
-        $newQrisPath = null;
-
-        DB::beginTransaction();
-        try {
-            $dataToUpdate = [
-                'nama_bank' => $validatedData['namaBank'],
-                'nomor_rekening' => $validatedData['nomorRekening'],
-            ];
-
-            if ($request->hasFile('logoBank')) {
-                $newLogoBankPath = $request->file('logoBank')->store('pengaturan/pembayaran', 'public');
-                $dataToUpdate['logo_bank'] = $newLogoBankPath;
-            }
-
-            if ($request->hasFile('qris')) {
-                $newQrisPath = $request->file('qris')->store('pengaturan/pembayaran', 'public');
-                $dataToUpdate['qris'] = $newQrisPath;
-            }
-
-            $record = PembayaranPnbpModel::updateOrCreate(['id' => 1], $dataToUpdate);
-
-            if ($newLogoBankPath && ($oldData['logo_bank'] ?? null)) {
-                Storage::disk('public')->delete($oldData['logo_bank']);
-            }
-
-            if ($newQrisPath && ($oldData['qris'] ?? null)) {
-                Storage::disk('public')->delete($oldData['qris']);
-            }
-
-            DB::commit();
-
-            $action = $record->wasRecentlyCreated ? 'menambahkan' : 'memperbarui';
-            $message = $record->wasRecentlyCreated ? 'Data berhasil disimpan.' : 'Data berhasil diubah.';
-
-            if ($request->wantsJson()) {
-                return response()->json(['success' => true, 'message' => $message]);
-            }
-
-            $context = [
-                'old' => $oldData,
-                'new' => $record->toArray(),
-            ];
-            AuditTrailService::record("telah {$action} pengaturan pembayaran & PNBP", $context);
-            return back()->with('success', $message);
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            if ($newLogoBankPath) {
-                Storage::disk('public')->delete($newLogoBankPath);
-            }
-            if ($newQrisPath) {
-                Storage::disk('public')->delete($newQrisPath);
-            }
-
-            Log::error('Gagal menyimpan pengaturan pembayaran dan PNBP: ' . $e->getMessage());
-
-            if ($request->wantsJson()) {
-                return response()->json(['success' => false, 'message' => 'Terjadi kesalahan saat menyimpan data.'], 500);
-            }
-
-            return back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
-        }
+        return $this->aplikasiService->storePayment($request);
     }
 
     public function pejabatStruktural()
@@ -208,69 +97,8 @@ class AplikasiController extends Controller
         return view('admin.pengaturan.pejabat-struktural', $data);
     }
 
-    public function storePejabatStruktural(PejabatStrukturalRequest $request): JsonResponse|RedirectResponse
+    public function storePejabatStruktural(PejabatStrukturalRequest $request)
     {
-        $validatedData = $request->validated();
-        $pejabat = PejabatStrukturalModel::find(1);
-        $oldData = $pejabat ? $pejabat->toArray() : [];
-
-        $dataToUpdate = [
-            'ketua' => $validatedData['ketua'],
-            'wakil_ketua' => $validatedData['wakil_ketua'],
-            'panitera' => $validatedData['panitera'],
-            'sekretaris' => $validatedData['sekretaris'],
-        ];
-
-        $newlyUploadedPaths = [];
-
-        DB::beginTransaction();
-        try {
-            $officials = ['ketua', 'wakil_ketua', 'panitera', 'sekretaris'];
-            foreach ($officials as $official) {
-                $fileKey = 'foto_' . $official;
-                if ($request->hasFile($fileKey)) {
-                    $path = $request->file($fileKey)->store('pengaturan/pejabat', 'public');
-                    $dataToUpdate[$fileKey] = $path;
-                    $newlyUploadedPaths[$fileKey] = $path;
-                }
-            }
-
-            $record = PejabatStrukturalModel::updateOrCreate(['id' => 1], $dataToUpdate);
-
-            foreach ($newlyUploadedPaths as $key => $path) {
-                if (isset($oldData[$key]) && $oldData[$key]) {
-                    Storage::disk('public')->delete($oldData[$key]);
-                }
-            }
-
-            DB::commit();
-
-            $action = $record->wasRecentlyCreated ? 'menambahkan' : 'memperbarui';
-            $message = $record->wasRecentlyCreated ? 'Data berhasil disimpan.' : 'Data berhasil diubah.';
-
-            if ($request->wantsJson()) {
-                return response()->json(['success' => true, 'message' => $message]);
-            }
-            $context = [
-                'old' => $oldData,
-                'new' => $record->toArray(),
-            ];
-            AuditTrailService::record("telah {$action} pengaturan pejabat struktural", $context);
-            return back()->with('success', $message);
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            foreach ($newlyUploadedPaths as $path) {
-                Storage::disk('public')->delete($path);
-            }
-
-            Log::error('Gagal menyimpan data pejabat struktural: ' . $e->getMessage());
-
-            if ($request->wantsJson()) {
-                return response()->json(['success' => false, 'message' => 'Terjadi kesalahan saat menyimpan data.'], 500);
-            }
-
-            return back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
-        }
+        return $this->aplikasiService->storePejabatStruktural($request);
     }
 }

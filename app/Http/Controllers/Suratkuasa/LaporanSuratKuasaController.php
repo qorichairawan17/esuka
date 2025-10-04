@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Suratkuasa;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Pengaturan\AplikasiModel;

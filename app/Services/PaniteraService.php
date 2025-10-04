@@ -11,8 +11,25 @@ use Illuminate\Support\Facades\Crypt;
 use App\Models\Pengguna\PaniteraModel;
 use Illuminate\Contracts\Encryption\DecryptException;
 
+/**
+ * Class PaniteraService
+ *
+ * This service handles the business logic for managing panitera data.
+ * It includes creating, updating, and deleting panitera records,
+ * and recording audit trails for these actions.
+ */
 class PaniteraService
 {
+    /**
+     * Store or update a panitera record.
+     *
+     * This method handles both the creation of a new panitera and the update
+     * of an existing one. It validates the request data and records detailed
+     * audit trails for changes.
+     *
+     * @param \Illuminate\Http\Request $request The request object containing panitera data.
+     * @return \Illuminate\Http\JsonResponse A JSON response indicating the success or failure of the operation.
+     */
     public function store($request): JsonResponse
     {
         $validatedData = $request->validated();
@@ -59,6 +76,15 @@ class PaniteraService
         }
     }
 
+    /**
+     * Delete a panitera record.
+     *
+     * This method deletes a panitera. It ensures that the action is recorded
+     * in the audit trail before deleting the data.
+     *
+     * @param string $id The encrypted ID of the panitera to be deleted.
+     * @return \Illuminate\Http\JsonResponse A JSON response indicating the success or failure of the operation.
+     */
     public function destroy($id): JsonResponse
     {
         DB::beginTransaction();

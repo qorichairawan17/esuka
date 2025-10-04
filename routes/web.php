@@ -61,6 +61,7 @@ Route::prefix('surat-kuasa')->middleware([AuthMiddleware::class, CompleteProfile
         Route::post('/store', 'store')->name('surat-kuasa.store');
         Route::post('/update/{id}', 'update')->name('surat-kuasa.update');
         Route::delete('/destroy/{id}', 'destroy')->name('surat-kuasa.destroy');
+        Route::delete('/destroy-rejected', 'destroyRejected')->name('surat-kuasa.destroy-rejected');
 
         Route::get('/download/{path}', 'downloadFile')->name('surat-kuasa.download');
         Route::get('/doc/preview/{id}/{jenis_dokumen}', 'previewFile')->name('surat-kuasa.preview-file');

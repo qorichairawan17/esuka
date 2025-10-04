@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('id_daftar')->index();
             $table->date('tanggal_daftar');
+            $table->unsignedBigInteger('migrated_from_id')->nullable()->comment('ID dari sistem lama jika ada')->index();
             $table->text('perihal');
             $table->enum('jenis_surat', ['Pidana', 'Perdata']);
             $table->string('klasifikasi');
@@ -82,6 +83,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sk_surat_kuasa');
+        Schema::dropIfExists('sk_pendaftaran_surat_kuasa');
+        Schema::dropIfExists('sk_register_surat_kuasa');
+        Schema::dropIfExists('sk_pembayaran_surat_kuasa');
+        Schema::dropIfExists('sk_pihak_surat_kuasa');
     }
 };

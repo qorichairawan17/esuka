@@ -60,13 +60,23 @@ class DatabaseSeeder extends Seeder
             'maintance' => '0',
         ]);
 
-        PaniteraModel::create([
-            'nip' => '121441',
-            'nama' => 'Syawal Aswad Siregar, S.H.,M.Hum',
-            'jabatan' => 'Panitera',
-            'status' => \App\Enum\StatusPaniteraEnum::NonPlh->value,
-            'aktif' => '1',
-            'created_by' => '1'
+        PaniteraModel::insert([
+            [
+                'nip' => '121441',
+                'nama' => 'Syawal Aswad Siregar, S.H.,M.Hum',
+                'jabatan' => 'Panitera',
+                'status' => \App\Enum\StatusPaniteraEnum::NonPlh->value,
+                'aktif' => '1',
+                'created_by' => '1'
+            ],
+            [
+                'nip' => '121442',
+                'nama' => 'Dedy Anthony, SH,MH',
+                'jabatan' => 'Panitera Muda Pidana',
+                'status' => \App\Enum\StatusPaniteraEnum::Plh->value,
+                'aktif' => '1',
+                'created_by' => '1'
+            ]
         ]);
     }
 }

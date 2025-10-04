@@ -26,6 +26,10 @@
                                         </a>
                                     </div>
                                 </div>
+                            @else
+                                <button class="btn btn-sm btn-soft-danger" id="hapus-surat-kuasa-ditolak">
+                                    Hapus Surat Kuasa Ditolak
+                                </button>
                             @endif
                         </div>
                         <div class="card-body">
@@ -47,6 +51,42 @@
     {!! $dataTable->scripts(attributes: ['type' => 'module']) !!}
     @if (Auth::user()->role != \App\Enum\RoleEnum::User->value)
         <script type="text/javascript">
+            document.getElementById('hapus-surat-kuasa-ditolak').addEventListener('click', async function() {
+                const result = await Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Semua surat kuasa yang ditolak akan dihapus secara permanen!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, hapus semua!',
+                    cancelButtonText: 'Batal'
+                });
+
+                if (result.isConfirmed) {
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                    try {
+                        const response = await fetch('{{ route('surat-kuasa.destroy-rejected') }}', {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        const data = await response.json();
+                        if (data.success) {
+                            await Swal.fire('Berhasil!', data.message, 'success');
+                            window.LaravelDataTables['pendaftaransuratkuasa-table'].ajax.reload();
+                        } else {
+                            Swal.fire('Gagal!', data.message || 'Terjadi kesalahan saat menghapus data.', 'error');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        Swal.fire('Oops', 'Terjadi kesalahan.', 'error');
+                    }
+                }
+            });
+
             window.deleteData = async function(url) {
                 const result = await Swal.fire({
                     title: 'Apakah Anda yakin?',

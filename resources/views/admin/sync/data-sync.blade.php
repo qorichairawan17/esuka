@@ -185,6 +185,7 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        progressBar.find('small').text('Migrasi sedang berjalan, mohon tunggu...');
                         progressBar.show();
                         $('#sinkronisasi, #deleteSinkronisasi, #migrasi').prop('disabled', true);
 

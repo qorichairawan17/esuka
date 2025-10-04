@@ -60,11 +60,6 @@ class SyncSuratKuasaController extends Controller
         return $this->syncService->fetchData($request->klasifikasi);
     }
 
-    public function fetchEdoc(Request $request)
-    {
-        return $this->syncService->fetchEdoc($request->klasifikasi);
-    }
-
     public function destroy()
     {
         return $this->syncService->fetchDelete();
@@ -73,21 +68,8 @@ class SyncSuratKuasaController extends Controller
     public function migrate(): JsonResponse
     {
         try {
-            $results = $this->syncService->migrateStagingData();
-
-            if ($results['failed_count'] > 0) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "Migrasi selesai dengan {$results['migrated_count']} data berhasil dan {$results['failed_count']} data gagal. Silakan cek log untuk detail.",
-                    'results' => $results
-                ], 500);
-            }
-
-            return response()->json([
-                'success' => true,
-                'message' => "Migrasi {$results['migrated_count']} data berhasil diselesaikan.",
-                'results' => $results
-            ]);
+            $response = $this->syncService->migrateStagingData();
+            return response()->json($response);
         } catch (\Exception $e) {
             Log::error('Error during bulk staging data migration: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return response()->json([

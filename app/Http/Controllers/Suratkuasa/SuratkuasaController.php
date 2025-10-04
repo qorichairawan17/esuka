@@ -717,4 +717,54 @@ class SuratkuasaController extends Controller
             return response()->json(['success' => false, 'message' => 'Terjadi kesalahan pada server.'], 500);
         }
     }
+
+    public function destroyRejected(): JsonResponse
+    {
+        DB::beginTransaction();
+        try {
+            $ditolakSuratKuasa = PendaftaranSuratKuasaModel::where('status', \App\Enum\StatusSuratKuasaEnum::Ditolak->value)->get();
+
+            if ($ditolakSuratKuasa->isEmpty()) {
+                return response()->json(['success' => false, 'message' => 'Tidak ada surat kuasa ditolak yang ditemukan.'], 404);
+            }
+
+            $fileFields = [
+                'file_surat_kuasa',
+                'file_identitas_pemberi',
+                'file_identitas_penerima',
+                'file_berita_acara_sumpah',
+                'file_surat_keterangan_organisasi'
+            ];
+
+            foreach ($ditolakSuratKuasa as $suratKuasa) {
+                // Delete associated files
+                foreach ($fileFields as $field) {
+                    if ($suratKuasa->$field && Storage::disk('local')->exists($suratKuasa->$field)) {
+                        Storage::disk('local')->delete($suratKuasa->$field);
+                    }
+                }
+
+                // Delete related parties
+                $suratKuasa->pihak()->delete();
+
+                // Delete the main record
+                $suratKuasa->delete();
+            }
+
+            $deletedIds = $ditolakSuratKuasa->pluck('id_daftar')->implode(', ');
+            $context = [
+                'old' => ['deleted_ids' => $deletedIds],
+                'new' => [],
+            ];
+            AuditTrailService::record('telah menghapus semua pendaftaran surat kuasa yang ditolak', $context);
+
+            DB::commit();
+
+            return response()->json(['success' => true, 'message' => 'Semua pendaftaran surat kuasa yang ditolak berhasil dihapus.'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error deleting rejected surat kuasa: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan saat menghapus data.'], 500);
+        }
+    }
 }

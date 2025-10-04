@@ -18,6 +18,7 @@ class PendaftaranSuratKuasaModel extends Model
     protected $fillable = [
         'id_daftar',
         'tanggal_daftar',
+        'migrated_from_id',
         'perihal',
         'jenis_surat',
         'klasifikasi',

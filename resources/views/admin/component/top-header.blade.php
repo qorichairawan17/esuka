@@ -80,7 +80,7 @@
                                 class="avatar avatar-md-sm rounded-circle border shadow" alt="">
                             <div class="flex-1 ms-2">
                                 <span class="d-block">{{ Auth::user()->name }}</span>
-                                <small class="text-muted">{{ Auth::user()->email }}</small>
+                                <small class="text-muted">{{ Auth::user()->role }}</small>
                             </div>
                         </a>
                         <a class="dropdown-item text-dark" href="{{ route('profile.index') }}">

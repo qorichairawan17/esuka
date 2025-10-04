@@ -20,7 +20,7 @@
                     <tr>
                         <td style="padding: 15px 24px 15px;text-align: justify;">
                             Kamu sebelumnya telah terdaftar pada layanan {{ config('app.name') }} versi lama, untuk itu silahkan untuk reaktivasi akun Kamu dan gunakan Password baru kamu :
-                            {{ $newPassword ?? '**********' }} untuk masuk kedalam aplikasi. Harap jangan membagikan kepada siapapun Password ini !.
+                            <b>{{ $newPassword ?? '**********' }}</b> untuk masuk kedalam aplikasi. Harap jangan membagikan kepada siapapun Password ini !.
                         </td>
                     </tr>
                 @endif

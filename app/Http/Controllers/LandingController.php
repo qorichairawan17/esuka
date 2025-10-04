@@ -14,14 +14,13 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class LandingController extends Controller
 {
-    protected $infoApp, $landingHelper;
-    public function __construct()
+    protected $infoApp;
+
+    public function __construct(protected LandingHelper $landingHelper)
     {
         $this->infoApp = Cache::memo()->remember('infoApp', 60, function () {
             return AplikasiModel::first();
         });
-
-        $this->landingHelper = new LandingHelper();
     }
 
     public function index()

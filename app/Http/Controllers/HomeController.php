@@ -9,14 +9,12 @@ use App\Models\Pengaturan\AplikasiModel;
 
 class HomeController extends Controller
 {
-    protected $infoApp, $homeHelper;
-    public function __construct()
+    protected $infoApp;
+    public function __construct(protected HomeHelper $homeHelper)
     {
         $this->infoApp = Cache::memo()->remember('infoApp', 60, function () {
             return AplikasiModel::first();
         });
-
-        $this->homeHelper = new HomeHelper();
     }
 
     private function breadCumb($parameters)

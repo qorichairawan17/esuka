@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Services\ResetPasswordService;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\SendResetLinkRequest;
 
 class ResetPasswordController extends Controller
 {
-    protected $resetPasswordService;
-    public function __construct()
+    public function __construct(protected ResetPasswordService $resetPasswordService)
     {
-        $this->resetPasswordService = new \App\Services\ResetPasswordService();
+        //
     }
 
     public function index()

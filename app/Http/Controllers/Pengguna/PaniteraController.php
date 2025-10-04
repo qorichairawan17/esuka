@@ -4,29 +4,22 @@ namespace App\Http\Controllers\Pengguna;
 
 use Illuminate\Http\Request;
 use App\Services\PaniteraService;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
-use App\Services\AuditTrailService;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use App\DataTables\PaniteraDataTable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\Pengguna\PaniteraModel;
 use App\Models\Pengaturan\AplikasiModel;
 use App\Http\Requests\Pengguna\PaniteraRequest;
-use Illuminate\Contracts\Encryption\DecryptException;
 
 class PaniteraController extends Controller
 {
-    protected $infoApp, $paniteraService;
-    public function __construct()
+    protected $infoApp;
+    public function __construct(protected PaniteraService $paniteraService)
     {
         $this->infoApp = Cache::memo()->remember('infoApp', 60, function () {
             return AplikasiModel::first();
         });
-        $this->paniteraService = new PaniteraService();
     }
 
     private function breadCumb($parameters)

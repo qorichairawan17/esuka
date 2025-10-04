@@ -16,6 +16,7 @@ use App\Models\Suratkuasa\PendaftaranSuratKuasaModel;
 class PembayaranController extends Controller
 {
     protected $infoApp;
+
     public function __construct(protected PaymentService $paymentService)
     {
         $this->infoApp = Cache::memo()->remember('infoApp', 60, function () {

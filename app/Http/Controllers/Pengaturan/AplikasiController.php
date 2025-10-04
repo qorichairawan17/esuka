@@ -3,14 +3,8 @@
 namespace App\Http\Controllers\Pengaturan;
 
 use App\Services\AplikasiService;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
-use App\Services\AuditTrailService;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Pengaturan\AplikasiModel;
 use App\Models\Pengaturan\PembayaranPnbpModel;
 use App\Http\Requests\Pengaturan\AplikasiRequest;
@@ -20,10 +14,10 @@ use App\Http\Requests\Pengaturan\PejabatStrukturalRequest;
 
 class AplikasiController extends Controller
 {
-    protected $infoApp, $aplikasiService;
-    public function __construct()
+    protected $infoApp;
+
+    public function __construct(protected AplikasiService $aplikasiService)
     {
-        $this->aplikasiService = new AplikasiService();
         $this->infoApp = Cache::memo()->remember('infoApp', 60, function () {
             return AplikasiModel::first();
         });

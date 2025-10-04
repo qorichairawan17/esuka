@@ -15,14 +15,12 @@ use App\Http\Requests\Pengguna\AdvokatRequest;
 
 class AdvokatNonAdvokatController extends Controller
 {
-    protected $infoApp, $advokatNonAdvokatService;
-    public function __construct()
+    protected $infoApp;
+    public function __construct(protected AdvokatNonAdvokatService $advokatNonAdvokatService)
     {
         $this->infoApp = Cache::memo()->remember('infoApp', 60, function () {
             return AplikasiModel::first();
         });
-
-        $this->advokatNonAdvokatService = new AdvokatNonAdvokatService();
     }
 
     private function breadCumb($parameters)

@@ -11,13 +11,12 @@ use App\Models\Pengaturan\AplikasiModel;
 
 class TestimoniController extends Controller
 {
-    protected $infoApp, $testimoniService;
-    public function __construct()
+    protected $infoApp;
+    public function __construct(protected TestimoniService $testimoniService)
     {
         $this->infoApp = Cache::memo()->remember('infoApp', 60, function () {
             return AplikasiModel::first();
         });
-        $this->testimoniService = new TestimoniService();
     }
 
     private function breadCumb($parameters)

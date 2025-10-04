@@ -15,14 +15,13 @@ use App\Http\Requests\Pengguna\AdministratorRequest;
 
 class AdministratorController extends Controller
 {
-    protected $infoApp, $administratorService;
+    protected $infoApp;
 
-    public function __construct()
+    public function __construct(protected AdministratorService $administratorService)
     {
         $this->infoApp = Cache::memo()->remember('infoApp', 60, function () {
             return AplikasiModel::first();
         });
-        $this->administratorService = new AdministratorService();
     }
 
     private function breadCumb($parameters)

@@ -13,12 +13,10 @@ use App\Models\Pengaturan\AplikasiModel;
 
 class SyncSuratKuasaController extends Controller
 {
-    private $infoApp, $syncService;
+    private $infoApp;
 
-    public function __construct()
+    public function __construct(protected SyncService $syncService)
     {
-        $this->syncService = new SyncService();
-
         $this->infoApp = Cache::memo()->remember('infoApp', 60, function () {
             return AplikasiModel::first();
         });

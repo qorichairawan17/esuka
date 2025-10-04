@@ -13,15 +13,13 @@ use App\Http\Requests\Profile\UpdatePasswordRequest;
 
 class ProfileController extends Controller
 {
-    protected $infoApp, $profileService;
+    protected $infoApp;
 
-    public function __construct()
+    public function __construct(protected ProfileService $profileService)
     {
         $this->infoApp = Cache::memo()->remember('infoApp', 60, function () {
             return AplikasiModel::first();
         });
-
-        $this->profileService = new ProfileService();
     }
 
     private function breadCumb($parameters)

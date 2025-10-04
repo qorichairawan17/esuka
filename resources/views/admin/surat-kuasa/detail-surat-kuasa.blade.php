@@ -42,8 +42,8 @@
                                             <h6>ID Pendaftaran</h6>
                                             <p>{{ $suratKuasa->id_daftar }}</p>
                                             <h6>Tanggal Pendaftaran</h6>
-                                            <p>{{ \Carbon\Carbon::parse($suratKuasa->tanggal_daftar)->format('d-m-Y') }} -
-                                                {{ $suratKuasa->migrated_from_id ? \Carbon\Carbon::parse($suratKuasa->created_at)->diffForHumans() : '' }}
+                                            <p>{{ \Carbon\Carbon::parse($suratKuasa->tanggal_daftar)->format('d-m-Y') }}
+                                                {{ $suratKuasa->migrated_from_id ? '' : \Carbon\Carbon::parse($suratKuasa->created_at)->diffForHumans() }}
                                             </p>
                                             @if ($suratKuasa->register)
                                                 <h6>Nomor Surat Kuasa</h6>
@@ -54,7 +54,7 @@
                                             <h6>Email</h6>
                                             <p>{{ $suratKuasa->user->email }}</p>
                                             <h6>No. Whatsapp</h6>
-                                            <p>{{ $suratKuasa->user->profile->kontak ?? '' }}</p>
+                                            <p>{{ $suratKuasa->user->profile->kontak ?? '-' }}</p>
                                             <h6>Perihal Surat Kuasa</h6>
                                             <p>{{ $suratKuasa->perihal }}</p>
                                             <h6>Jenis Surat Kuasa</h6>

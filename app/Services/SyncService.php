@@ -329,6 +329,7 @@ class SyncService
                     'role' => RoleEnum::User->value,
                     'profile_status' => '0',
                     'profile_id' => $profile->id,
+                    'privacy_policy_agreed_at' => Carbon::now(),
                 ]);
                 Log::info("Created new user with profile during migration: {$user->email}");
             }

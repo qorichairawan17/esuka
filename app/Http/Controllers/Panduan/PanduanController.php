@@ -70,8 +70,13 @@ class PanduanController extends Controller
             throw new \Exception("Pastikan Anda sudah menjalankan 'composer require league/commonmark'", 500, $e);
         }
 
+        // Get the last part of slug for title
+        $slugParts = explode('/', $slug);
+        $lastSlug = end($slugParts);
+        $convertTitle = $lastSlug === 'home' ? 'Panduan Penggunaan' : Str::title(str_replace('-', ' ', $lastSlug));
+
         $data = [
-            'title' => 'Panduan - ' . config('app.name'),
+            'title' => $convertTitle . ' - ' . config('app.name'),
             'pageTitle' => config('app.name'),
             'breadCumb' => $this->breadCumb($slug),
             'infoApp' => $this->infoApp,

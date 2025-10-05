@@ -10,7 +10,6 @@
                  </span>
              </a>
          </div>
-
          <ul class="sidebar-menu">
              <li class="sidebar">
                  <a href="{{ route('panduan.show') }}">
@@ -21,12 +20,11 @@
                  <a href="javascript:void(0)"><i class="ti ti-user me-2"></i>Panduan Akun</a>
                  <div class="sidebar-submenu">
                      <ul>
-                         <li><a href="{{ route('panduan.show', 'akun/register-email') }}">Daftar Dengan Email</a></li>
-                         <li><a href="{{ route('panduan.show', 'akun/register-google') }}">Daftar Dengan Google</a></li>
+                         <li><a href="{{ route('panduan.show', 'akun/daftar-dengan-email') }}">Daftar Dengan Email</a></li>
+                         <li><a href="{{ route('panduan.show', 'akun/daftar-dengan-google') }}">Daftar Dengan Google</a></li>
                          <li><a href="{{ route('panduan.show', 'akun/lupa-password') }}">Lupa Password</a></li>
                          <li><a href="{{ route('panduan.show', 'akun/menghapus-akun') }}">Menghapus Akun</a></li>
                          <li><a href="{{ route('panduan.show', 'akun/tautkan-google') }}">Tautkan Akun Dengan Google</a></li>
-
                      </ul>
                  </div>
              </li>
@@ -48,7 +46,7 @@
      <ul class="sidebar-footer list-unstyled mb-0">
          <li class="list-inline-item mb-0">
              <a href="https://wa.me/{{ $infoApp->kontak }}" target="_blank" class="btn btn-icon btn-soft-light">
-                 <i class="ti ti-headphone-alt"></i>
+                 <i class="fa fa-phone-alt"></i>
              </a>
              <small class="text-muted fw-medium ms-1">
                  Layanan Bantuan

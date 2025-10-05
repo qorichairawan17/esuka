@@ -10,17 +10,16 @@
         </div>
     </div>
 
-    <section class="bg-home d-flex align-items-center">
-        <div class="container">
+    <section class="d-flex align-items-center">
+        <div class="container-fluid">
             <div class="row align-items-center">
-                <div class="col-lg-7 col-md-12 com-sm-12 d-none d-lg-block">
-                    <div class="me-lg-5">
-                        <img onclick="window.location='{{ route('app.home') }}'" src="{{ asset('icons/horizontal-e-suka.png') }}" class="img-fluid d-block mx-auto" alt="logo">
-                    </div>
+                <div class="col-lg-8 d-none d-lg-block" style="background-image: url('{{ asset('assets/images/model-3.jpeg') }}'); background-size: cover; background-position: center; height: 100vh;">
                 </div>
-                <div class="col-lg-5 col-md-12 com-sm-12">
-                    <div class="card login-page shadow rounded border-0">
+                <div class="col-lg-4 col-md-12 col-sm-12">
+                    <div class="card login-page rounded border-0">
                         <div class="card-body">
+                            <img onclick="window.location='{{ route('app.home') }}'" src="{{ asset('icons/horizontal-e-suka.png') }}" class="img-fluid d-block mx-auto d-lg-none mb-4" alt="logo"
+                                style="max-height: 50px; cursor: pointer;">
                             <h4 class="card-title text-center m-0">Login</h4>
                             <p class="text-center">{{ config('app.name') }}</p>
                             <form class="login-form mt-4" id="login-form">

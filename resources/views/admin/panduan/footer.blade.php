@@ -39,6 +39,40 @@
     </script>
 @endif
 @stack('scripts')
+<script>
+    function searchTopics() {
+        const input = document.getElementById('s');
+        const filter = input.value.toLowerCase();
+
+        const menu = document.getElementById('panduan-menu');
+        const listItems = menu.getElementsByTagName('li');
+
+        for (let i = 0; i < listItems.length; i++) {
+            const a = listItems[i].getElementsByTagName('a')[0];
+            if (a) {
+                const txtValue = a.textContent || a.innerText;
+                if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                    listItems[i].style.display = "";
+                } else {
+                    listItems[i].style.display = "none";
+                }
+            }
+        }
+
+        const dropdowns = menu.getElementsByClassName('sidebar-dropdown');
+        for (let i = 0; i < dropdowns.length; i++) {
+            const submenuItems = dropdowns[i].querySelectorAll('.sidebar-submenu li');
+            let hasVisibleChild = false;
+            submenuItems.forEach(item => {
+                if (item.style.display !== 'none') {
+                    hasVisibleChild = true;
+                }
+            });
+
+            dropdowns[i].style.display = hasVisibleChild ? "" : (filter ? "none" : "");
+        }
+    }
+</script>
 </body>
 
 </html>

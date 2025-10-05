@@ -16,8 +16,7 @@
                 <div id="search" class="menu-search mb-0">
                     <form role="search" method="get" id="searchform" class="searchform">
                         <div>
-                            <input type="text" class="form-control border rounded" name="s" id="s" placeholder="Cari Topik...">
-                            <input type="submit" id="searchsubmit" value="Search">
+                            <input type="text" class="form-control border rounded w-100" autocomplete="off" name="s" id="s" placeholder="Cari Topik..." onkeyup="searchTopics()">
                         </div>
                     </form>
                 </div>

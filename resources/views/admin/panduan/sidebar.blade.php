@@ -10,7 +10,7 @@
                  </span>
              </a>
          </div>
-         <ul class="sidebar-menu">
+         <ul class="sidebar-menu" id="panduan-menu">
              <li class="sidebar">
                  <a href="{{ route('panduan.show') }}">
                      <i class="ti ti-home me-2"></i>Home

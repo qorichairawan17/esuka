@@ -37,7 +37,7 @@
                 <li><a href="{{ route('app.home') }}" class="sub-menu-item active">Beranda</a></li>
                 <li><a href="{{ route('app.about') }}" class="has-submenu parent-parent-menu-item">Tentang</a></li>
                 <li><a href="{{ route('app.contact') }}" class="has-submenu parent-parent-menu-item">Kontak</a></li>
-                <li><a href="#" class="has-submenu parent-parent-menu-item">Panduan</a></li>
+                <li><a href="{{ route('panduan.show') }}" class="has-submenu parent-parent-menu-item">Panduan</a></li>
                 <li class="d-lg-none">
                     @if (Auth::check())
                         <a href="{{ route('dashboard.pengguna') }}" class="sub-menu-item">

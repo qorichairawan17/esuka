@@ -13,7 +13,7 @@
     <section class="d-flex align-items-center">
         <div class="container-fluid">
             <div class="row align-items-center">
-                <div class="col-lg-8 d-none d-lg-block" style="background-image: url('{{ asset('assets/images/model-3.jpeg') }}'); background-size: cover; background-position: center; height: 100vh;">
+                <div class="col-lg-8 d-none d-lg-block" style="background-image: url('{{ asset('assets/images/model-5.jpeg') }}'); background-size: cover; background-position: center; height: 100vh;">
                 </div>
                 <div class="col-lg-4 col-md-12 col-sm-12">
                     <div class="card login-page rounded border-0">

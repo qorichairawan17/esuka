@@ -10,4 +10,35 @@ export default defineConfig({
         }),
         tailwindcss(),
     ],
+    build: {
+        // Optimize build output
+        minify: 'terser',
+        terserOptions: {
+            compress: {
+                drop_console: true, // Remove console.log in production
+                drop_debugger: true,
+            },
+        },
+        // Code splitting for better caching
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    vendor: ['axios'],
+                },
+            },
+        },
+        // Chunk size warnings
+        chunkSizeWarningLimit: 600,
+        // Source maps for debugging (disable in production)
+        sourcemap: false,
+    },
+    // Optimize dependencies
+    optimizeDeps: {
+        include: ['axios'],
+    },
+    server: {
+        hmr: {
+            host: 'localhost',
+        },
+    },
 });

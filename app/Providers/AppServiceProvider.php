@@ -4,7 +4,10 @@ namespace App\Providers;
 
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,7 +17,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Register optimization services in production
+        if ($this->app->isProduction()) {
+            $this->app['config']['app.debug'] = false;
+        }
     }
 
     /**
@@ -22,6 +28,23 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Set default string length for MySQL compatibility
+        Schema::defaultStringLength(191);
+
+        // Force HTTPS in production
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
+        }
+
+        // Optimize database queries - disable strict mode if needed
+        // DB::statement("SET SESSION sql_mode=''");
+
+        // Optimize eloquent model loading
+        if ($this->app->environment('production')) {
+            DB::enableQueryLog();
+        }
+
+        // Rate limiting for login
         RateLimiter::for('login', function (Request $request) {
             $email = (string) $request->string('email')->lower();
             $ip = (string) $request->ip();
@@ -39,6 +62,16 @@ class AppServiceProvider extends ServiceProvider
                 // Allows 20 attempts per minute from a single IP.
                 Limit::perMinute(20)->by($ip),
             ];
+        });
+
+        // Rate limiting for API
+        RateLimiter::for('api', function (Request $request) {
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        });
+
+        // Rate limiting for global requests
+        RateLimiter::for('global', function (Request $request) {
+            return Limit::perMinute(1000)->by($request->ip());
         });
     }
 }

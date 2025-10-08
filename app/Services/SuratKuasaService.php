@@ -567,11 +567,12 @@ class SuratKuasaService
             }
 
             $fileFields = [
-                'file_surat_kuasa',
-                'file_identitas_pemberi',
-                'file_identitas_penerima',
-                'file_berita_acara_sumpah',
-                'file_surat_keterangan_organisasi'
+                'edoc_kartu_tanda_penduduk',
+                'edoc_kartu_tanda_anggota',
+                'edoc_kartu_tanda_pegawai',
+                'edoc_berita_acara_sumpah',
+                'edoc_surat_tugas',
+                'edoc_surat_kuasa'
             ];
 
             foreach ($ditolakSuratKuasa as $suratKuasa) {

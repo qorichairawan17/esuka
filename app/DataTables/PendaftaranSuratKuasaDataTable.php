@@ -122,12 +122,11 @@ class PendaftaranSuratKuasaDataTable extends DataTable
                 ->addClass('text-center'),
             Column::make('id_daftar'),
             Column::make('tanggal_daftar'),
+            Column::make('pemohon'),
             Column::make('perihal'),
             Column::make('jenis_surat'),
             Column::make('tahapan'),
             Column::make('status'),
-            // Column::make('created_at'),
-            // Column::make('updated_at'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

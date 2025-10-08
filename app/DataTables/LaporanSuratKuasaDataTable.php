@@ -59,6 +59,13 @@ class LaporanSuratKuasaDataTable extends DataTable
         if ($this->request->filled('status') && $this->request->get('status') != '') {
             $query->where('status', $this->request->get('status'));
         }
+
+        // Menerapkan filter tahun dari request
+        if ($this->request->filled('tahun') && $this->request->get('tahun') != '') {
+            $tahun = $this->request->get('tahun');
+            $query->whereYear('tanggal_daftar', $tahun);
+        }
+
         return $query;
     }
 
@@ -100,6 +107,7 @@ class LaporanSuratKuasaDataTable extends DataTable
             'type' => 'GET',
             'data' => 'function(d) {
                 d.status = $("#statusFilter").val();
+                d.tahun = $("#tahunFilter").val();
             }',
         ];
     }

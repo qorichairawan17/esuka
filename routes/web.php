@@ -84,6 +84,7 @@ Route::prefix('surat-kuasa')->middleware([AuthMiddleware::class, CompleteProfile
 
     Route::controller(LaporanSuratKuasaController::class)->middleware(ForbiddenForUserMiddleware::class)->group(function () {
         Route::get('/laporan', 'index')->name('surat-kuasa.laporan');
+        Route::get('/laporan/export-pdf', 'exportPdf')->name('surat-kuasa.laporan.export-pdf');
     });
 });
 

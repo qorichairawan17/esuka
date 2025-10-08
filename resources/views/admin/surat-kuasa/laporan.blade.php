@@ -18,12 +18,27 @@
                                 <h6 class="card-title mb-0">Laporan Pendaftaran Surat Kuasa</h6>
                                 <div class="d-flex gap-2">
                                     <div class="widget-filter">
+                                        <select class="form-select form-select-sm" id="tahunFilter" aria-label="Filter Tahun">
+                                            <option value="">Semua Tahun</option>
+                                            @php
+                                                $currentYear = date('Y');
+                                                $startYear = 2020; // Tahun awal data
+                                            @endphp
+                                            @for ($year = $currentYear; $year >= $startYear; $year--)
+                                                <option value="{{ $year }}">{{ $year }}</option>
+                                            @endfor
+                                        </select>
+                                    </div>
+                                    <div class="widget-filter">
                                         <select class="form-select form-select-sm" id="statusFilter" aria-label="Filter Status">
                                             <option value="">Semua Status</option>
                                             <option value="{{ \App\Enum\StatusSuratKuasaEnum::Disetujui->value }}">Disetujui</option>
                                             <option value="{{ \App\Enum\StatusSuratKuasaEnum::Ditolak->value }}">Ditolak</option>
                                         </select>
                                     </div>
+                                    <button type="button" class="btn btn-sm btn-primary" id="btnPrintPdf" title="Cetak PDF">
+                                        <i class="uil uil-print"></i> Cetak PDF
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -48,11 +63,44 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const statusFilter = document.getElementById('statusFilter');
+            const tahunFilter = document.getElementById('tahunFilter');
+            const btnPrintPdf = document.getElementById('btnPrintPdf');
 
             // Menambahkan event listener ke filter status
             statusFilter.addEventListener('change', function() {
                 // Reload datatable ketika filter berubah
                 window.LaravelDataTables['laporansuratkuasa-table'].ajax.reload();
+            });
+
+            // Menambahkan event listener ke filter tahun
+            tahunFilter.addEventListener('change', function() {
+                // Reload datatable ketika filter berubah
+                window.LaravelDataTables['laporansuratkuasa-table'].ajax.reload();
+            });
+
+            // Event listener untuk tombol print PDF
+            btnPrintPdf.addEventListener('click', function() {
+                const status = statusFilter.value;
+                const tahun = tahunFilter.value;
+
+                // Build URL with query parameters
+                let url = '{{ route('surat-kuasa.laporan.export-pdf') }}';
+                const params = new URLSearchParams();
+
+                if (status) {
+                    params.append('status', status);
+                }
+                if (tahun) {
+                    params.append('tahun', tahun);
+                }
+
+                // Add params to URL if any
+                if (params.toString()) {
+                    url += '?' + params.toString();
+                }
+
+                // Open URL in new window to download PDF
+                window.open(url, '_blank');
             });
         });
     </script>

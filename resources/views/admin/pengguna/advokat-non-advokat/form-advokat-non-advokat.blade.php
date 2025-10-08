@@ -15,7 +15,7 @@
                     <div class="card shadow">
                         <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
                             <h6 class="card-title mb-0">{{ $pageTitle }}</h6>
-                            <a href="{{ route('panitera.index') }}" class="btn btn-sm btn-secondary">Kembali</a>
+                            <a href="{{ route('advokat.index') }}" class="btn btn-sm btn-secondary">Kembali</a>
                         </div>
                         <div class="card-body">
                             <form action="{{ route('advokat.store') }}" method="POST" id="advokat-form" enctype="multipart/form-data">

@@ -18,14 +18,14 @@
                 </tr>
                 <tr>
                     <td style="padding: 15px 24px 15px;text-align: justify;">
-                        Selamat! Pendaftaran surat kuasa Anda dengan ID Pendaftaran:
+                        Selamat! Pendaftaran surat kuasa Kamu dengan ID Pendaftaran:
                         <b>{{ $suratKuasa->id_daftar }}</b> telah disetujui dan diregistrasi dengan nomor:
                         <b>{{ $suratKuasa->register->nomor_surat_kuasa ?? '' }}</b>.
                     </td>
                 </tr>
                 <tr>
                     <td style="padding: 15px 24px 15px;text-align: justify;">
-                        Anda dapat mengunduh barcode pendaftaran elektronik yang terlampir pada email ini. Silakan
+                        Kamu dapat mengunduh barcode pendaftaran elektronik yang terlampir pada email ini. Silakan
                         gunakan barcode tersebut untuk keperluan lebih lanjut.
                     </td>
                 </tr>

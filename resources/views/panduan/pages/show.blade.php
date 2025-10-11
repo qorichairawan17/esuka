@@ -1,10 +1,10 @@
-@extends('admin.panduan.body')
+@extends('panduan.body')
 @section('title', $title)
 @section('content')
     <!-- Start Page Content -->
     <main class="page-content bg-light">
 
-        @include('admin.panduan.top-header')
+        @include('panduan.top-header')
 
         <div class="container-fluid">
             <div class="layout-specing">
@@ -23,7 +23,7 @@
             </div>
         </div><!--end container-->
 
-        @include('admin.panduan.content-footer')
+        @include('panduan.content-footer')
         <!-- End -->
     </main>
     <!--End page-content" -->

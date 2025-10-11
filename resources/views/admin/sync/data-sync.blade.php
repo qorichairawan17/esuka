@@ -94,7 +94,7 @@
 
                 Swal.fire({
                     title: 'Konfirmasi Sinkronisasi',
-                    text: `Anda yakin ingin memulai sinkronisasi untuk data ${klasifikasi}? Proses ini mungkin memakan waktu.`,
+                    text: `Kamu yakin ingin memulai sinkronisasi untuk data ${klasifikasi}? Proses ini mungkin memakan waktu.`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -136,7 +136,7 @@
             // 2. Handle Hapus Data Sinkronisasi
             $('#deleteSinkronisasi').on('click', function() {
                 Swal.fire({
-                    title: 'Anda Yakin?',
+                    title: 'Kamu Yakin?',
                     text: "Tindakan ini akan menghapus semua data dari tabel staging sinkronisasi. Data tidak dapat dipulihkan.",
                     icon: 'warning',
                     showCancelButton: true,
@@ -176,7 +176,7 @@
             $('#migrasi').on('click', function() {
                 Swal.fire({
                     title: 'Konfirmasi Migrasi Data',
-                    text: "Anda yakin ingin memigrasi semua data dari tabel staging ke tabel utama? Proses ini mungkin memakan waktu dan tidak dapat dibatalkan.",
+                    text: "Kamu yakin ingin memigrasi semua data dari tabel staging ke tabel utama? Proses ini mungkin memakan waktu dan tidak dapat dibatalkan.",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',

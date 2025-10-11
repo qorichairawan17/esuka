@@ -33,7 +33,7 @@ class CompleteProfileMiddleware
             !$profile->foto ||
             $user->profile_status != 1
         ) {
-            return redirect()->route('profile.index')->with('warning', 'Lengkapi profil Anda terlebih dahulu.');
+            return redirect()->route('profile.index')->with('warning', 'Lengkapi profil Kamu terlebih dahulu.');
         }
 
         return $next($request);

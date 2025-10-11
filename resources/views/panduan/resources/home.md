@@ -1,6 +1,6 @@
 #### Panduan Penggunaan {{ config('app.name') }}
 
-Kami menyediakan panduan ini untuk membantu Anda memahami cara menggunakan aplikasi, mulai dari proses pendaftaran akun, pengelolaan data pengguna, pengajuan surat kuasa, hingga langkah-langkah memanfaatkan seluruh fitur aplikasi dengan mudah.
+Kami menyediakan panduan ini untuk membantu Kamu memahami cara menggunakan aplikasi, mulai dari proses pendaftaran akun, pengelolaan data pengguna, pengajuan surat kuasa, hingga langkah-langkah memanfaatkan seluruh fitur aplikasi dengan mudah.
 
 <table class="table">
     <tbody>
@@ -26,3 +26,5 @@ Kami menyediakan panduan ini untuk membantu Anda memahami cara menggunakan aplik
         </tr>
     </tbody>
 </table>
+
+<a class="btn btn-soft-primary btn-sm" href="{{ route('app.signin') }}">Akses Sekarang</a>

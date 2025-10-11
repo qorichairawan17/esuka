@@ -1,4 +1,4 @@
-@include('admin.panduan.header')
+@include('panduan.header')
 <!-- Loader -->
 <div id="preloader">
     <div id="status">
@@ -10,7 +10,7 @@
 </div>
 <!-- Loader -->
 <div class="page-wrapper toggled">
-    @include('admin.panduan.sidebar')
+    @include('panduan.sidebar')
     @yield('content')
 </div>
-@include('admin.panduan.footer')
+@include('panduan.footer')

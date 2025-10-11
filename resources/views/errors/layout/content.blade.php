@@ -14,6 +14,6 @@
          <p class="text-danger fw-bold para-desc mx-auto mb-0">
              "{{ $message }}"
          </p>
-         <a href="{{ url()->previous() == url()->current() ? route('app.home') : url()->previous() }}" class="btn btn-primary mt-3">Kembali</a>
+         <a href="{{ url()->previous() == url()->current() ? route('app.home') : url()->previous() }}" class="btn btn-primary btn-sm mt-3">Kembali</a>
      </div>
  </section>

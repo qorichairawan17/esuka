@@ -507,10 +507,10 @@
                 e.preventDefault();
 
                 Swal.fire({
-                    title: 'Apakah Anda Yakin?',
+                    title: 'Apakah Kamu Yakin?',
                     html: `
                         <p class="text-danger fw-bold">Tindakan ini tidak dapat diurungkan!</p>
-                        <p>Seluruh data Anda, termasuk riwayat pendaftaran surat kuasa dan file terkait, akan dihapus secara permanen.</p>
+                        <p>Seluruh data Kamu, termasuk riwayat pendaftaran surat kuasa dan file terkait, akan dihapus secara permanen.</p>
                         <p class="mt-3">Untuk melanjutkan, ketik "<b class="text-danger">hapus akun saya</b>" di bawah ini:</p>
                         <input type="text" id="confirmation-text" class="form-control" placeholder="hapus akun saya">
                     `,
@@ -582,7 +582,7 @@
 
                 Swal.fire({
                     title: 'Putuskan Tautan Akun Google?',
-                    text: "Anda masih bisa login menggunakan email dan password Anda. Anda dapat menautkannya kembali kapan saja.",
+                    text: "Kamu masih bisa login menggunakan email dan password Kamu. Kamu dapat menautkannya kembali kapan saja.",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',

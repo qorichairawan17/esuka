@@ -21,7 +21,7 @@
         const privacyPolicyCheckbox = document.getElementById('privacy_policy');
         if (!privacyPolicyCheckbox.checked) {
             document.getElementById('privacy_policyError').textContent =
-                'Anda harus menyetujui Kebijakan Privasi & Persyaratan Penggunaan.';
+                'Kamu harus menyetujui Kebijakan Privasi & Persyaratan Penggunaan.';
             // Hentikan eksekusi jika belum dicentang
             return;
         }

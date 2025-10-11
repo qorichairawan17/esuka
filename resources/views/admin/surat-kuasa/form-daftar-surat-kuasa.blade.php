@@ -277,7 +277,7 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Data Tidak Lengkap',
-                        text: 'Anda harus menambahkan minimal satu Pihak Pemberi Kuasa dan satu Pihak Penerima Kuasa.',
+                        text: 'Kamu harus menambahkan minimal satu Pihak Pemberi Kuasa dan satu Pihak Penerima Kuasa.',
                     });
                     return; // Stop form submission
                 }

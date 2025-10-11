@@ -18,7 +18,7 @@ class ForbiddenForUserMiddleware
     {
         $user = Auth::user();
         if ($user->role === \App\Enum\RoleEnum::User->value) {
-            return redirect()->route('dashboard.pengguna')->with('error', 'Anda tidak memiliki akses ke halaman ini.');
+            return redirect()->route('dashboard.pengguna')->with('error', 'Kamu tidak memiliki akses ke halaman ini.');
         }
         return $next($request);
     }

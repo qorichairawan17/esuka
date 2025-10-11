@@ -73,7 +73,7 @@ class GoogleAuthController extends Controller
     private function handleRegistrationCallback($googleUser, ?User $existingUser): RedirectResponse
     {
         if ($existingUser) {
-            return redirect()->route('app.signup')->with('error', 'Email Google Anda sudah terdaftar! Silakan login.');
+            return redirect()->route('app.signup')->with('error', 'Email Google Kamu sudah terdaftar! Silakan login.');
         }
 
         $newUser = DB::transaction(function () use ($googleUser) {
@@ -115,7 +115,7 @@ class GoogleAuthController extends Controller
             return redirect()->route('app.signin')->with('error', 'Akun dengan email Google tersebut tidak terdaftar');
         }
         if ($user->google_id == null) {
-            return redirect()->route('app.signin')->with('error', 'Akun Anda belum terhubung dengan Google');
+            return redirect()->route('app.signin')->with('error', 'Akun Kamu belum terhubung dengan Google');
         }
 
         // Update google_id and avatar if they are missing, then log in.
@@ -146,7 +146,7 @@ class GoogleAuthController extends Controller
             $user = Auth::user();
 
             if (!$user) {
-                return redirect()->route('app.signin')->with('error', 'Anda harus login untuk menautkan akun.');
+                return redirect()->route('app.signin')->with('error', 'Kamu harus login untuk menautkan akun.');
             }
 
             // Check if another user has already linked this Google ID.
@@ -166,7 +166,7 @@ class GoogleAuthController extends Controller
             return redirect()->route('profile.index')->with('success', 'Akun Google berhasil ditautkan!');
         } catch (\Exception $e) {
             Log::error('Google Socialite linking error: ' . $e->getMessage(), ['user_id' => Auth::id(), 'trace' => $e->getTraceAsString()]);
-            return redirect()->route('profile.index')->with('error', 'Terjadi kesalahan saat mencoba menautkan akun Google Anda.');
+            return redirect()->route('profile.index')->with('error', 'Terjadi kesalahan saat mencoba menautkan akun Google Kamu.');
         }
     }
 

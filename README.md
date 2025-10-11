@@ -81,7 +81,7 @@ Proyek ini dibangun menggunakan tumpukan teknologi modern dan andal:
 
 ### 🛠️ Panduan Instalasi
 
-Ikuti langkah-langkah berikut untuk menjalankan proyek ini di lingkungan lokal Anda.
+Ikuti langkah-langkah berikut untuk menjalankan proyek ini di lingkungan lokal Kamu.
 
 ### Prasyarat
 - PHP >= 8.2
@@ -112,8 +112,8 @@ Ikuti langkah-langkah berikut untuk menjalankan proyek ini di lingkungan lokal A
       ```bash
       cp .env.example .env
       ```
-    - Buka file `.env` dan atur koneksi database Anda (`DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`).
-    - Atur `APP_URL` sesuai dengan URL lokal Anda.
+    - Buka file `.env` dan atur koneksi database Kamu (`DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`).
+    - Atur `APP_URL` sesuai dengan URL lokal Kamu.
 
 5.  **Generate Kunci Aplikasi**
     ```bash
@@ -136,7 +136,7 @@ Ikuti langkah-langkah berikut untuk menjalankan proyek ini di lingkungan lokal A
     ```
 
 9.  **Jalankan Server Development**
-    - Untuk menjalankan server dan Vite secara bersamaan, Anda bisa menggunakan script `dev` yang sudah disediakan di `composer.json`.
+    - Untuk menjalankan server dan Vite secara bersamaan, Kamu bisa menggunakan script `dev` yang sudah disediakan di `composer.json`.
       ```bash
       composer dev
       ```

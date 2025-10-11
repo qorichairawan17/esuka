@@ -37,7 +37,7 @@ class ActivationController extends Controller
                 Log::info('User account activated successfully.', ['user_id' => $user->id]);
             });
 
-            return redirect()->route('app.signin')->with('success', 'Akun Anda berhasil diaktivasi, silakan login.');
+            return redirect()->route('app.signin')->with('success', 'Akun Kamu berhasil diaktivasi, silakan login.');
         } catch (\Exception $e) {
             Log::error('Account activation failed during transaction.', [
                 'activation_id' => $activation->id,

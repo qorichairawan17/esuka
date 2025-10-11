@@ -35,7 +35,7 @@ class ApproveSuratKuasaMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Pendaftaran Surat Kuasa Anda Telah Disetujui - ' . config('app.name'),
+            subject: 'Pendaftaran Surat Kuasa Kamu Telah Disetujui - ' . config('app.name'),
         );
     }
 

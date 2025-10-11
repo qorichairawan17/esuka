@@ -32,7 +32,7 @@ class RejectSuratKuasaMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Pendaftaran Surat Kuasa Anda Ditolak - ' . config('app.name'),
+            subject: 'Pendaftaran Surat Kuasa Kamu Ditolak - ' . config('app.name'),
         );
     }
 

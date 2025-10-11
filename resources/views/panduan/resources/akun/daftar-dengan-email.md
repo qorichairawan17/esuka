@@ -6,15 +6,15 @@ Untuk mendaftar akun di layanan **{{ config('app.name') }}**, pastikan Kamu memi
 
 1. **Buka halaman pendaftaran akun.** dengan mengklik tombol login kemudian memilih, Daftar Akun.
 
-    <img class="img-fluid mb-2" src="{{ asset('assets/images/panduan/landing-page.png') }}" alt="Halaman Pendaftaran Akun">
+    <img class="img-fluid mb-2" src="{{ asset('assets/images/panduan/landing-page.png') }}">
 
 2. **Isi formulir pendaftaran** dengan data yang benar dan lengkap.
 
-    <img class="img-fluid mb-2" src="{{ asset('assets/images/panduan/akun/register-page.png') }}" alt="Formulir Pendaftaran">
+    <img class="img-fluid mb-2" src="{{ asset('assets/images/panduan/akun/register-page.png') }}">
 
 3. **Konfirmasi persetujuan** penggunaan informasi data pribadi Kamu untuk proses layanan pendaftaran Surat Kuasa.
     
-    <img class="img-fluid mb-2" src="{{ asset('assets/images/panduan/akun/privacy-policy.png') }}" alt="Formulir Pendaftaran">
+    <img class="img-fluid mb-2" src="{{ asset('assets/images/panduan/akun/privacy-policy.png') }}">
 
 <span class="text-danger" style="margin-left: 30px;">Pastikan semua data yang diisi sudah benar sebelum melanjutkan proses pendaftaran.</span>
 
@@ -22,6 +22,6 @@ Untuk mendaftar akun di layanan **{{ config('app.name') }}**, pastikan Kamu memi
 
 5. **Klik Tombol Aktivasi** Kamu akan diarahkan menuju halaman login untuk masuk ke sistem, Gunakan email dan password yang Kamu daftarkan sebelumnya.
     
-    <img class="img-fluid mb-2" src="{{ asset('assets/images/panduan/akun/activated-account.png') }}" alt="Aktivasi Akun">
+    <img class="img-fluid mb-2" src="{{ asset('assets/images/panduan/akun/activated-account.png') }}">
 ---
 

@@ -53,7 +53,7 @@
         <script type="text/javascript">
             document.getElementById('hapus-surat-kuasa-ditolak').addEventListener('click', async function() {
                 const result = await Swal.fire({
-                    title: 'Apakah Anda yakin?',
+                    title: 'Apakah Kamu yakin?',
                     text: "Semua surat kuasa yang ditolak akan dihapus secara permanen!",
                     icon: 'warning',
                     showCancelButton: true,
@@ -89,7 +89,7 @@
 
             window.deleteData = async function(url) {
                 const result = await Swal.fire({
-                    title: 'Apakah Anda yakin?',
+                    title: 'Apakah Kamu yakin?',
                     text: "Data yang akan dihapus tidak dapat dikembalikan!",
                     icon: 'warning',
                     showCancelButton: true,

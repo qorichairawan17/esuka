@@ -154,7 +154,7 @@
                     </p>
 
                     <h5>3. Penggunaan Informasi</h5>
-                    <p class="text-muted">Informasi Anda digunakan untuk:
+                    <p class="text-muted">Informasi Kamu digunakan untuk:
                     <ul class="text-muted">
                         <li class="text-muted">Memproses pendaftaran surat kuasa Anda.</li>
                         <li class="text-muted">Mengirim notifikasi terkait status pendaftaran Anda.</li>
@@ -167,7 +167,7 @@
                     <h5>4. Keamanan Data</h5>
                     <p class="text-muted" style="text-align: justify;">
                         Kami menerapkan langkah-langkah keamanan yang wajar untuk
-                        melindungi informasi pribadi Anda dari akses, penggunaan, atau pengungkapan yang
+                        melindungi informasi pribadi Kamu dari akses, penggunaan, atau pengungkapan yang
                         tidak sah. Namun, tidak ada metode transmisi melalui internet atau metode
                         penyimpanan elektronik yang 100% aman.
                     </p>
@@ -200,8 +200,8 @@
 
                     <h5>8. Persetujuan Pengguna</h5>
                     <p class="text-muted" style="text-align:justify;">
-                        Dengan mencentang kotak persetujuan saat pendaftaran, Anda setuju
-                        dengan pengumpulan dan penggunaan informasi sesuai dengan kebijakan ini. Anda juga
+                        Dengan mencentang kotak persetujuan saat pendaftaran, Kamu setuju
+                        dengan pengumpulan dan penggunaan informasi sesuai dengan kebijakan ini. Kamu juga
                         setuju untuk mematuhi semua persyaratan dan ketentuan yang berlaku.
                     </p>
                 </div>

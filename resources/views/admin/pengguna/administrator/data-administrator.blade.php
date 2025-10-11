@@ -37,7 +37,7 @@
     <script type="text/javascript">
         window.deleteData = async function(url) {
             const result = await Swal.fire({
-                title: 'Apakah Anda yakin?',
+                title: 'Apakah Kamu yakin?',
                 text: "Data yang akan dihapus tidak dapat dikembalikan!",
                 icon: 'warning',
                 showCancelButton: true,

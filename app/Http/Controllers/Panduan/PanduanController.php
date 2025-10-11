@@ -51,7 +51,7 @@ class PanduanController extends Controller
 
     public function show($slug = 'home')
     {
-        $path = resource_path('/views/admin/panduan/resources/' . str_replace('/', DIRECTORY_SEPARATOR, $slug) . '.md');
+        $path = resource_path('/views/panduan/resources/' . str_replace('/', DIRECTORY_SEPARATOR, $slug) . '.md');
 
         if (!File::exists($path)) {
             throw new NotFoundHttpException('Halaman panduan tidak ditemukan.');
@@ -67,7 +67,7 @@ class PanduanController extends Controller
             ]);
             $htmlContent = $converter->convert($renderedContent);
         } catch (MissingDependencyException $e) {
-            throw new \Exception("Pastikan Anda sudah menjalankan 'composer require league/commonmark'", 500, $e);
+            throw new \Exception("Pastikan Kamu sudah menjalankan 'composer require league/commonmark'", 500, $e);
         }
 
         // Get the last part of slug for title
@@ -84,6 +84,6 @@ class PanduanController extends Controller
             'slug' => $slug,
         ];
 
-        return view('admin.panduan.pages.show', $data);
+        return view('panduan.pages.show', $data);
     }
 }

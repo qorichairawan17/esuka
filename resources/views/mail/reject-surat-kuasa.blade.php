@@ -18,13 +18,13 @@
                 </tr>
                 <tr>
                     <td style="padding: 15px 24px 15px;text-align: justify;">
-                        Mohon maaf, verifikasi pendaftaran surat kuasa Anda dengan ID Daftar: <b>{{ $suratKuasa->id_daftar ?? '' }}</b>, ditolak oleh petugas.
+                        Mohon maaf, verifikasi pendaftaran surat kuasa Kamu dengan ID Daftar: <b>{{ $suratKuasa->id_daftar ?? '' }}</b>, ditolak oleh petugas.
                     </td>
                 </tr>
                 <tr>
                     <td style="padding: 15px 24px 15px;text-align: justify;">
                         <b>Alasan :</b> {{ $keterangan ?? 'Tidak ada alasan yang diberikan.' }} <br>
-                        Harap memperbaiki data pendaftaran surat kuasa Anda jika ingin melanjutkan proses persetujuan.
+                        Harap memperbaiki data pendaftaran surat kuasa Kamu jika ingin melanjutkan proses persetujuan.
                     </td>
                 </tr>
                 <tr>

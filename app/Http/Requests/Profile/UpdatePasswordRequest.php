@@ -40,7 +40,7 @@ class UpdatePasswordRequest extends FormRequest
     {
         return [
             'passwordLama.required' => 'Password lama wajib diisi.',
-            'passwordLama.current_password' => 'Password lama yang Anda masukkan salah.',
+            'passwordLama.current_password' => 'Password lama yang Kamu masukkan salah.',
             'passwordBaru.required' => 'Password baru wajib diisi.',
             'passwordBaru.confirmed' => 'Konfirmasi password baru tidak cocok.',
             'passwordBaru.different' => 'Password baru tidak boleh sama dengan password lama.',

@@ -1,19 +1,33 @@
- <div id="preloader">
-     <div id="status">
-         <div class="spinner">
-             <div class="double-bounce1"></div>
-             <div class="double-bounce2"></div>
-         </div>
-     </div>
- </div>
+<div class="error-page-wrapper">
+    <div class="error-card">
+        <div class="error-decorations">
+            <div class="decoration-circle decoration-circle-1"></div>
+            <div class="decoration-circle decoration-circle-2"></div>
+        </div>
 
- <section class="bg-home d-flex align-items-center">
-     <div class="container text-center">
-         <img src="{{ asset('icons/horizontal-e-suka.png') }}" style="max-width: 250px;" alt="logo">
-         <div class="text-uppercase mt-4 display-5 mb-3 fw-semibold">{{ $code }}</div>
-         <p class="text-danger fw-bold para-desc mx-auto mb-0">
-             "{{ $message }}"
-         </p>
-         <a href="{{ url()->previous() == url()->current() ? route('app.home') : url()->previous() }}" class="btn btn-primary btn-sm mt-3">Kembali</a>
-     </div>
- </section>
+        <div class="text-center">
+            <img src="{{ asset('icons/horizontal-e-suka.png') }}" class="error-logo" alt="E-Suka Logo">
+
+            <div class="error-icon">
+                <i class="uil uil-exclamation-triangle"></i>
+            </div>
+
+            <h1 class="error-code">{{ $code }}</h1>
+
+            <p class="error-message">
+                {{ $message }}
+            </p>
+
+            <div class="error-actions">
+                <a href="{{ url()->previous() == url()->current() ? route('app.home') : url()->previous() }}" class="btn-error btn-primary-gradient">
+                    <i class="uil uil-arrow-left"></i>
+                    Kembali
+                </a>
+                <a href="{{ route('app.home') }}" class="btn-error btn-outline-custom">
+                    <i class="uil uil-home"></i>
+                    Beranda
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

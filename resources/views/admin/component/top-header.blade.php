@@ -1,4 +1,3 @@
-<!-- Top Header -->
 <div class="top-header">
     <div class="header-bar d-flex justify-content-between">
         <div class="d-flex align-items-center">
@@ -91,31 +90,31 @@
         </ul>
     </div>
 </div>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const notificationButton = document.getElementById('notification-button');
-        if (notificationButton) {
-            notificationButton.addEventListener('click', function() {
-                const notificationBadge = document.querySelector('.bg-danger.rounded-circle');
-                if (!notificationBadge) {
-                    return; // Jangan lakukan apa-apa jika tidak ada notifikasi baru
-                }
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const notificationButton = document.getElementById('notification-button');
+            if (notificationButton) {
+                notificationButton.addEventListener('click', function() {
+                    const notificationBadge = document.querySelector('.bg-danger.rounded-circle');
+                    if (!notificationBadge) {
+                        return;
+                    }
 
-                // Mark notifications as read on the server
-                fetch("{{ route('notifications.markAsRead') }}", {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json'
-                    }
-                }).then(response => {
-                    if (response.ok) {
-                        // Hapus indikator titik merah setelah notifikasi ditandai terbaca
-                        setTimeout(() => notificationBadge.remove(), 1000);
-                    }
+                    // Mark notifications as read on the server
+                    fetch("{{ route('notifications.markAsRead') }}", {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json'
+                        }
+                    }).then(response => {
+                        if (response.ok) {
+                            setTimeout(() => notificationBadge.remove(), 1000);
+                        }
+                    });
                 });
-            });
-        }
-    });
-</script>
-<!-- Top Header -->
+            }
+        });
+    </script>
+@endpush

@@ -23,7 +23,6 @@
                         <li><a href="{{ route('panduan.show', 'akun/daftar-dengan-google') }}">Daftar Dengan Google</a></li>
                         <li><a href="{{ route('panduan.show', 'akun/lupa-password') }}">Lupa Password</a></li>
                         <li><a href="{{ route('panduan.show', 'akun/menghapus-akun') }}">Menghapus Akun</a></li>
-                        <li><a href="{{ route('panduan.show', 'akun/tautkan-google') }}">Tautkan Akun Dengan Google</a></li>
                     </ul>
                 </div>
             </li>

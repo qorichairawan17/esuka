@@ -35,6 +35,7 @@
                                         <li class="border-bottom py-2">Kontak: {{ $user->profile->kontak }}</li>
                                         <li class="border-bottom py-2">Alamat: {{ $user->profile->alamat }}</li>
                                         <li class="border-bottom py-2">Status Akun: <span class="badge bg-{{ $user->block ? 'danger' : 'success' }}">{{ $user->block ? 'Diblokir' : 'Aktif' }}</span></li>
+                                        <li class="border-bottom py-2">Setuju Privacy Policy: {{ $user->privacy_policy_agreed_at }}</li>
                                         <li class="border-bottom py-2">Created At: {{ $user->created_at }} | Updated At: {{ $user->updated_at }}</li>
                                     </ul>
                                 </div>

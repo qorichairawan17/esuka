@@ -138,7 +138,7 @@
                                 <span class="text-primary h5 me-2">
                                     <i class="uil uil-check-circle align-middle"></i>
                                 </span>
-                                Pembayaran Dengan QRIS
+                                Pembayaran Dengan QRIS Dan Transfer Bank
                             </li>
                             <li class="mb-1">
                                 <span class="text-primary h5 me-2">

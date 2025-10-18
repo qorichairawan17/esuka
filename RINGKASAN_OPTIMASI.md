@@ -1,7 +1,5 @@
 # 📋 RINGKASAN OPTIMASI e-SUKA
 
-Tanggal: $(Get-Date -Format 'dd MMMM yyyy HH:mm')
-
 ## ✅ File-file yang Telah Dibuat/Dimodifikasi
 
 ### 1. Konfigurasi

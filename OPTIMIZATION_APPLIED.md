@@ -1,7 +1,5 @@
 # 🚀 OPTIMASI YANG TELAH DITERAPKAN
 
-Tanggal: $(Get-Date -Format 'dd MMMM yyyy')
-
 ## Ringkasan Optimasi
 
 Proyek e-Suka telah dioptimasi dengan berbagai peningkatan performa untuk memastikan aplikasi berjalan dengan lebih cepat, efisien, dan aman.

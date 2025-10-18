@@ -39,7 +39,7 @@
                                     <p class="mb-0">Testimoni</p>
                                 </div>
                             </a>
-                            <a href="#" class="card card-shortcut shadow">
+                            <a href="{{ route('panduan.show') }}" class="card card-shortcut shadow">
                                 <div class="card-body">
                                     <i class="ti ti-help text-primary"></i>
                                     <p class="mb-0">Panduan</p>

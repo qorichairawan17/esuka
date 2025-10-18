@@ -76,6 +76,10 @@
             text-align: center;
         }
 
+         .text-left {
+            text-align: left;
+        }
+
         .badge {
             display: inline-block;
             padding: 3px 8px;
@@ -165,7 +169,7 @@
                     <td class="text-center">{{ \Carbon\Carbon::parse($item->tanggal_daftar)->format('d/m/Y') }}</td>
                     <td>{{ $item->id_daftar }}</td>
                     <td>{{ $item->pemohon ?? 'N/A' }}</td>
-                    <td class="text-center">{{ $item->register->nomor_surat_kuasa ?? '-' }}</td>
+                    <td class="text-left">{{ $item->register->nomor_surat_kuasa ?? '-' }}</td>
                     <td>{{ $item->pihak->where('jenis', \App\Enum\PihakSuratKuasaEnum::Pemberi->value)->pluck('nama')->join(', ') }}</td>
                     <td>{{ $item->pihak->where('jenis', \App\Enum\PihakSuratKuasaEnum::Penerima->value)->pluck('nama')->join(', ') }}</td>
                     <td class="text-center">

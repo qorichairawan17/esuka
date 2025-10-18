@@ -33,7 +33,7 @@
                         <li><a href="{{ route('panduan.show', 'surat-kuasa/pengajuan') }}">Pengajuan Surat Kuasa</a></li>
                         <li><a href="{{ route('panduan.show', 'surat-kuasa/pembayaran') }}">Pembayaran Surat Kuasa</a></li>
                         <li><a href="{{ route('panduan.show', 'surat-kuasa/perbaikan') }}">Perbaikan Surat Kuasa</a></li>
-                        <li><a href="{{ route('panduan.show', 'surat-kuasa/verifikasi') }}">Verifikasi Surat Kuasa</a></li>
+                        <li><a href="{{ route('panduan.show', 'surat-kuasa/download-barcode') }}">Download Barcode Surat Kuasa</a></li>
                     </ul>
                 </div>
             </li>

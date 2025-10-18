@@ -25,10 +25,9 @@
                     </a>
                 @else
                     <a href="{{ route('app.signin') }}" class="btn btn-pills btn-soft-primary">
-                        Login <i data-feather="log-in" class="fea icon-sm"> </i>
+                        Login <i data-feather="log-in" class="fea icon-sm"></i>
                     </a>
                 @endif
-
             </li>
         </ul>
 

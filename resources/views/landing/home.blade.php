@@ -115,7 +115,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-7 mt-4 pt-2">
                     <div class="saas-feature-shape-left position-relative me-lg-5 wow animate__animated animate__fadeInUp" data-wow-delay=".5s">
-                        <img src="{{ asset('assets/images/dashboard-app.png') }}" class="img-fluid mx-auto d-block rounded shadow" alt="">
+                        <img src="{{ asset('assets/images/dashboard.png') }}" class="img-fluid mx-auto d-block rounded shadow" alt="">
                     </div>
                 </div>
 

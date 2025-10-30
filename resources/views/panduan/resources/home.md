@@ -17,14 +17,10 @@ Kami menyediakan panduan ini untuk membantu Kamu memahami cara menggunakan aplik
             <td>{{ config('app.description') }}</td>
         </tr>
         <tr>
-            <th>Developer</th>
-            <td>{{ config('app.developer') }}</td>
-        </tr>
-        <tr>
             <th>Rilis Panduan</th>
             <td>{{ \Carbon\Carbon::parse('2025-01-09')->isoFormat('dddd, D MMMM Y') }}</td>
         </tr>
     </tbody>
 </table>
 
-<a class="btn btn-soft-primary btn-sm" href="{{ route('app.signin') }}">Akses Sekarang</a>
+<a class="btn btn-soft-primary btn-sm" href="{{ route('app.signin') }}">Akses Aplikasi</a>

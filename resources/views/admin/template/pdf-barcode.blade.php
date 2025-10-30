@@ -137,7 +137,7 @@
                     "Cetak lembar ini dan gabungkan dengan Surat Kuasa yang didaftarkan !."
                 </p>
                 <p style="font-size: 10px; margin:0;">
-                    Dicetak : {{ \Carbon\Carbon::now()->isoFormat('D MMMM Y HH:mm:ss') }} | <i>Powered by : {{ $infoApp->pengadilan_negeri }}</i>
+                    Dicetak : {{ \Carbon\Carbon::now()->isoFormat('D MMMM Y HH:mm:ss') }} | <i>Developed by : {{ $infoApp->pengadilan_negeri }}</i>
                 </p>
             </td>
         </tr>

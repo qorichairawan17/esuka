@@ -18,7 +18,7 @@
                             Akses Sekarang <i data-feather="arrow-right"></i>
                         </a>
                         <p class="text-muted mb-0 mt-3">
-                            Powered by <a href="https://pn-lubukpakam.go.id" target="_blank" class="text-primary">{{ $infoApp->pengadilan_negeri }}
+                            Developed by <a href="https://pn-lubukpakam.go.id" target="_blank" class="text-primary">{{ $infoApp->pengadilan_negeri }}
                             </a>
                         </p>
                     </div>

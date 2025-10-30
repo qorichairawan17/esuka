@@ -29,7 +29,7 @@
                 </tr>
                 <tr>
                     <td style="padding: 15px 24px 15px;">
-                        {{ config('app.name') }} <br> Powered by {{ config('app.author') }} <br>
+                        {{ config('app.name') }} <br> Developed by {{ config('app.author') }} <br>
                         <span style="color: red; font-size: 12px;">Email ini dikirim otomatis oleh sistem, mohon untuk tidak membalas email ini.</span>
                     </td>
                 </tr>

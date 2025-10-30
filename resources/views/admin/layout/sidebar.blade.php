@@ -39,7 +39,7 @@
             </li>
             @if (Auth::user()->role == \App\Enum\RoleEnum::Superadmin->value)
                 <li class="sidebar-dropdown">
-                    <a href="javascript:void(0)"><i class="ti ti-browser me-2"></i>Pengguna</a>
+                    <a href="javascript:void(0)"><i class="ti ti-users me-2"></i>Pengguna</a>
                     <div class="sidebar-submenu">
                         <ul>
                             <li><a href="{{ route('panitera.index') }}">Panitera</a></li>

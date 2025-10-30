@@ -41,19 +41,24 @@ class PendaftaranSuratKuasaDataTable extends DataTable
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
                 $detailUrl = route('surat-kuasa.detail', ['id' => Crypt::encrypt($row->id)]);
-                $actionBtn = '<a href="' . $detailUrl . '" class="btn btn-soft-primary btn-sm mb-2"><i class="ti ti-eye"></i></a>';
-
                 $roleBased = Auth::user()->role;
+                $actionBtn = '';
+
                 if ($roleBased == \App\Enum\RoleEnum::User->value && $row->status == \App\Enum\StatusSuratKuasaEnum::Ditolak->value) {
                     $editUrl = route('surat-kuasa.form', ['param' => 'edit', 'klasifikasi' => $row->klasifikasi, 'id' => Crypt::encrypt($row->id)]);
-                    $actionBtn .= '<a href="' . $editUrl . '" class="btn btn-soft-warning btn-sm mb-2"><i class="ti ti-edit"></i></a>';
+                    $actionBtn .= '<a href="' . $detailUrl . '" class="btn btn-soft-primary btn-sm"><i class="ti ti-eye"></i></a>';
+                    $actionBtn .= '<a href="' . $editUrl . '" class="btn btn-soft-warning btn-sm"><i class="ti ti-edit"></i></a>';
                 } elseif ($roleBased != \App\Enum\RoleEnum::User->value) {
                     $editUrl = route('surat-kuasa.form', ['param' => 'edit', 'klasifikasi' => $row->klasifikasi, 'id' => Crypt::encrypt($row->id)]);
                     $deleteUrl = route('surat-kuasa.destroy', ['id' => Crypt::encrypt($row->id)]);
-                    $actionBtn .= '<a href="' . $editUrl . '" class="btn btn-soft-warning btn-sm mb-2"><i class="ti ti-edit"></i></a>';
-                    $actionBtn .= '<button type="button" onclick="deleteData(\'' . $deleteUrl . '\')" class="btn btn-danger btn-sm ms-1"><i class="ti ti-trash"></i></button>';
+                    $actionBtn .= '<a href="' . $detailUrl . '" class="btn btn-soft-primary btn-sm"><i class="ti ti-eye"></i></a>';
+                    $actionBtn .= '<a href="' . $editUrl . '" class="btn btn-soft-warning btn-sm"><i class="ti ti-edit"></i></a>';
+                    $actionBtn .= '<a href="javascript:void(0);" onclick="deleteData(\'' . $deleteUrl . '\')" class="btn btn-danger btn-sm"><i class="ti ti-trash"></i></a>';
+                } else {
+                    $actionBtn .= '<a href="' . $detailUrl . '" class="btn btn-soft-primary btn-sm"><i class="ti ti-eye"></i></a>';
                 }
-                return $actionBtn;
+
+                return '<div class="d-flex flex-row gap-1">' . $actionBtn . '</div>';
             })
             ->editColumn('id_daftar', function ($row) {
                 $nomorSurat = ($row->register && $row->register->nomor_surat_kuasa) ? '<br>Nomor Surat : ' . $row->register->nomor_surat_kuasa : '';
@@ -120,13 +125,13 @@ class PendaftaranSuratKuasaDataTable extends DataTable
                 ->searchable(false)
                 ->width(30)
                 ->addClass('text-center'),
-            Column::make('id_daftar'),
-            Column::make('tanggal_daftar'),
-            Column::make('pemohon'),
-            Column::make('perihal'),
-            Column::make('jenis_surat'),
-            Column::make('tahapan'),
-            Column::make('status'),
+            Column::make('id_daftar')->style('vertical-align: top; text-wrap: wrap;'),
+            Column::make('tanggal_daftar')->style('vertical-align: top; min-width: 150px;')->addClass('text-center'),
+            Column::make('pemohon')->style('vertical-align: top;'),
+            Column::make('perihal')->style('vertical-align: top; text-wrap:wrap; min-width: 300px;'),
+            Column::make('jenis_surat')->style('vertical-align: top;min-width: 150px;'),
+            Column::make('tahapan')->style('vertical-align: top;'),
+            Column::make('status')->style('vertical-align: top;'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

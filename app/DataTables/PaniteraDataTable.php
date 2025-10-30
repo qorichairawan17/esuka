@@ -2,8 +2,9 @@
 
 namespace App\DataTables;
 
-use Illuminate\Support\Facades\Crypt;
+use App\Models\User;
 use Yajra\DataTables\Html\Column;
+use Illuminate\Support\Facades\Crypt;
 use App\Models\Pengguna\PaniteraModel;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Services\DataTable;
@@ -24,9 +25,17 @@ class PaniteraDataTable extends DataTable
             ->addColumn('action', function ($row) {
                 $editUrl = route('panitera.form', ['param' => 'edit', 'id' => Crypt::encrypt($row->id)]);
                 $deleteUrl = route('panitera.destroy', ['id' => Crypt::encrypt($row->id)]);
-                $actionBtn = '<a href="' . $editUrl . '" class="btn btn-soft-warning btn-sm mb-2"><i class="ti ti-edit"></i></a>';
+                $actionBtn = '';
+                $actionBtn = '<a href="' . $editUrl . '" class="btn btn-soft-warning btn-sm"><i class="ti ti-edit"></i></a>';
                 $actionBtn .= '<button type="button" onclick="deleteData(\'' . $deleteUrl . '\')" class="btn btn-danger btn-sm ms-1"><i class="ti ti-trash"></i></button>';
-                return $actionBtn;
+                return '<div class="d-flex flex-row gap-1">' . $actionBtn . '</div>';
+            })
+            ->editColumn('created_by', function ($row) {
+                $createdBy = User::find($row->created_by);
+                return $createdBy ? $createdBy->name : 'Unknown';
+            })
+            ->editColumn('aktif', function ($row) {
+                return $row->aktif == 1 ? '<span class="badge bg-success">Ya</span>' : '<span class="badge bg-danger">Tidak</span>';
             })
             ->editColumn('created_at', function ($row) {
                 return $row->created_at ? $row->created_at->format('d-m-Y H:i:s') : '';
@@ -34,7 +43,7 @@ class PaniteraDataTable extends DataTable
             ->editColumn('updated_at', function ($row) {
                 return $row->updated_at ? $row->updated_at->format('d-m-Y H:i:s') : '';
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['aktif', 'action'])
             ->setRowId('id');
     }
 
@@ -80,6 +89,7 @@ class PaniteraDataTable extends DataTable
             Column::make('jabatan'),
             Column::make('status'),
             Column::make('aktif'),
+            Column::make('created_by'),
             Column::make('created_at'),
             Column::make('updated_at'),
             Column::computed('action')

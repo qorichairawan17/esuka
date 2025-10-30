@@ -26,10 +26,14 @@ class AdministratorDataTable extends DataTable
                 $detailUrl = route('administrator.detail', ['id' => Crypt::encrypt($row->id)]);
                 $editUrl = route('administrator.form', ['param' => 'edit', 'id' => Crypt::encrypt($row->id)]);
                 $deleteUrl = route('administrator.destroy', ['id' => Crypt::encrypt($row->id)]);
-                $actionBtn = '<a href="' . $detailUrl . '" class="btn btn-soft-primary btn-sm mb-2"><i class="ti ti-eye"></i></a>';
-                $actionBtn .= '<a href="' . $editUrl . '" class="btn btn-soft-warning btn-sm mb-2"><i class="ti ti-edit"></i></a>';
-                Auth::id() === $row->id ? $actionBtn .= '<button type="button" disabled class="btn btn-danger btn-sm ms-1"><i class="ti ti-trash"></i></button>' : $actionBtn .= '<button type="button" onclick="deleteData(\'' . $deleteUrl . '\')" class="btn btn-danger btn-sm ms-1"><i class="ti ti-trash"></i></button>';
-                return $actionBtn;
+                $actionBtn = '';
+                $actionBtn = '<a href="' . $detailUrl . '" class="btn btn-soft-primary btn-sm"><i class="ti ti-eye"></i></a>';
+                $actionBtn .= '<a href="' . $editUrl . '" class="btn btn-soft-warning btn-sm"><i class="ti ti-edit"></i></a>';
+                Auth::id() === $row->id ? $actionBtn .= '<button type="button" disabled class="btn btn-danger btn-sm"><i class="ti ti-trash"></i></button>' : $actionBtn .= '<button type="button" onclick="deleteData(\'' . $deleteUrl . '\')" class="btn btn-danger btn-sm ms-1"><i class="ti ti-trash"></i></button>';
+                return '<div class="d-flex flex-row gap-1">' . $actionBtn . '</div>';
+            })
+            ->editColumn('block', function ($row) {
+                return $row->block == 1 ? '<span class="badge bg-success">Ya</span>' : '<span class="badge bg-danger">Tidak</span>';
             })
             ->editColumn('created_at', function ($row) {
                 return $row->created_at ? $row->created_at->format('d-m-Y H:i:s') : '';
@@ -37,7 +41,7 @@ class AdministratorDataTable extends DataTable
             ->editColumn('updated_at', function ($row) {
                 return $row->updated_at ? $row->updated_at->format('d-m-Y H:i:s') : '';
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['block', 'action'])
             ->setRowId('id');
     }
 

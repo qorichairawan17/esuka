@@ -10,7 +10,8 @@
         <div class="sidebar-brand">
             <a href="{{ $urlDashboard }}">
                 <img src="{{ asset('icons/horizontal-e-suka.png') }}" height="50" class="logo-light-mode" alt="">
-                <img src="{{ asset('icons/horizontal-e-suka-white.png') }}" height="50" class="logo-dark-mode" alt="">
+                <img src="{{ asset('icons/horizontal-e-suka-white.png') }}" height="50" class="logo-dark-mode"
+                    alt="">
                 <span class="sidebar-colored">
                     <img src="{{ asset('icons/horizontal-e-suka-white.png') }}" height="50" alt="">
                 </span>
@@ -28,7 +29,8 @@
                 <div class="sidebar-submenu">
                     <ul>
                         <li><a href="{{ route('surat-kuasa.index') }}">Pendaftaran</a></li>
-                        @if (Auth::user()->role == \App\Enum\RoleEnum::Superadmin->value || Auth::user()->role == \App\Enum\RoleEnum::Administrator->value)
+                        @if (Auth::user()->role == \App\Enum\RoleEnum::Superadmin->value ||
+                                Auth::user()->role == \App\Enum\RoleEnum::Administrator->value)
                             <li><a href="{{ route('surat-kuasa.laporan') }}">Laporan</a></li>
                         @endif
                         @if (Auth::user()->role == \App\Enum\RoleEnum::Superadmin->value)
@@ -58,6 +60,9 @@
                             <li><a href="{{ route('pejabat-struktural.index') }}">Pejabat Struktural</a></li>
                         </ul>
                     </div>
+                </li>
+                <li class="sidebar">
+                    <a href="{{ route('panduan.show') }}"><i class="ti ti-link me-2"></i>Panduan</a>
                 </li>
                 <li class="sidebar">
                     <a href="{{ route('audit-trail.index') }}"><i class="ti ti-database me-2"></i>Audit Trail</a>

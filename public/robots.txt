@@ -1,2 +1,26 @@
+# Robots.txt for E-SUKA Application
+# Allow all search engines to crawl
+
 User-agent: *
-Disallow:
+Allow: /
+Allow: /index
+Allow: /index/about
+Allow: /index/contact
+Allow: /index/signin
+Allow: /index/signup
+
+# Block sensitive areas
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /surat-kuasa/
+Disallow: /pengguna/
+Disallow: /pengaturan/
+Disallow: /profil/
+Disallow: /audit-trail/
+Disallow: /storage/
+Disallow: /vendor/
+Disallow: /*.json
+Disallow: /*.log
+
+# Sitemap location
+Sitemap: https://esuka.example.com/sitemap.xml

@@ -67,7 +67,9 @@ class DatabaseSeeder extends Seeder
                 'jabatan' => 'Panitera',
                 'status' => \App\Enum\StatusPaniteraEnum::NonPlh->value,
                 'aktif' => '1',
-                'created_by' => '1'
+                'created_by' => '1',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'nip' => '121442',
@@ -75,7 +77,9 @@ class DatabaseSeeder extends Seeder
                 'jabatan' => 'Panitera Muda Pidana',
                 'status' => \App\Enum\StatusPaniteraEnum::Plh->value,
                 'aktif' => '1',
-                'created_by' => '1'
+                'created_by' => '1',
+                'created_at' => now(),
+                'updated_at' => now(),
             ]
         ]);
     }

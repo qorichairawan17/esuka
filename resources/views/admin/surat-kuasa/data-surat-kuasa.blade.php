@@ -13,7 +13,7 @@
 
                 <div class="mt-4">
                     <div class="card shadow">
-                        <div class="card-header">
+                        <div class="card-header bg-soft-primary">
                             @if (Auth::user()->role == \App\Enum\RoleEnum::User->value)
                                 <div class="btn-group dropdown-primary me-2 mt-2">
                                     <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

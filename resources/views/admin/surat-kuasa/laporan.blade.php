@@ -13,9 +13,9 @@
 
                 <div class="mt-4">
                     <div class="card shadow">
-                        <div class="card-header">
+                        <div class="card-header bg-soft-primary">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h6 class="card-title mb-0">Laporan Pendaftaran Surat Kuasa</h6>
+                                <h6 class="card-title mb-0 text-dark">Laporan Pendaftaran Surat Kuasa</h6>
                                 <div class="d-flex gap-2">
                                     <div class="widget-filter">
                                         <select class="form-select form-select-sm" id="tahunFilter" aria-label="Filter Tahun">
@@ -43,8 +43,8 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive" style="border-color: #f1f1f1;">
-                                {{ $dataTable->table(['class' => 'table table-bordered table-hover', 'style' => 'font-size:15px;']) }}
+                            <div class="table-responsive">
+                                {{ $dataTable->table(['class' => 'table table-bordered table-hover', 'style' => 'font-size:14px;']) }}
                             </div>
                         </div>
                     </div>

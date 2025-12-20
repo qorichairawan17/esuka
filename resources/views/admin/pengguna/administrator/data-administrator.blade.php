@@ -13,13 +13,13 @@
 
                 <div class="mt-4">
                     <div class="card shadow">
-                        <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
-                            <h6 class="card-title mb-0">Data Administrator</h6>
+                        <div class="card-header d-flex flex-wrap align-items-center justify-content-between bg-soft-primary">
+                            <h6 class="card-title mb-0 text-dark">Data Administrator</h6>
                             <a href="{{ route('administrator.form', ['param' => 'add']) }}" class="btn btn-primary btn-sm">Tambah</a>
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive" style="border-color: #f1f1f1;">
-                                {!! $dataTable->table(['class' => 'table table-bordered table-hover', 'style' => 'width:100%;font-size:15px;']) !!}
+                            <div class="table-responsive">
+                                {!! $dataTable->table(['class' => 'table table-bordered table-hover', 'style' => 'width:100%;font-size:14px;']) !!}
                             </div>
                         </div>
                     </div>

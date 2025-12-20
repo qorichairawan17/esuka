@@ -13,8 +13,8 @@
 
                 <div class="mt-4">
                     <div class="card shadow">
-                        <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
-                            Pembayaran Surat Kuasa ID : {{ $suratKuasa->id_daftar }}, Atas Nama {{ $suratKuasa->pemohon }}
+                        <div class="card-header d-flex flex-wrap align-items-center justify-content-between bg-soft-primary">
+                            <h6 class="card-title mb-0 text-dark">Pembayaran Surat Kuasa ID : {{ $suratKuasa->id_daftar }}, Atas Nama {{ $suratKuasa->pemohon }}</h6>
                             <a href="{{ route('surat-kuasa.detail', ['id' => Crypt::encrypt($suratKuasa->id)]) }}" class="btn btn-sm btn-secondary">Kembali</a>
                         </div>
                         <div class="card-body">

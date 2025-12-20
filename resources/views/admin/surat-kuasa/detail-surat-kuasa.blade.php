@@ -13,8 +13,8 @@
 
                 <div class="mt-4">
                     <div class="card shadow">
-                        <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
-                            Surat Kuasa Terdaftar ID : {{ $suratKuasa->id_daftar }}, Atas Nama {{ $suratKuasa->pemohon }}
+                        <div class="card-header d-flex flex-wrap align-items-center justify-content-between bg-soft-primary">
+                            <h6 class="card-title mb-0 text-dark">Surat Kuasa Terdaftar ID : {{ $suratKuasa->id_daftar }}, Atas Nama {{ $suratKuasa->pemohon }}</h6>
                             <a class="d-none d-md-inline-block btn btn-sm btn-secondary" href="{{ route('surat-kuasa.index') }}">Kembali</a>
                         </div>
                         <div class="card-body">

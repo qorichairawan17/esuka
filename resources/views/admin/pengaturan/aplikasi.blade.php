@@ -12,8 +12,8 @@
                 @include('admin.component.breadcumb')
 
                 <div class="card shadow mt-4">
-                    <div class="card-header">
-                        <h6 class="card-title mb-0">
+                    <div class="card-header bg-soft-primary">
+                        <h6 class="card-title mb-0 text-dark">
                             Pengaturan Aplikasi
                         </h6>
                     </div>
@@ -26,30 +26,31 @@
                                         <label for="pengadilanTinggi">
                                             Pengadilan Tingkat Banding <span class="text-danger">*</span>
                                         </label>
-                                        <input type="text" name="pengadilanTinggi" class="form-control" id="pengadilanTinggi" placeholder="Pengadilan Tinggi Medan"
-                                            value="{{ old('pengadilanTinggi', $infoApp->pengadilan_tinggi ?? '') }}" required>
+                                        <input type="text" name="pengadilanTinggi" class="form-control @error('pengadilanTinggi') is-invalid @enderror" id="pengadilanTinggi"
+                                            placeholder="Pengadilan Tinggi Medan" value="{{ old('pengadilanTinggi', $infoApp->pengadilan_tinggi ?? '') }}" required>
                                         <div class="invalid-feedback" id="pengadilanTinggi-error"></div>
                                     </div>
                                     <div class="form-group mb-3">
                                         <label for="pengadilanNegeri">
                                             Pengadilan Tingkat Pertama <span class="text-danger">*</span>
                                         </label>
-                                        <input type="text" name="pengadilanNegeri" class="form-control" id="pengadilanNegeri" placeholder="Pengadilan Negeri Lubuk Pakam"
-                                            value="{{ old('pengadilanNegeri', $infoApp->pengadilan_negeri ?? '') }}" required>
+                                        <input type="text" name="pengadilanNegeri" class="form-control @error('pengadilanNegeri') is-invalid @enderror" id="pengadilanNegeri"
+                                            placeholder="Pengadilan Negeri Lubuk Pakam" value="{{ old('pengadilanNegeri', $infoApp->pengadilan_negeri ?? '') }}" required>
                                         <div class="invalid-feedback" id="pengadilanNegeri-error"></div>
                                     </div>
                                     <div class="form-group mb-3">
                                         <label for="kodeDipa">
                                             Kode DIPA <span class="text-danger">*</span>
                                         </label>
-                                        <input type="text" name="kodeDipa" class="form-control" id="kodeDipa" placeholder="400395" value="{{ old('kodeDipa', $infoApp->kode_dipa ?? '') }}" required>
+                                        <input type="text" name="kodeDipa" class="form-control @error('kodeDipa') is-invalid @enderror" id="kodeDipa" placeholder="400395"
+                                            value="{{ old('kodeDipa', $infoApp->kode_dipa ?? '') }}" required>
                                         <div class="invalid-feedback" id="kodeDipa-error"></div>
                                     </div>
                                     <div class="form-group mb-3">
                                         <label for="kodeSuratKuasa">
                                             Kode Surat Kuasa <span class="text-danger">*</span>
                                         </label>
-                                        <input type="text" name="kodeSuratKuasa" class="form-control" id="kodeSuratKuasa" placeholder="400395"
+                                        <input type="text" name="kodeSuratKuasa" class="form-control @error('kodeSuratKuasa') is-invalid @enderror" id="kodeSuratKuasa" placeholder="400395"
                                             value="{{ old('kodeSuratKuasa', $infoApp->kode_surat_kuasa ?? '') }}" required>
                                         <div class="invalid-feedback" id="kodeSuratKuasa-error"></div>
                                     </div>
@@ -57,30 +58,31 @@
                                         <label for="provinsi">
                                             Provinsi <span class="text-danger">*</span>
                                         </label>
-                                        <input type="text" name="provinsi" class="form-control" id="provinsi" placeholder="Sumatera Utara" value="{{ old('provinsi', $infoApp->provinsi ?? '') }}"
-                                            required>
+                                        <input type="text" name="provinsi" class="form-control @error('provinsi') is-invalid @enderror" id="provinsi" placeholder="Sumatera Utara"
+                                            value="{{ old('provinsi', $infoApp->provinsi ?? '') }}" required>
                                         <div class="invalid-feedback" id="provinsi-error"></div>
                                     </div>
                                     <div class="form-group mb-3">
                                         <label for="kabupaten">
                                             Kabupaten/ Kota <span class="text-danger">*</span>
                                         </label>
-                                        <input type="text" name="kabupaten" class="form-control" id="kabupaten" placeholder="Deli Serdang" value="{{ old('kabupaten', $infoApp->kabupaten ?? '') }}"
-                                            required>
+                                        <input type="text" name="kabupaten" class="form-control @error('kabupaten') is-invalid @enderror" id="kabupaten" placeholder="Deli Serdang"
+                                            value="{{ old('kabupaten', $infoApp->kabupaten ?? '') }}" required>
                                         <div class="invalid-feedback" id="kabupaten-error"></div>
                                     </div>
                                     <div class="form-group mb-3">
                                         <label for="kodePos">
                                             Kode Pos <span class="text-danger">*</span>
                                         </label>
-                                        <input type="text" name="kodePos" class="form-control" id="kodePos" placeholder="20512" value="{{ old('kodePos', $infoApp->kode_pos ?? '') }}" required>
+                                        <input type="text" name="kodePos" class="form-control @error('kodePos') is-invalid @enderror" id="kodePos" placeholder="20512"
+                                            value="{{ old('kodePos', $infoApp->kode_pos ?? '') }}" required>
                                         <div class="invalid-feedback" id="kodePos-error"></div>
                                     </div>
                                     <div class="form-group mb-3">
                                         <label for="alamat">
                                             Alamat <span class="text-danger">*</span>
                                         </label>
-                                        <textarea class="form-control" style="height: 128px" name="alamat" id="alamat" required placeholder="Jln. Jenderal Sudirman">{{ old('alamat', $infoApp->alamat ?? '') }}</textarea>
+                                        <textarea class="form-control @error('alamat') is-invalid @enderror" style="height: 128px" name="alamat" id="alamat" required placeholder="Jln. Jenderal Sudirman">{{ old('alamat', $infoApp->alamat ?? '') }}</textarea>
                                         <div class="invalid-feedback" id="alamat-error"></div>
                                     </div>
                                 </div>
@@ -89,7 +91,7 @@
                                         <label for="website">
                                             Website <span class="text-danger">*</span>
                                         </label>
-                                        <input type="text" name="website" class="form-control" id="website" placeholder="https://website.go.id"
+                                        <input type="text" name="website" class="form-control @error('website') is-invalid @enderror" id="website" placeholder="https://website.go.id"
                                             value="{{ old('website', $infoApp->website ?? '') }}" required>
                                         <div class="invalid-feedback" id="website-error"></div>
                                     </div>
@@ -97,7 +99,7 @@
                                         <label for="facebook">
                                             Facebook <span class="text-danger">*</span>
                                         </label>
-                                        <input type="text" name="facebook" class="form-control" id="facebook" placeholder="https://facebook.com/user"
+                                        <input type="text" name="facebook" class="form-control @error('facebook') is-invalid @enderror" id="facebook" placeholder="https://facebook.com/user"
                                             value="{{ old('facebook', $infoApp->facebook ?? '') }}" required>
                                         <div class="invalid-feedback" id="facebook-error"></div>
                                     </div>
@@ -105,7 +107,7 @@
                                         <label for="instagram">
                                             Instagram <span class="text-danger">*</span>
                                         </label>
-                                        <input type="text" name="instagram" class="form-control" id="instagram" placeholder="https://instagram.com/user"
+                                        <input type="text" name="instagram" class="form-control @error('instagram') is-invalid @enderror" id="instagram" placeholder="https://instagram.com/user"
                                             value="{{ old('instagram', $infoApp->instagram ?? '') }}" required>
                                         <div class="invalid-feedback" id="instagram-error"></div>
                                     </div>
@@ -113,7 +115,7 @@
                                         <label for="youtube">
                                             Youtube <span class="text-danger">*</span>
                                         </label>
-                                        <input type="text" name="youtube" class="form-control" id="youtube" placeholder="https://youtube.com/channel"
+                                        <input type="text" name="youtube" class="form-control @error('youtube') is-invalid @enderror" id="youtube" placeholder="https://youtube.com/channel"
                                             value="{{ old('youtube', $infoApp->youtube ?? '') }}" required>
                                         <div class="invalid-feedback" id="youtube-error"></div>
                                     </div>
@@ -121,16 +123,16 @@
                                         <label for="kontak">
                                             Kontak <span class="text-danger">*</span>
                                         </label>
-                                        <input type="text" name="kontak" class="form-control" id="kontak" placeholder="+6288088776767" value="{{ old('kontak', $infoApp->kontak ?? '') }}"
-                                            required>
+                                        <input type="text" name="kontak" class="form-control @error('kontak') is-invalid @enderror" id="kontak" placeholder="+6288088776767"
+                                            value="{{ old('kontak', $infoApp->kontak ?? '') }}" required>
                                         <div class="invalid-feedback" id="kontak-error"></div>
                                     </div>
                                     <div class="form-group mb-3">
                                         <label for="email">
                                             Email <span class="text-danger">*</span>
                                         </label>
-                                        <input type="email" name="email" class="form-control" id="email" placeholder="email@example.com" value="{{ old('email', $infoApp->email ?? '') }}"
-                                            required>
+                                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="email" placeholder="email@example.com"
+                                            value="{{ old('email', $infoApp->email ?? '') }}" required>
                                         <div class="invalid-feedback" id="email-error"></div>
                                     </div>
                                     <div class="form-group mb-3">
@@ -139,7 +141,7 @@
                                                 <span class="text-danger">*</span>
                                             @endif
                                         </label>
-                                        <input type="file" name="logo" class="form-control" id="logo" accept="image/png, image/jpeg, image/gif">
+                                        <input type="file" name="logo" class="form-control @error('logo') is-invalid @enderror" id="logo" accept="image/png, image/jpeg, image/gif">
                                         <div class="invalid-feedback" id="logo-error"></div>
                                         @if (!empty($infoApp->logo))
                                             <img src="{{ asset('storage/' . $infoApp->logo) }}" class="img-fluid img-thumbnail mt-3" alt="Logo" style="max-width: 150px;">

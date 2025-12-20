@@ -12,8 +12,8 @@
                 @include('admin.component.breadcumb')
 
                 <div class="card shadow mt-4">
-                    <div class="card-header">
-                        <h6 class="card-title mb-0">
+                    <div class="card-header bg-soft-primary">
+                        <h6 class="card-title mb-0 text-dark">
                             Profil Pejabat Struktural
                         </h6>
                     </div>
@@ -26,7 +26,8 @@
                                     <label for="ketua">
                                         Ketua <span class="text-danger">*</span>
                                     </label>
-                                    <input type="text" name="ketua" class="form-control" id="ketua" placeholder="Nama Ketua" value="{{ old('ketua', $pejabat->ketua ?? '') }}" required>
+                                    <input type="text" name="ketua" class="form-control @error('ketua') is-invalid @enderror" id="ketua" placeholder="Nama Ketua"
+                                        value="{{ old('ketua', $pejabat->ketua ?? '') }}" required>
                                     <div class="invalid-feedback" id="ketua-error"></div>
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -36,7 +37,7 @@
                                             <span class="text-danger">*</span>
                                         @endif
                                     </label>
-                                    <input type="file" name="foto_ketua" class="form-control" id="foto_ketua" accept="image/png, image/jpeg, image/gif">
+                                    <input type="file" name="foto_ketua" class="form-control @error('foto_ketua') is-invalid @enderror" id="foto_ketua" accept="image/png, image/jpeg, image/gif">
                                     <div class="invalid-feedback" id="foto_ketua-error"></div>
                                     @if (!empty($pejabat->foto_ketua))
                                         <img src="{{ asset('storage/' . $pejabat->foto_ketua) }}" class="img-fluid img-thumbnail mt-3" alt="Foto Ketua" style="max-width: 150px;">
@@ -48,7 +49,7 @@
                                     <label for="wakil_ketua">
                                         Wakil Ketua <span class="text-danger">*</span>
                                     </label>
-                                    <input type="text" name="wakil_ketua" class="form-control" id="wakil_ketua" placeholder="Nama Wakil Ketua"
+                                    <input type="text" name="wakil_ketua" class="form-control @error('wakil_ketua') is-invalid @enderror" id="wakil_ketua" placeholder="Nama Wakil Ketua"
                                         value="{{ old('wakil_ketua', $pejabat->wakil_ketua ?? '') }}" required>
                                     <div class="invalid-feedback" id="wakil_ketua-error"></div>
                                 </div>
@@ -59,7 +60,8 @@
                                             <span class="text-danger">*</span>
                                         @endif
                                     </label>
-                                    <input type="file" name="foto_wakil_ketua" class="form-control" id="foto_wakil_ketua" accept="image/png, image/jpeg, image/gif">
+                                    <input type="file" name="foto_wakil_ketua" class="form-control @error('foto_wakil_ketua') is-invalid @enderror" id="foto_wakil_ketua"
+                                        accept="image/png, image/jpeg, image/gif">
                                     <div class="invalid-feedback" id="foto_wakil_ketua-error"></div>
                                     @if (!empty($pejabat->foto_wakil_ketua))
                                         <img src="{{ asset('storage/' . $pejabat->foto_wakil_ketua) }}" class="img-fluid img-thumbnail mt-3" alt="Foto Wakil Ketua" style="max-width: 150px;">
@@ -71,7 +73,8 @@
                                     <label for="panitera">
                                         Panitera <span class="text-danger">*</span>
                                     </label>
-                                    <input type="text" name="panitera" class="form-control" id="panitera" placeholder="Nama Panitera" value="{{ old('panitera', $pejabat->panitera ?? '') }}" required>
+                                    <input type="text" name="panitera" class="form-control @error('panitera') is-invalid @enderror" id="panitera" placeholder="Nama Panitera"
+                                        value="{{ old('panitera', $pejabat->panitera ?? '') }}" required>
                                     <div class="invalid-feedback" id="panitera-error"></div>
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -81,7 +84,8 @@
                                             <span class="text-danger">*</span>
                                         @endif
                                     </label>
-                                    <input type="file" name="foto_panitera" class="form-control" id="foto_panitera" accept="image/png, image/jpeg, image/gif">
+                                    <input type="file" name="foto_panitera" class="form-control @error('foto_panitera') is-invalid @enderror" id="foto_panitera"
+                                        accept="image/png, image/jpeg, image/gif">
                                     <div class="invalid-feedback" id="foto_panitera-error"></div>
                                     @if (!empty($pejabat->foto_panitera))
                                         <img src="{{ asset('storage/' . $pejabat->foto_panitera) }}" class="img-fluid img-thumbnail mt-3" alt="Foto Panitera" style="max-width: 150px;">
@@ -93,8 +97,8 @@
                                     <label for="sekretaris">
                                         Sekretaris <span class="text-danger">*</span>
                                     </label>
-                                    <input type="text" name="sekretaris" class="form-control" id="sekretaris" placeholder="Nama Sekretaris" value="{{ old('sekretaris', $pejabat->sekretaris ?? '') }}"
-                                        required>
+                                    <input type="text" name="sekretaris" class="form-control @error('sekretaris') is-invalid @enderror" id="sekretaris" placeholder="Nama Sekretaris"
+                                        value="{{ old('sekretaris', $pejabat->sekretaris ?? '') }}" required>
                                     <div class="invalid-feedback" id="sekretaris-error"></div>
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -104,7 +108,8 @@
                                             <span class="text-danger">*</span>
                                         @endif
                                     </label>
-                                    <input type="file" name="foto_sekretaris" class="form-control" id="foto_sekretaris" accept="image/png, image/jpeg, image/gif">
+                                    <input type="file" name="foto_sekretaris" class="form-control @error('foto_sekretaris') is-invalid @enderror" id="foto_sekretaris"
+                                        accept="image/png, image/jpeg, image/gif">
                                     <div class="invalid-feedback" id="foto_sekretaris-error"></div>
                                     @if (!empty($pejabat->foto_sekretaris))
                                         <img src="{{ asset('storage/' . $pejabat->foto_sekretaris) }}" class="img-fluid img-thumbnail mt-3" alt="Foto Sekretaris" style="max-width: 150px;">

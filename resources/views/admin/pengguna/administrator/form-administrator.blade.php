@@ -13,8 +13,8 @@
 
                 <div class="mt-4">
                     <div class="card shadow">
-                        <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
-                            <h6 class="card-title mb-0">{{ $pageTitle }}</h6>
+                        <div class="card-header d-flex flex-wrap align-items-center justify-content-between bg-soft-primary">
+                            <h6 class="card-title mb-0 text-dark">{{ $pageTitle }}</h6>
                             <a href="{{ route('administrator.index') }}" class="btn btn-sm btn-secondary">Kembali</a>
                         </div>
                         <div class="card-body">
@@ -27,14 +27,16 @@
                                     <label for="nama">
                                         Nama <span class="text-danger">*</span>
                                     </label>
-                                    <input type="text" name="nama" class="form-control" id="nama" placeholder="Ahmad Naufal" required value="{{ old('nama', $user->name ?? '') }}">
+                                    <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror" id="nama" placeholder="Ahmad Naufal" required
+                                        value="{{ old('nama', $user->name ?? '') }}">
                                     <div class="invalid-feedback"></div>
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="email">
                                         Email <span class="text-danger">*</span>
                                     </label>
-                                    <input type="email" name="email" class="form-control" id="email" placeholder="naufal@example.com" required value="{{ old('email', $user->email ?? '') }}">
+                                    <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="email" placeholder="naufal@example.com" required
+                                        value="{{ old('email', $user->email ?? '') }}">
                                     <div class="invalid-feedback"></div>
                                 </div>
                                 <div class="form-group mb-3">
@@ -46,14 +48,16 @@
                                             <small class="text-muted">(Kosongkan jika tidak ingin diubah)</small>
                                         @endif
                                     </label>
-                                    <input type="password" name="password" class="form-control" id="password" placeholder="***********" {{ isset($user) ? '' : 'required' }}>
+                                    <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="password" placeholder="***********"
+                                        {{ isset($user) ? '' : 'required' }}>
                                     <div class="invalid-feedback"></div>
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="kontak">
                                         Kontak <span class="text-danger">*</span>
                                     </label>
-                                    <input type="number" name="kontak" class="form-control" id="kontak" placeholder="6288088776767" required value="{{ old('kontak', $user->profile->kontak ?? '') }}">
+                                    <input type="number" name="kontak" class="form-control @error('kontak') is-invalid @enderror" id="kontak" placeholder="6288088776767" required
+                                        value="{{ old('kontak', $user->profile->kontak ?? '') }}">
                                     <div class="invalid-feedback"></div>
                                 </div>
                                 <div class="form-group mb-3">
@@ -65,7 +69,7 @@
                                             <small class="text-muted">(Kosongkan jika tidak ingin diubah)</small>
                                         @endif
                                     </label>
-                                    <input type="file" name="foto" class="form-control" id="foto">
+                                    <input type="file" name="foto" class="form-control @error('foto') is-invalid @enderror" id="foto">
                                     @if (isset($user) && $user->profile && $user->profile->foto)
                                         <img src="{{ asset('storage/' . $user->profile->foto) }}" alt="Foto Profil" class="img-thumbnail mt-2" style="max-width: 150px;">
                                     @endif
@@ -75,7 +79,7 @@
                                     <label for="role">
                                         Role <span class="text-danger">*</span>
                                     </label>
-                                    <select name="role" class="form-control" id="role" required>
+                                    <select name="role" class="form-control @error('role') is-invalid @enderror" id="role" required>
                                         <option selected disabled>Pilih Role</option>
                                         @foreach (\App\Enum\RoleEnum::cases() as $role)
                                             <option value="{{ $role->value }}" {{ old('role', $user->role ?? '') == $role->value ? 'selected' : '' }}>
@@ -89,7 +93,7 @@
                                     <label for="aktif">
                                         Status Akun <span class="text-danger">*</span>
                                     </label>
-                                    <select name="aktif" class="form-control" id="aktif" required>
+                                    <select name="aktif" class="form-control @error('aktif') is-invalid @enderror" id="aktif" required>
                                         <option selected disabled>Pilih Status</option>
                                         <option value="0" {{ old('aktif', $user->block ?? '') == '0' ? 'selected' : '' }}>Aktif</option>
                                         <option value="1" {{ old('aktif', $user->block ?? '') == '1' ? 'selected' : '' }}>Diblokir</option>

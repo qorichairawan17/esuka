@@ -13,7 +13,7 @@
 
                 <div class="mt-4">
                     <div class="card shadow">
-                        <div class="card-header">
+                        <div class="card-header bg-soft-primary">
                             <div class="alert bg-soft-warning fw-medium" role="alert">
                                 <i class="uil uil-info-circle fs-5 align-middle me-1"></i> Harap perhatikan pengisian data
                                 dengan teliti dan valid, Apabila ada kekeliruan maka akan ditolak oleh petugas verifikasi

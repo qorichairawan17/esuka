@@ -13,12 +13,12 @@
 
                 <div class="mt-4">
                     <div class="card shadow">
-                        <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
-                            <h6 class="card-title mb-0">Data Testimoni</h6>
+                        <div class="card-header d-flex flex-wrap align-items-center justify-content-between bg-soft-primary">
+                            <h6 class="card-title mb-0 text-dark">Data Testimoni</h6>
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive" style="border-color: #f1f1f1;">
-                                {!! $dataTable->table(['class' => 'table table-bordered', 'style' => 'width:100%;font-size:15px;']) !!}
+                            <div class="table-responsive">
+                                {!! $dataTable->table(['class' => 'table table-bordered table-hover', 'style' => 'width:100%;font-size:14px;']) !!}
                             </div>
                         </div>
                     </div>
@@ -61,8 +61,7 @@
                             </div>
                             <div class="d-flex justify-content-end">
                                 <button type="button" class="btn btn-sm btn-secondary me-2" data-bs-dismiss="modal">Batal</button>
-                                <button type="submit" id="btn-update-testimoni" class="btn btn-sm btn-primary">Simpan
-                                    Perubahan</button>
+                                <button type="submit" id="btn-update-testimoni" class="btn btn-sm btn-primary">Simpan</button>
                             </div>
                         </form>
                     </div>

@@ -12,8 +12,8 @@
                 @include('admin.component.breadcumb')
 
                 <div class="card shadow mt-4">
-                    <div class="card-header">
-                        <h6 class="card-title mb-0">
+                    <div class="card-header bg-soft-primary">
+                        <h6 class="card-title mb-0 text-dark">
                             Pembayaran & PNBP (Penerimaan Negara Bukan Pajak)
                         </h6>
                     </div>
@@ -24,14 +24,15 @@
                                 <label for="namaBank">
                                     Bank Rekening <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" name="namaBank" class="form-control" id="namaBank" placeholder="Bank BTN" value="{{ old('namaBank', $pembayaran->nama_bank ?? '') }}" required>
+                                <input type="text" name="namaBank" class="form-control @error('namaBank') is-invalid @enderror" id="namaBank" placeholder="Bank BTN"
+                                    value="{{ old('namaBank', $pembayaran->nama_bank ?? '') }}" required>
                                 <div class="invalid-feedback" id="namaBank-error"></div>
                             </div>
                             <div class="form-group mb-3">
                                 <label for="nomorRekening">
                                     Nomor Rekening <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" name="nomorRekening" class="form-control" id="nomorRekening" placeholder="0000-0000-0000-0000"
+                                <input type="text" name="nomorRekening" class="form-control @error('nomorRekening') is-invalid @enderror" id="nomorRekening" placeholder="0000-0000-0000-0000"
                                     value="{{ old('nomorRekening', $pembayaran->nomor_rekening ?? '') }}" required>
                                 <div class="invalid-feedback" id="nomorRekening-error"></div>
                             </div>
@@ -42,7 +43,7 @@
                                         <span class="text-danger">*</span>
                                     @endif
                                 </label>
-                                <input type="file" name="logoBank" class="form-control" id="logoBank" accept="image/png, image/jpeg, image/gif">
+                                <input type="file" name="logoBank" class="form-control @error('logoBank') is-invalid @enderror" id="logoBank" accept="image/png, image/jpeg, image/gif">
                                 <div class="invalid-feedback" id="logoBank-error"></div>
                                 @if (!empty($pembayaran->logo_bank))
                                     <img src="{{ asset('storage/' . $pembayaran->logo_bank) }}" class="img-fluid img-thumbnail mt-3" alt="Logo Bank" style="max-width: 150px;">
@@ -52,7 +53,7 @@
                                 <label for="qris">
                                     QRIS <sub>(Opsional)</sub>
                                 </label>
-                                <input type="file" name="qris" class="form-control" id="qris" accept="image/png, image/jpeg, image/gif">
+                                <input type="file" name="qris" class="form-control @error('qris') is-invalid @enderror" id="qris" accept="image/png, image/jpeg, image/gif">
                                 <div class="invalid-feedback" id="qris-error"></div>
                                 @if (!empty($pembayaran->qris))
                                     <img src="{{ asset('storage/' . $pembayaran->qris) }}" class="img-fluid img-thumbnail mt-3" alt="QRIS" style="max-width: 150px;">

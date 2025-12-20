@@ -13,8 +13,8 @@
 
                 <div class="mt-4">
                     <div class="card shadow">
-                        <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
-                            <h6 class="card-title mb-0">Staging Synchronize Surat Kuasa</h6>
+                        <div class="card-header d-flex flex-wrap align-items-center justify-content-between bg-soft-primary">
+                            <h6 class="card-title mb-0 text-dark">Staging Synchronize Surat Kuasa</h6>
                         </div>
                         <div class="card-body">
                             <div class="row mb-3">
@@ -45,7 +45,7 @@
                             </div>
 
                             <div class="table-responsive">
-                                {!! $dataTable->table(['class' => 'table table-bordered', 'style' => 'font-size:15px;']) !!}
+                                {!! $dataTable->table(['class' => 'table table-bordered', 'style' => 'font-size:14px;']) !!}
                             </div>
                         </div>
                     </div>

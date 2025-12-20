@@ -4,7 +4,7 @@
             <label for="ktp" class="form-label">
                 KTP (Kartu Tanda Penduduk) <span class="text-danger">*</span>
             </label>
-            <input type="file" class="form-control" id="ktp" name="ktp" {{ !$isEditMode ? 'required' : '' }}>
+            <input type="file" class="form-control @error('ktp') is-invalid @enderror" id="ktp" name="ktp" {{ !$isEditMode ? 'required' : '' }}>
             @if ($isEditMode && $suratKuasa->edoc_kartu_tanda_penduduk)
                 <div class="mt-2">
                     <a href="{{ route('surat-kuasa.download', ['path' => Crypt::encrypt($suratKuasa->edoc_kartu_tanda_penduduk)]) }}" target="_blank" class="btn btn-sm btn-soft-primary">
@@ -21,7 +21,7 @@
             <label for="kta" class="form-label">
                 KTA (Kartu Tanda Anggota) <span class="text-danger">*</span>
             </label>
-            <input type="file" class="form-control" id="kta" name="kta" {{ !$isEditMode ? 'required' : '' }}>
+            <input type="file" class="form-control @error('kta') is-invalid @enderror" id="kta" name="kta" {{ !$isEditMode ? 'required' : '' }}>
             @if ($isEditMode && $suratKuasa->edoc_kartu_tanda_anggota)
                 <div class="mt-2">
                     <a href="{{ route('surat-kuasa.download', ['path' => Crypt::encrypt($suratKuasa->edoc_kartu_tanda_anggota)]) }}" target="_blank" class="btn btn-sm btn-soft-primary">
@@ -40,7 +40,7 @@
             <label for="bas" class="form-label">
                 BAS (Berita Acara Sumpah) <span class="text-danger">*</span>
             </label>
-            <input type="file" class="form-control" id="bas" name="bas" {{ !$isEditMode ? 'required' : '' }}>
+            <input type="file" class="form-control @error('bas') is-invalid @enderror" id="bas" name="bas" {{ !$isEditMode ? 'required' : '' }}>
             @if ($isEditMode && $suratKuasa->edoc_berita_acara_sumpah)
                 <div class="mt-2">
                     <a href="{{ route('surat-kuasa.download', ['path' => Crypt::encrypt($suratKuasa->edoc_berita_acara_sumpah)]) }}" target="_blank" class="btn btn-sm btn-soft-primary">
@@ -57,7 +57,7 @@
             <label for="suratKuasa" class="form-label">
                 Surat Kuasa <span class="text-danger">*</span>
             </label>
-            <input type="file" class="form-control" id="suratKuasa" name="suratKuasa" {{ !$isEditMode ? 'required' : '' }}>
+            <input type="file" class="form-control @error('suratKuasa') is-invalid @enderror" id="suratKuasa" name="suratKuasa" {{ !$isEditMode ? 'required' : '' }}>
             @if ($isEditMode && $suratKuasa->edoc_surat_kuasa)
                 <div class="mt-2">
                     <a href="{{ route('surat-kuasa.download', ['path' => Crypt::encrypt($suratKuasa->edoc_surat_kuasa)]) }}" target="_blank" class="btn btn-sm btn-soft-primary">

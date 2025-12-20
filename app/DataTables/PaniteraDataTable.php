@@ -83,21 +83,16 @@ class PaniteraDataTable extends DataTable
                 ->orderable(false)
                 ->searchable(false)
                 ->width(30)
-                ->addClass('text-center'),
-            Column::make('nip'),
-            Column::make('nama'),
-            Column::make('jabatan'),
-            Column::make('status'),
-            Column::make('aktif'),
-            Column::make('created_by'),
-            Column::make('created_at'),
-            Column::make('updated_at'),
+                ->addClass('text-center align-top'),
+            Column::make('nip')->addClass('align-top'),
+            Column::make('nama')->addClass('align-top'),
+            Column::make('jabatan')->addClass('align-top'),
+            Column::make('status')->addClass('align-top'),
+            Column::make('aktif')->addClass('align-top'),
+            Column::make('created_by')->addClass('align-top'),
+            Column::make('created_at')->addClass('align-top'),
+            Column::make('updated_at')->addClass('align-top'),
             Column::computed('action')
-                ->exportable(false)
-                ->printable(false)
-                ->width(60)
-                ->addClass('text-center')
-                ->titleAttr(['class' => 'text-center']),
         ];
     }
 

@@ -80,23 +80,18 @@ class StagingSuratKuasaDataTable extends DataTable
                 ->orderable(false)
                 ->searchable(false)
                 ->width(30)
-                ->addClass('text-center'),
-            Column::make('user_id')->title('User ID'),
-            Column::make('email')->title('Email'),
-            Column::make('nama_lengkap')->title('Nama Lengkap'),
-            Column::make('perihal')->title('Perihal'),
-            Column::make('jenis_surat')->title('Jenis Surat'),
-            Column::make('nomor_surat_kuasa')->title('No. Surat Kuasa'),
-            Column::make('klasifikasi')->title('Klasifikasi'),
-            Column::make('status')->title('Status'),
-            Column::make('created_at'),
-            Column::make('updated_at'),
+                ->addClass('text-center align-top'),
+            Column::make('user_id')->title('User ID')->addClass('align-top'),
+            Column::make('email')->title('Email')->addClass('align-top'),
+            Column::make('nama_lengkap')->title('Nama Lengkap')->addClass('align-top'),
+            Column::make('perihal')->title('Perihal')->addClass('align-top'),
+            Column::make('jenis_surat')->title('Jenis Surat')->addClass('align-top'),
+            Column::make('nomor_surat_kuasa')->title('No. Surat Kuasa')->addClass('align-top'),
+            Column::make('klasifikasi')->title('Klasifikasi')->addClass('align-top'),
+            Column::make('status')->title('Status')->addClass('align-top'),
+            Column::make('created_at')->addClass('align-top'),
+            Column::make('updated_at')->addClass('align-top'),
             Column::computed('action')
-                ->exportable(false)
-                ->printable(false)
-                ->width(60)
-                ->addClass('text-center')
-                ->titleAttr(['class' => 'text-center']),
         ];
     }
 

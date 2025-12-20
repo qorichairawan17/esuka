@@ -81,19 +81,14 @@ class AdministratorDataTable extends DataTable
                 ->orderable(false)
                 ->searchable(false)
                 ->width(30)
-                ->addClass('text-center'),
-            Column::make('name'),
-            Column::make('email'),
-            Column::make('role'),
-            Column::make('block'),
-            Column::make('created_at'),
-            Column::make('updated_at'),
+                ->addClass('text-center align-top'),
+            Column::make('name')->addClass('align-top'),
+            Column::make('email')->addClass('align-top'),
+            Column::make('role')->addClass('align-top'),
+            Column::make('block')->addClass('align-top'),
+            Column::make('created_at')->addClass('align-top'),
+            Column::make('updated_at')->addClass('align-top'),
             Column::computed('action')
-                ->exportable(false)
-                ->printable(false)
-                ->width(60)
-                ->addClass('text-center')
-                ->titleAttr(['class' => 'text-center']),
         ];
     }
 

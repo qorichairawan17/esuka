@@ -13,8 +13,8 @@
 
                 <div class="mt-4">
                     <div class="card shadow">
-                        <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
-                            <h6 class="card-title mb-0">{{ $detailTitle }}</h6>
+                        <div class="card-header d-flex flex-wrap align-items-center justify-content-between bg-soft-primary">
+                            <h6 class="card-title mb-0 text-dark">{{ $detailTitle }}</h6>
                             <a href="{{ route('advokat.index') }}" class="btn btn-sm btn-secondary">Kembali</a>
                         </div>
                         <div class="card-body">

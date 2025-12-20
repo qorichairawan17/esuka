@@ -33,8 +33,8 @@
                                             </label>
                                             <div class="form-icon position-relative">
                                                 <i data-feather="user" class="fea icon-sm icons"></i>
-                                                <input type="text" class="form-control ps-5" placeholder="Qori...." id="namaDepan" name="namaDepan" required value="{{ old('namaDepan') }}"
-                                                    autocomplete="given-name">
+                                                <input type="text" class="form-control @error('namaDepan') is-invalid @enderror ps-5" placeholder="Qori...." id="namaDepan" name="namaDepan" required
+                                                    value="{{ old('namaDepan') }}" autocomplete="given-name">
                                                 <small class="text-danger mt-2" id="namaDepanError"></small>
                                             </div>
                                         </div>
@@ -46,8 +46,8 @@
                                             </label>
                                             <div class="form-icon position-relative">
                                                 <i data-feather="user" class="fea icon-sm icons"></i>
-                                                <input type="text" class="form-control ps-5" placeholder="Chairawan...." id="namaBelakang" name="namaBelakang" required autocomplete="family-name"
-                                                    value="{{ old('namaBelakang') }}">
+                                                <input type="text" class="form-control @error('namaBelakang') is-invalid @enderror ps-5" placeholder="Chairawan...." id="namaBelakang"
+                                                    name="namaBelakang" required autocomplete="family-name" value="{{ old('namaBelakang') }}">
                                                 <small class="text-danger mt-2" id="namaBelakangError"></small>
                                             </div>
                                         </div>
@@ -60,8 +60,8 @@
                                             </label>
                                             <div class="form-icon position-relative">
                                                 <i data-feather="user" class="fea icon-sm icons"></i>
-                                                <input type="email" class="form-control ps-5" placeholder="qori@example.com" id="email" name="email" required value="{{ old('email') }}"
-                                                    autocomplete="email">
+                                                <input type="email" class="form-control @error('email') is-invalid @enderror ps-5" placeholder="qori@example.com" id="email" name="email"
+                                                    required value="{{ old('email') }}" autocomplete="email">
                                                 <small class="text-danger mt-2" id="emailError"></small>
                                             </div>
                                         </div>
@@ -74,27 +74,25 @@
                                             </label>
                                             <div class="form-icon position-relative">
                                                 <i data-feather="key" class="fea icon-sm icons"></i>
-                                                <input type="password" class="form-control ps-5" placeholder="**********" id="password" name="password" required autocomplete="new-password">
+                                                <input type="password" class="form-control @error('password') is-invalid @enderror ps-5" placeholder="**********" id="password" name="password"
+                                                    required autocomplete="new-password">
                                                 <small class="text-danger mt-2" id="passwordError"></small>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="col-lg-12">
-                                        <div class="mb-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="privacy_policy" id="privacy_policy">
-                                                <label class="form-check-label" for="privacy_policy">Saya telah membaca dan menyetujui
-                                                    <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#privacyPolicyModal" class="text-primary">
-                                                        Kebijakan Privasi & Persyaratan Penggunaan
-                                                    </a>.
-                                                </label>
-                                                <small class="text-danger mt-2 d-block" id="privacy_policyError"></small>
-                                            </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="privacy_policy" id="privacy_policy">
+                                            <label class="form-check-label" for="privacy_policy">Saya telah membaca dan menyetujui
+                                                <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#privacyPolicyModal" class="text-primary">
+                                                    Kebijakan Privasi & Persyaratan Penggunaan
+                                                </a>
+                                            </label>
+                                            <small class="text-danger mt-2 d-block" id="privacy_policyError"></small>
                                         </div>
-
-                                        <p class="forgot-pass mb-0"><a href="{{ route('auth.forgot-password') }}" class="text-dark fw-bold">Lupa Password ?</a></p>
-                                        <div class="d-grid mt-3">
+                                        <p class="forgot-pass mb-0 m-0"><a href="{{ route('auth.forgot-password') }}" class="text-dark fw-bold">Lupa Password ?</a></p>
+                                        <div class="d-grid mt-2">
                                             <button class="btn btn-primary" type="submit" id="register-button">Daftar</button>
                                         </div>
                                     </div>

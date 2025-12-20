@@ -33,7 +33,8 @@
                                             </label>
                                             <div class="form-icon position-relative">
                                                 <i data-feather="user" class="fea icon-sm icons"></i>
-                                                <input type="email" class="form-control ps-5" placeholder="Email" id="email" name="email" required value="{{ old('email') }}">
+                                                <input type="email" class="form-control @error('email') is-invalid @enderror ps-5" placeholder="Email" id="email" name="email" required
+                                                    value="{{ old('email') }}">
                                                 <small class="text-danger mt-2" id="emailError"></small>
                                             </div>
                                         </div>
@@ -46,7 +47,8 @@
                                             </label>
                                             <div class="form-icon position-relative">
                                                 <i data-feather="key" class="fea icon-sm icons"></i>
-                                                <input type="password" class="form-control ps-5" placeholder="Password" id="password" name="password" required value="{{ old('password') }}">
+                                                <input type="password" class="form-control @error('password') is-invalid @enderror ps-5" placeholder="Password" id="password" name="password" required
+                                                    value="{{ old('password') }}">
                                                 <small class="text-danger mt-2" id="passwordError"></small>
                                             </div>
                                         </div>

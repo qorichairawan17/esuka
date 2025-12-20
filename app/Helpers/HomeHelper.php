@@ -55,8 +55,8 @@ class HomeHelper
         $currentYear = date('Y');
         $cacheKey = "chart_data_{$currentYear}";
 
-        // Cache the data for 1 day (1440 minutes) or until invalidated.
-        return Cache::remember($cacheKey, 1440, function () use ($currentYear) {
+        // Cache the data for 1 day (3600 minutes) or until invalidated.
+        return Cache::remember($cacheKey, 3600, function () use ($currentYear) {
             $monthlyCounts = array_fill(0, 12, 0);
 
             $results = PendaftaranSuratKuasaModel::select(
@@ -106,8 +106,8 @@ class HomeHelper
         $currentYear = date('Y');
         $cacheKey = "chart_data_user_{$userId}_{$currentYear}";
 
-        // Cache the data for 1 day (1440 minutes) or until invalidated.
-        return Cache::remember($cacheKey, 1440, function () use ($userId, $currentYear) {
+        // Cache the data for 1 day (3600 minutes) or until invalidated.
+        return Cache::remember($cacheKey, 3600, function () use ($userId, $currentYear) {
             $monthlyCounts = array_fill(0, 12, 0);
 
             $results = PendaftaranSuratKuasaModel::select(

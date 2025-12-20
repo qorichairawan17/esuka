@@ -9,9 +9,10 @@ use App\Http\Requests\SendResetLinkRequest;
 
 class ResetPasswordController extends Controller
 {
-    public function __construct(protected ResetPasswordService $resetPasswordService)
+    protected $resetPasswordService;
+    public function __construct(ResetPasswordService $resetPasswordService)
     {
-        //
+        $this->resetPasswordService = $resetPasswordService;
     }
 
     public function index()

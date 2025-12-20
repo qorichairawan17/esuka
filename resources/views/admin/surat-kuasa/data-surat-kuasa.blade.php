@@ -27,7 +27,7 @@
                                     </div>
                                 </div>
                             @else
-                                <button class="btn btn-sm btn-soft-danger" id="hapus-surat-kuasa-ditolak">
+                                <button class="btn btn-sm btn-danger" id="hapus-surat-kuasa-ditolak">
                                     Hapus Surat Kuasa Ditolak
                                 </button>
                             @endif

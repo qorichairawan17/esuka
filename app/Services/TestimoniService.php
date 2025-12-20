@@ -49,6 +49,8 @@ class TestimoniService
             AuditTrailService::record("telah {$action} testimoni", $context);
             DB::commit();
 
+            // forget cache
+            cache()->forget('testimoni');
             return response()->json(['success' => true, 'message' => 'Terima kasih, testimoni Kamu telah disimpan.']);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -118,7 +120,8 @@ class TestimoniService
             DB::commit();
 
             Log::info('Testimoni berhasil diperbarui', ['id' => $decryptedId, 'user_id' => $testimoni->user_id]);
-
+            // forget cache
+            cache()->forget('testimoni');
             return response()->json(['success' => true, 'message' => 'Testimoni berhasil diperbarui.']);
         } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
             DB::rollBack();

@@ -19,7 +19,7 @@ class PembayaranController extends Controller
 
     public function __construct(protected PaymentService $paymentService)
     {
-        $this->infoApp = Cache::memo()->remember('infoApp', 60, function () {
+        $this->infoApp = Cache::remember('infoApp', 3600, function () {
             return AplikasiModel::first();
         });
     }

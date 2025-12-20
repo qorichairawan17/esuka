@@ -47,8 +47,6 @@ class AplikasiService
 
             DB::commit();
 
-            Cache::forget('infoApp');
-
             $action = $record->wasRecentlyCreated ? 'menambahkan' : 'memperbarui';
             $message = $record->wasRecentlyCreated ? 'Data berhasil disimpan.' : 'Data berhasil diubah.';
 
@@ -60,6 +58,8 @@ class AplikasiService
                 'old' => $oldData,
                 'new' => $record->toArray(),
             ];
+            // forget cache
+            cache()->forget('infoApp');
             AuditTrailService::record("telah {$action} pengaturan aplikasi", $context);
             return back()->with('success', $message);
         } catch (\Exception $e) {
@@ -218,6 +218,8 @@ class AplikasiService
                 'old' => $oldData,
                 'new' => $record->toArray(),
             ];
+            // forget cache
+            cache()->forget('pejabatStruktural');
             AuditTrailService::record("telah {$action} pengaturan pejabat struktural", $context);
             return back()->with('success', $message);
         } catch (\Exception $e) {

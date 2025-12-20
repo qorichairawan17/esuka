@@ -11,9 +11,10 @@ use App\Http\Requests\AuthRegisterRequest;
 
 class AuthController extends Controller
 {
-    public function __construct(protected AuthService $authService)
+    protected $authService;
+    public function __construct(AuthService $authService)
     {
-        //
+        $this->authService = $authService;
     }
     public function login(AuthRequest $request)
     {

@@ -15,7 +15,7 @@ class AuditTrailController extends Controller
     protected $infoApp;
     public function __construct()
     {
-        $this->infoApp = Cache::memo()->remember('infoApp', 60, function () {
+        $this->infoApp = Cache::remember('infoApp', 3600, function () {
             return \App\Models\Pengaturan\AplikasiModel::first();
         });
     }

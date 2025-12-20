@@ -2,18 +2,25 @@
 
 namespace App\Helpers;
 
-use App\Models\User;
 use App\Models\Suratkuasa\PendaftaranSuratKuasaModel;
+use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 
 class LandingHelper
 {
     public function getTotalSuratKuasa()
     {
-        return PendaftaranSuratKuasaModel::where('status', '=', \App\Enum\StatusSuratKuasaEnum::Disetujui->value)->count();
+        $suratKuasa = Cache::remember('total_surat_kuasa', 3600, function () {
+            return PendaftaranSuratKuasaModel::where('status', '=', \App\Enum\StatusSuratKuasaEnum::Disetujui->value)->count();
+        });
+        return $suratKuasa;
     }
 
     public function getTotalUser()
     {
-        return User::where('role', '=', \App\Enum\RoleEnum::User->value)->count();
+        $user = Cache::remember('total_user', 3600, function () {
+            return User::where('role', '=', \App\Enum\RoleEnum::User->value)->count();
+        });
+        return $user;
     }
 }

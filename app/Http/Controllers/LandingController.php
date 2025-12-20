@@ -18,18 +18,18 @@ class LandingController extends Controller
 
     public function __construct(protected LandingHelper $landingHelper)
     {
-        $this->infoApp = Cache::memo()->remember('infoApp', 60, function () {
+        $this->infoApp = Cache::remember('infoApp', 3600, function () {
             return AplikasiModel::first();
         });
     }
 
     public function index()
     {
-        $pejabatStruktural  = Cache::memo()->remember('pejabatStruktural', 60, function () {
+        $pejabatStruktural  = Cache::remember('pejabatStruktural', 3600, function () {
             return PejabatStrukturalModel::first();
         });
 
-        $testimoni = Cache::memo()->remember('testimoni', 60, function () {
+        $testimoni = Cache::remember('testimoni', 3600, function () {
             return TestimoniModel::where('publish_at', '!=', null)->with('user.profile')->orderBy('created_at', 'desc')->get();
         });
 

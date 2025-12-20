@@ -20,6 +20,10 @@ class TestimoniModel extends Model
         'publish_at'
     ];
 
+    protected $casts = [
+        'publish_at' => 'datetime',
+    ];
+
     public $timestamps = true;
 
     public function user(): BelongsTo

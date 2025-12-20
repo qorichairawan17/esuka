@@ -61,7 +61,7 @@ class PendaftaranSuratKuasaDataTable extends DataTable
                 return '<div class="d-flex flex-row gap-1">' . $actionBtn . '</div>';
             })
             ->editColumn('id_daftar', function ($row) {
-                $nomorSurat = ($row->register && $row->register->nomor_surat_kuasa) ? '<br>Nomor Surat : ' . $row->register->nomor_surat_kuasa : '';
+                $nomorSurat = ($row->register && $row->register->nomor_surat_kuasa) ? '<br>Nomor : ' . $row->register->nomor_surat_kuasa : '';
                 return '<a href="' . route('surat-kuasa.detail', ['id' => Crypt::encrypt($row->id)]) . '" title="Detail Pendaftaran">' . $row->id_daftar . '</a>' . $nomorSurat;
             })
             ->editColumn('updated_at', function ($row) {
@@ -124,20 +124,15 @@ class PendaftaranSuratKuasaDataTable extends DataTable
                 ->orderable(false)
                 ->searchable(false)
                 ->width(30)
-                ->addClass('text-center'),
-            Column::make('id_daftar')->style('vertical-align: top; text-wrap: wrap;'),
-            Column::make('tanggal_daftar')->style('vertical-align: top; min-width: 150px;')->addClass('text-center'),
-            Column::make('pemohon')->style('vertical-align: top;'),
-            Column::make('perihal')->style('vertical-align: top; text-wrap:wrap; min-width: 300px;'),
-            Column::make('jenis_surat')->style('vertical-align: top;min-width: 150px;'),
-            Column::make('tahapan')->style('vertical-align: top;'),
-            Column::make('status')->style('vertical-align: top;'),
-            Column::computed('action')
-                ->exportable(false)
-                ->printable(false)
-                ->width(60)
-                ->addClass('text-center')
-                ->titleAttr(['class' => 'text-center']),
+                ->addClass('text-center align-top'),
+            Column::make('id_daftar')->addClass('align-top'),
+            Column::make('tanggal_daftar')->addClass('align-top text-start'),
+            Column::make('pemohon')->addClass('align-top'),
+            Column::make('perihal')->addClass('align-top'),
+            Column::make('jenis_surat')->addClass('align-top'),
+            Column::make('tahapan')->addClass('align-top'),
+            Column::make('status')->addClass('align-top'),
+            Column::computed('action')->addClass('align-top'),
         ];
     }
 

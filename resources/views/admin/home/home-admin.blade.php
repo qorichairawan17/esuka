@@ -62,8 +62,8 @@
                 </div>
 
                 <div class="card border-0 mt-2">
-                    <div class="d-flex justify-content-between p-4 shadow rounded-top">
-                        <h6 class="fw-bold mb-0">Pendaftaran Surat Kuasa</h6>
+                    <div class="d-flex justify-content-between p-2 shadow rounded-top bg-soft-primary">
+                        <h6 class="fw-bold mb-0 text-dark">Pendaftaran Surat Kuasa</h6>
                         <a href="{{ route('surat-kuasa.index') }}" class="text-primary">Lihat <i class="uil uil-arrow-right align-middle"></i></a>
                     </div>
                     <div class="table-responsive shadow rounded-bottom simplebar-scrollable-x simplebar-scrollable-y" data-simplebar="init" style="height: 250px;">
@@ -75,7 +75,7 @@
                                 <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
                                     <div class="simplebar-content-wrapper" tabindex="0" role="region" aria-label="scrollable content" style="height: 100%; overflow: scroll;">
                                         <div class="simplebar-content" style="padding: 0px;">
-                                            <table class="table table-center bg-white mb-0">
+                                            <table class="table table-center bg-white mb-0" style="font-size: 14px;">
                                                 <thead>
                                                     <tr>
                                                         <th class="border-bottom p-3">#</th>
@@ -136,7 +136,7 @@
                     <div class="col-lg-8 col-sm-12">
                         {{-- Grafik Chart --}}
                         <div class="card border-0 rounded shadow p-4 mb-3">
-                            <h6 class="mb-0 mb-3">Grafik Pendaftaran Surat Kuasa</h6>
+                            <h6 class="mb-0 mb-3 text-center">Grafik Pendaftaran Surat Kuasa</h6>
                             <div>
                                 <canvas id="myChart"></canvas>
                             </div>
@@ -146,7 +146,7 @@
                         <div class="card shadow">
                             <div class="card-body">
                                 <h6>Audit Trail</h6>
-                                <p class="text-muted" style="text-align:justify;">
+                                <p class="text-muted m-0" style="text-align:justify;">
                                     {{ $lastAuditTrail->payload }}
                                 </p>
                             </div>
@@ -162,7 +162,7 @@
                                         </div>
                                         <div class="flex-1 ms-3">
                                             <h6 class="mb-0 text-muted">Surat Kuasa Disetujui</h6>
-                                            <p class="fs-5 text-dark fw-bold mb-0">
+                                            <p class="fs-5 text-success fw-bold mb-0">
                                                 {{ $statusSuratKuasa['disetujui'] }}
                                             </p>
                                         </div>
@@ -180,7 +180,7 @@
                                         </div>
                                         <div class="flex-1 ms-3">
                                             <h6 class="mb-0 text-muted">Surat Kuasa Ditolak</h6>
-                                            <p class="fs-5 text-dark fw-bold mb-0">
+                                            <p class="fs-5 text-danger fw-bold mb-0">
                                                 {{ $statusSuratKuasa['ditolak'] }}
                                             </p>
                                         </div>
@@ -198,7 +198,7 @@
                                         </div>
                                         <div class="flex-1 ms-3">
                                             <h6 class="mb-0 text-muted">Surat Kuasa Belum Bayar</h6>
-                                            <p class="fs-5 text-dark fw-bold mb-0">
+                                            <p class="fs-5 text-warning fw-bold mb-0">
                                                 {{ $tahapanSuratKuasa['pendaftaran'] }}
                                             </p>
                                         </div>
@@ -216,7 +216,7 @@
                                         </div>
                                         <div class="flex-1 ms-3">
                                             <h6 class="mb-0 text-muted">Surat Kuasa Sudah Bayar</h6>
-                                            <p class="fs-5 text-dark fw-bold mb-0">
+                                            <p class="fs-5 text-primary fw-bold mb-0">
                                                 {{ $tahapanSuratKuasa['pembayaran'] }}
                                             </p>
                                         </div>

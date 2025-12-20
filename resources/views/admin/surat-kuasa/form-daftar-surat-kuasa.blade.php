@@ -13,14 +13,12 @@
 
                 <div class="mt-4">
                     <div class="card shadow">
-                        <div class="card-header bg-soft-primary">
+                        <div class="card-body">
                             <div class="alert bg-soft-warning fw-medium" role="alert">
                                 <i class="uil uil-info-circle fs-5 align-middle me-1"></i> Harap perhatikan pengisian data
                                 dengan teliti dan valid, Apabila ada kekeliruan maka akan ditolak oleh petugas verifikasi
                                 !
                             </div>
-                        </div>
-                        <div class="card-body">
                             @php
                                 $isEditMode = isset($suratKuasa);
                                 $formAction = $isEditMode ? route('surat-kuasa.update', ['id' => Crypt::encrypt($suratKuasa->id)]) : route('surat-kuasa.store');

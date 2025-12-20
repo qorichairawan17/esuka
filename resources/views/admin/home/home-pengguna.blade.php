@@ -58,7 +58,7 @@
                 <div class="row mt-3">
                     <div class="col-lg-8 col-sm-12">
                         <div class="card border-0 rounded shadow p-4 mb-3">
-                            <h5 class="mb-0 mb-3">Grafik Pendaftaran Surat Kuasa</h5>
+                            <h5 class="mb-0 mb-3 text-center">Grafik Pendaftaran Surat Kuasa</h5>
                             <div>
                                 <canvas id="myChart"></canvas>
                             </div>

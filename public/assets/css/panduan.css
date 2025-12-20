@@ -1,0 +1,471 @@
+  :root {
+      --panduan-primary: #2F55D4;
+      --panduan-primary-light: #4a6fdf;
+      --panduan-secondary: #f8f9fc;
+      --panduan-white: #FFFFFF;
+      --panduan-dark: #161c2d;
+      --panduan-muted: #8492a6;
+      --panduan-border: #e9ecef;
+      --panduan-card-shadow: 0 2px 4px rgba(47, 85, 212, 0.08);
+      --panduan-card-hover-shadow: 0 10px 30px rgba(47, 85, 212, 0.12);
+  }
+
+  body {
+      background: var(--panduan-secondary);
+      min-height: 100vh;
+  }
+
+  /* Preloader Redesign */
+  #preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--panduan-primary);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  }
+
+  #status {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+  }
+
+  .spinner {
+      width: 50px;
+      height: 50px;
+      position: relative;
+  }
+
+  .double-bounce1,
+  .double-bounce2 {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: var(--panduan-white);
+      opacity: 0.6;
+      position: absolute;
+      top: 0;
+      left: 0;
+      animation: sk-bounce 2.0s infinite ease-in-out;
+  }
+
+  .double-bounce2 {
+      animation-delay: -1.0s;
+  }
+
+  @keyframes sk-bounce {
+
+      0%,
+      100% {
+          transform: scale(0.0);
+      }
+
+      50% {
+          transform: scale(1.0);
+      }
+  }
+
+  /* Sidebar Redesign */
+  .sidebar-wrapper {
+      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%) !important;
+      border-right: none !important;
+      box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .sidebar-wrapper.sidebar-light {
+      background: var(--panduan-white) !important;
+      border-right: 1px solid var(--panduan-border) !important;
+      box-shadow: none;
+  }
+
+  .sidebar-brand {
+      padding: 1.5rem !important;
+      border-bottom: 1px solid var(--panduan-border);
+  }
+
+  .sidebar-menu {
+      padding: 1rem 0.75rem !important;
+  }
+
+  .sidebar-menu li>a {
+      padding: 0.75rem 1rem !important;
+      margin: 0.125rem 0;
+      border-radius: 8px !important;
+      color: var(--panduan-dark) !important;
+      font-weight: 500;
+      transition: all 0.2s ease !important;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+  }
+
+  .sidebar-menu li>a:hover {
+      background: rgba(47, 85, 212, 0.1) !important;
+      color: var(--panduan-white) !important;
+  }
+
+  .sidebar-submenu ul {
+      background: var(--panduan-secondary) !important;
+      border-radius: 8px;
+      margin: 0.375rem 0 0.375rem 0;
+      padding: 0.375rem !important;
+  }
+
+  .sidebar-submenu ul li a {
+      padding: 0.5rem 0.75rem !important;
+      font-size: 0.8125rem;
+      color: var(--panduan-muted) !important;
+      border-radius: 6px !important;
+  }
+
+  .sidebar-submenu ul li a:hover {
+      background: rgba(47, 85, 212, 0.1) !important;
+      color: var(--panduan-primary) !important;
+  }
+
+  .header-bar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+  }
+
+  .header-bar .btn-icon {
+      width: 38px !important;
+      height: 38px !important;
+      min-width: 38px;
+      padding: 0 !important;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+  }
+
+  .search-bar {
+      flex: 1;
+      max-width: 320px;
+  }
+
+  .search-bar .form-control {
+      background: var(--panduan-secondary) !important;
+      border: 1px solid var(--panduan-border) !important;
+      border-radius: 6px !important;
+      padding: 0.5rem 0.875rem !important;
+      font-size: 0.8125rem;
+      transition: all 0.2s ease !important;
+      width: 100%;
+      height: 38px;
+  }
+
+  .search-bar .form-control:focus {
+      background: var(--panduan-white) !important;
+      border-color: var(--panduan-primary) !important;
+      box-shadow: 0 0 0 2px rgba(47, 85, 212, 0.1) !important;
+  }
+
+  .search-bar .form-control::placeholder {
+      color: var(--panduan-muted);
+      font-size: 0.8125rem;
+  }
+
+  /* Main Content Area */
+  .page-content {
+      background: transparent !important;
+  }
+
+  .layout-specing {
+      padding: 1.5rem !important;
+  }
+
+  /* Modern Cards */
+  .card {
+      border: 1px solid var(--panduan-border) !important;
+      border-radius: 8px !important;
+      box-shadow: var(--panduan-card-shadow) !important;
+      transition: all 0.2s ease !important;
+      background: var(--panduan-white);
+  }
+
+  .card:hover {
+      box-shadow: var(--panduan-card-hover-shadow) !important;
+  }
+
+  .card-body {
+      padding: 1.5rem !important;
+  }
+
+  /* Typography in Content */
+  .card-body h1,
+  .card-body h2,
+  .card-body h3,
+  .card-body h4 {
+      color: var(--panduan-dark);
+      font-weight: 600;
+      margin-bottom: 1rem;
+  }
+
+  .card-body p {
+      color: var(--panduan-muted);
+      line-height: 1.7;
+      font-size: 0.9375rem;
+  }
+
+  .card-body .table {
+      border-radius: 8px;
+      overflow: hidden;
+  }
+
+  .card-body .table th {
+      background: var(--panduan-secondary);
+      color: var(--panduan-dark);
+      font-weight: 600;
+      border: none;
+      padding: 0.875rem 1rem;
+  }
+
+  .card-body .table td {
+      padding: 0.875rem 1rem;
+      border-color: var(--panduan-border);
+      color: var(--panduan-muted);
+  }
+
+  /* Buttons */
+  .btn-soft-primary {
+      background: var(--panduan-primary) !important;
+      border: none !important;
+      color: var(--panduan-white) !important;
+      padding: 0.625rem 1.25rem !important;
+      border-radius: 8px !important;
+      font-weight: 500;
+      transition: all 0.2s ease !important;
+  }
+
+  .btn-soft-primary:hover {
+      background: var(--panduan-primary-light) !important;
+      box-shadow: 0 4px 12px rgba(47, 85, 212, 0.35) !important;
+  }
+
+  .btn-icon {
+      width: 40px !important;
+      height: 40px !important;
+      border-radius: 8px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      transition: all 0.2s ease !important;
+  }
+
+  .btn-soft-light {
+      background: var(--panduan-secondary) !important;
+      border: 1px solid var(--panduan-border) !important;
+      color: var(--panduan-dark) !important;
+  }
+
+  .btn-soft-light:hover {
+      background: var(--panduan-primary) !important;
+      border-color: var(--panduan-primary) !important;
+      color: var(--panduan-white) !important;
+  }
+
+  /* Footer */
+  footer.shadow {
+      background: var(--panduan-white) !important;
+      border-top: 1px solid var(--panduan-border);
+      box-shadow: none !important;
+  }
+
+  footer p {
+      font-size: 0.8125rem;
+  }
+
+  footer .text-primary {
+      color: var(--panduan-primary) !important;
+      font-weight: 500;
+  }
+
+  /* Breadcrumb */
+  .breadcrumb {
+      background: transparent;
+      padding: 0;
+      margin: 0;
+  }
+
+  .breadcrumb-item {
+      font-size: 0.875rem;
+  }
+
+  .breadcrumb-item a {
+      color: var(--panduan-primary);
+      text-decoration: none;
+  }
+
+  .breadcrumb-item.active {
+      color: var(--panduan-muted);
+  }
+
+  /* Welcome Section for Home */
+  .welcome-section {
+      background: var(--panduan-primary);
+      border-radius: 12px;
+      padding: 2.5rem;
+      color: var(--panduan-white);
+      margin-bottom: 1.5rem;
+  }
+
+  .welcome-section h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--panduan-white);
+  }
+
+  .welcome-section p {
+      font-size: 0.9375rem;
+      opacity: 0.9;
+      max-width: 600px;
+      color: var(--panduan-white);
+      margin-bottom: 0;
+  }
+
+  /* Guide Cards */
+  .guide-card {
+      background: var(--panduan-white);
+      border-radius: 8px;
+      padding: 1.25rem;
+      height: 100%;
+      transition: all 0.2s ease;
+      border: 1px solid var(--panduan-border);
+  }
+
+  .guide-card:hover {
+      border-color: var(--panduan-primary);
+      box-shadow: var(--panduan-card-hover-shadow);
+  }
+
+  .guide-card-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+  }
+
+  .guide-card-icon.purple {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      color: #ffffff;
+  }
+
+  .guide-card-icon.green {
+      background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+      color: #ffffff;
+  }
+
+  .guide-card-icon.blue {
+      background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+      color: #ffffff;
+  }
+
+  .guide-card-icon.orange {
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      color: #ffffff;
+  }
+
+  .guide-card h5 {
+      color: var(--panduan-dark);
+      font-weight: 600;
+      font-size: 0.9375rem;
+      margin-bottom: 0.5rem;
+  }
+
+  .guide-card p {
+      color: var(--panduan-muted);
+      font-size: 0.8125rem;
+      margin-bottom: 0;
+      line-height: 1.5;
+  }
+
+  /* Info Box */
+  .info-box {
+      background: var(--panduan-secondary);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.75rem;
+      border: 1px solid var(--panduan-border);
+  }
+
+  .info-box-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--panduan-primary);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      flex-shrink: 0;
+  }
+
+  .info-box-content h6 {
+      color: var(--panduan-dark);
+      font-weight: 600;
+      font-size: 0.8125rem;
+      margin-bottom: 0.25rem;
+  }
+
+  .info-box-content p {
+      color: var(--panduan-muted);
+      font-size: 0.8125rem;
+      margin: 0;
+  }
+
+  /* Section Label */
+  .section-label {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: var(--panduan-muted);
+      text-transform: uppercase;
+      padding: 0.5rem 1rem;
+      margin-top: 1rem;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+      .search-bar .form-control {
+          min-width: 180px;
+      }
+
+      .welcome-section {
+          padding: 1.5rem;
+      }
+
+      .welcome-section h2 {
+          font-size: 1.375rem;
+      }
+  }
+
+  /* Smooth transitions */
+  .card,
+  .guide-card,
+  .welcome-section {
+      animation: fadeIn 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+      from {
+          opacity: 0;
+      }
+
+      to {
+          opacity: 1;
+      }
+  }

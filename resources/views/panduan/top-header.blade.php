@@ -1,27 +1,23 @@
 <!-- Top Header -->
 <div class="top-header">
-    <div class="header-bar d-flex justify-content-between">
-        <div class="d-flex align-items-center">
-            <a href="#" class="logo-icon me-3">
-                <img src="{{ asset('icons/android-icon-192x192.png') }}" height="30" class="small" alt="logo">
-                <span class="big">
-                    <img src="{{ asset('icons/horizontal-e-suka.png') }}" height="50" class="logo-light-mode" alt="logo">
-                    <img src="{{ asset('icons/horizontal-e-suka-white.png') }}" height="50" class="logo-dark-mode" alt="logo">
-                </span>
+    <div class="header-bar">
+        <!-- Left: Toggle + Search -->
+        <div class="d-flex align-items-center gap-2">
+            <a href="{{ route('panduan.show') }}" class="logo-icon d-lg-none">
+                <img src="{{ asset('icons/android-icon-192x192.png') }}" height="32" class="rounded" alt="logo">
             </a>
-            <a id="close-sidebar" class="btn btn-icon btn-soft-light" href="javascript:void(0)">
-                <i class="ti ti-menu-2"></i>
-            </a>
-            <div class="search-bar p-0 d-none d-md-block ms-2">
-                <div id="search" class="menu-search mb-0">
-                    <form role="search" method="get" id="searchform" class="searchform">
-                        <div>
-                            <input type="text" class="form-control border rounded w-100" autocomplete="off" name="s" id="s" placeholder="Cari Topik..." onkeyup="searchTopics()">
-                        </div>
-                    </form>
-                </div>
+            <a id="close-sidebar" class="btn btn-icon btn-soft-light" href="javascript:void(0)">☰</a>
+            <div class="search-bar d-none d-md-block">
+                <input type="text" class="form-control" autocomplete="off" name="s" id="s" placeholder="Cari topik panduan..." onkeyup="searchTopics()">
             </div>
+        </div>
+        <!-- Right: Button -->
+        <div class="d-flex align-items-center">
+            <a href="{{ route('app.signin') }}" class="btn btn-primary btn-sm">Masuk Aplikasi</a>
         </div>
     </div>
 </div>
-<!-- Top Header -->
+<!-- Mobile Search -->
+<div class="d-md-none px-3 py-2 bg-white border-bottom">
+    <input type="text" class="form-control form-control-sm w-100" autocomplete="off" placeholder="Cari topik panduan..." onkeyup="searchTopics()">
+</div>

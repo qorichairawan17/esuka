@@ -10,68 +10,116 @@
 <script src="{{ asset('assets/libs/jquery-ui-1.14.1/jquery-ui.js') }}"></script>
 <script src="{{ asset('assets/libs/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
 <script src="{{ asset('admin/assets/plugins/DataTables/datatables.min.js') }}"></script>
-@if (session()->has('success'))
-    <script>
-        Swal.fire({
-            position: 'center',
-            icon: 'success',
-            title: 'Notifikasi',
-            text: '{{ session()->get('success') }}',
-        })
-    </script>
-@elseif (session()->has('error'))
-    <script>
-        Swal.fire({
-            position: 'center',
-            icon: 'error',
-            title: 'Oops...',
-            text: '{{ session()->get('error') }}',
-        })
-    </script>
-@elseif (session()->has('warning'))
-    <script>
-        Swal.fire({
-            position: 'center',
-            icon: 'warning',
-            title: 'Informasi...',
-            text: '{{ session()->get('warning') }}',
-        })
-    </script>
-@endif
+@foreach (['success', 'error', 'warning'] as $msg)
+    @if (session()->has($msg))
+        <script>
+            Swal.fire({
+                position: 'center',
+                icon: '{{ $msg }}',
+                title: '{{ $msg == 'success' ? 'Notifikasi' : ($msg == 'error' ? 'Oops...' : 'Informasi...') }}',
+                text: '{{ session()->get($msg) }}',
+                customClass: {
+                    popup: 'rounded-4',
+                    confirmButton: 'btn btn-soft-primary px-4'
+                },
+                buttonsStyling: false
+            })
+        </script>
+    @endif
+@endforeach
 @stack('scripts')
 <script>
+    // Hide preloader when page is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            const preloader = document.getElementById('preloader');
+            if (preloader) {
+                preloader.style.opacity = '0';
+                preloader.style.transition = 'opacity 0.5s ease';
+                setTimeout(function() {
+                    preloader.style.display = 'none';
+                }, 500);
+            }
+        }, 500);
+    });
+
+    // Search Topics Function
     function searchTopics() {
         const input = document.getElementById('s');
-        const filter = input.value.toLowerCase();
+        if (!input) return;
 
+        const filter = input.value.toLowerCase().trim();
         const menu = document.getElementById('panduan-menu');
-        const listItems = menu.getElementsByTagName('li');
+        if (!menu) return;
 
-        for (let i = 0; i < listItems.length; i++) {
-            const a = listItems[i].getElementsByTagName('a')[0];
-            if (a) {
-                const txtValue = a.textContent || a.innerText;
-                if (txtValue.toLowerCase().indexOf(filter) > -1) {
-                    listItems[i].style.display = "";
-                } else {
-                    listItems[i].style.display = "none";
-                }
-            }
+        // Get all menu items
+        const allLinks = menu.querySelectorAll('.sidebar a');
+        const dropdowns = menu.querySelectorAll('.sidebar-dropdown');
+
+        // If search is empty, show everything
+        if (filter === '') {
+            allLinks.forEach(link => {
+                link.closest('li').style.display = '';
+            });
+            dropdowns.forEach(dropdown => {
+                dropdown.style.display = '';
+            });
+            return;
         }
 
-        const dropdowns = menu.getElementsByClassName('sidebar-dropdown');
-        for (let i = 0; i < dropdowns.length; i++) {
-            const submenuItems = dropdowns[i].querySelectorAll('.sidebar-submenu li');
+        // Search through dropdowns and their submenus
+        dropdowns.forEach(dropdown => {
+            const mainLink = dropdown.querySelector(':scope > a');
+            const submenuItems = dropdown.querySelectorAll('.sidebar-submenu li');
             let hasVisibleChild = false;
+
             submenuItems.forEach(item => {
-                if (item.style.display !== 'none') {
-                    hasVisibleChild = true;
+                const link = item.querySelector('a');
+                if (link) {
+                    const text = link.textContent.toLowerCase();
+                    if (text.includes(filter)) {
+                        item.style.display = '';
+                        hasVisibleChild = true;
+                    } else {
+                        item.style.display = 'none';
+                    }
                 }
             });
 
-            dropdowns[i].style.display = hasVisibleChild ? "" : (filter ? "none" : "");
-        }
+            // Check if main category matches
+            const mainText = mainLink ? mainLink.textContent.toLowerCase() : '';
+            if (mainText.includes(filter)) {
+                hasVisibleChild = true;
+                submenuItems.forEach(item => item.style.display = '');
+            }
+
+            dropdown.style.display = hasVisibleChild ? '' : 'none';
+        });
+
+        // Search through standalone menu items
+        const standaloneItems = menu.querySelectorAll(':scope > li.sidebar');
+        standaloneItems.forEach(item => {
+            const link = item.querySelector('a');
+            if (link) {
+                const text = link.textContent.toLowerCase();
+                item.style.display = text.includes(filter) ? '' : 'none';
+            }
+        });
     }
+
+    // Add smooth scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
 </script>
 </body>
 

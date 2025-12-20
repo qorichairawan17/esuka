@@ -43,4 +43,14 @@
             </li>
         </ul>
     </div>
+    <ul class="sidebar-footer list-unstyled mb-0">
+        <li class="list-inline-item mb-0">
+            <a href="https://wa.me/{{ $infoApp->kontak }}" target="_blank" class="btn btn-icon btn-soft-light">
+                <i class="uil uil-whatsapp"></i>
+            </a>
+            <small class="text-muted fw-medium ms-1">
+                Layanan Bantuan
+            </small>
+        </li>
+    </ul>
 </nav>

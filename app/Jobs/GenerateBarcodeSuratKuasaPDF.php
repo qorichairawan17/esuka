@@ -33,78 +33,95 @@ class GenerateBarcodeSuratKuasaPDF implements ShouldQueue
      */
     public function handle(): void
     {
-        try {
-            // Reload the model from the database to ensure the latest data and relations can be loaded.
-            $register = RegisterSuratKuasaModel::with(['pendaftaran.pihak', 'panitera'])->findOrFail($this->register->id);
+        $registerId = $this->register->id ?? 'N/A';
 
+        try {
+            // Step 1: Load data from database
+            $register = RegisterSuratKuasaModel::with(['pendaftaran.pihak', 'panitera'])->findOrFail($this->register->id);
             $pendaftaran = $register->pendaftaran;
 
-            // Validate that pendaftaran exists
             if (!$pendaftaran) {
-                throw new \Exception("Pendaftaran not found for register ID: {$register->id}");
+                throw new \Exception("STEP 1 FAILED: Pendaftaran not found for register ID: {$register->id}");
             }
 
-            // Validate that panitera exists
             if (!$register->panitera) {
-                throw new \Exception("Panitera not found for register ID: {$register->id}");
+                throw new \Exception("STEP 1 FAILED: Panitera not found for register ID: {$register->id}");
             }
 
-            $infoApp = AplikasiModel::first(); //Get application setting
-
-            // Validate that infoApp exists
+            $infoApp = AplikasiModel::first();
             if (!$infoApp) {
-                throw new \Exception("Application settings not found");
+                throw new \Exception("STEP 1 FAILED: Application settings not found");
             }
 
-            // Generate URL QR Code base on UUID
-            $qrCodeUrl = route('app.surat-kuasa.verify', ['uuid' => $register->uuid]);
-
-            // Generate QR Code as base64 string for embedding in PDF
-            $qrCode = base64_encode(QrCode::format('svg')->size(80)->generate($qrCodeUrl));
-
-            // Prepare data for view
-            $data = [
-                'title' => 'Bukti Pendaftaran Surat Kuasa - ' . $pendaftaran->id_daftar,
-                'register' => $register,
-                'infoApp' => $infoApp, // Pass application setting
-                'pendaftaran' => $pendaftaran,
-                'qrCode' => $qrCode,
-                'qrCodeUrl' => $qrCodeUrl,
-            ];
-
-            // Generate PDF from view
-            $pdf = Pdf::loadView('admin.template.pdf-barcode', $data);
-
-            // Generate file name - add random string to prevent duplicate filename issues
-            $randomSuffix = strtoupper(substr(uniqid(), -4));
-            $fileName = 'barcode-surat-kuasa-' . str_replace('#', '', $pendaftaran->id_daftar) . '-' . $randomSuffix . '.pdf';
-            $filePath = 'barcode/' . date('Y') . '/' . date('m') . '/' . $fileName;
-
-            // Ensure directory exists
-            $directory = dirname($filePath);
-            if (!Storage::disk('local')->exists($directory)) {
-                Storage::disk('local')->makeDirectory($directory);
+            // Step 2: Generate QR Code
+            try {
+                $qrCodeUrl = route('app.surat-kuasa.verify', ['uuid' => $register->uuid]);
+                $qrCode = base64_encode(QrCode::format('svg')->size(80)->generate($qrCodeUrl));
+            } catch (\Exception $qrEx) {
+                throw new \Exception("STEP 2 FAILED (QR Code): " . $qrEx->getMessage());
             }
 
-            // Save PDF to storage
-            $saved = Storage::disk('local')->put($filePath, $pdf->output());
+            // Step 3: Generate PDF
+            try {
+                $data = [
+                    'title' => 'Bukti Pendaftaran Surat Kuasa - ' . $pendaftaran->id_daftar,
+                    'register' => $register,
+                    'infoApp' => $infoApp,
+                    'pendaftaran' => $pendaftaran,
+                    'qrCode' => $qrCode,
+                    'qrCodeUrl' => $qrCodeUrl,
+                ];
 
-            if (!$saved) {
-                throw new \Exception("Failed to save PDF file to storage: {$filePath}");
+                $pdf = Pdf::loadView('admin.template.pdf-barcode', $data);
+                $pdfOutput = $pdf->output();
+
+                if (empty($pdfOutput)) {
+                    throw new \Exception("PDF output is empty");
+                }
+            } catch (\Exception $pdfEx) {
+                throw new \Exception("STEP 3 FAILED (PDF Generation): " . $pdfEx->getMessage());
             }
 
-            // Update path_file di database
+            // Step 4: Save to storage
+            try {
+                $randomSuffix = strtoupper(substr(uniqid(), -4));
+                $fileName = 'barcode-surat-kuasa-' . str_replace('#', '', $pendaftaran->id_daftar) . '-' . $randomSuffix . '.pdf';
+                $filePath = 'barcode/' . date('Y') . '/' . date('m') . '/' . $fileName;
+
+                $directory = dirname($filePath);
+                if (!Storage::disk('local')->exists($directory)) {
+                    Storage::disk('local')->makeDirectory($directory);
+                }
+
+                $saved = Storage::disk('local')->put($filePath, $pdfOutput);
+
+                if (!$saved) {
+                    $storagePath = storage_path('app/' . $directory);
+                    $isWritable = is_writable(storage_path('app'));
+                    throw new \Exception("Storage::put returned false. Path: {$filePath}, Storage writable: " . ($isWritable ? 'YES' : 'NO'));
+                }
+
+                // Verify file exists
+                if (!Storage::disk('local')->exists($filePath)) {
+                    throw new \Exception("File not found after save: {$filePath}");
+                }
+            } catch (\Exception $storageEx) {
+                throw new \Exception("STEP 4 FAILED (Storage): " . $storageEx->getMessage());
+            }
+
+            // Step 5: Update database
             $register->update(['path_file' => $filePath]);
 
             Log::info('Success generate PDF barcode.', ['register_id' => $register->id, 'path' => $filePath]);
         } catch (\Exception $e) {
-            Log::error('Error generate PDF barcode.', [
-                'register_id' => $this->register->id ?? 'N/A',
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+            Log::error('BARCODE_PDF_ERROR', [
+                'register_id' => $registerId,
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
             ]);
 
-            // Re-throw the exception so it can be caught by the caller when using dispatchSync
+            // Re-throw the exception
             throw $e;
         }
     }

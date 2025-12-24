@@ -110,6 +110,11 @@ class VerifikasiSuratKuasaController extends Controller
             // Load register model to get new path_file.
             $register->refresh();
 
+            // Verify that PDF was generated successfully
+            if (empty($register->path_file)) {
+                throw new \Exception('Path file PDF kosong setelah generate.');
+            }
+
             // Send email notification to user with attached PDF.
             // Email will be processed in the background because Mailable implements ShouldQueue.
             Mail::to($pendaftaran->user->email)->queue(new ApproveSuratKuasaMail($pendaftaran, $register->path_file));
@@ -119,9 +124,19 @@ class VerifikasiSuratKuasaController extends Controller
             $message = "Pendaftaran surat kuasa {$pendaftaran->id_daftar} telah disetujui.";
             $pendaftaran->user->notify(new SuratKuasaStatusNotification($pendaftaran, $title, $message));
         } catch (\Exception $postEx) {
-            // Log the error but don't fail the request since the main transaction was successful
-            Log::error('Failed post-approve operations (PDF/notification): ' . $postEx->getMessage(), ['trace' => $postEx->getTraceAsString()]);
-            // Continue with remaining operations
+            // Log the error with full details
+            Log::error('Failed post-approve operations (PDF/notification): ' . $postEx->getMessage(), [
+                'register_id' => $register->id ?? 'N/A',
+                'pendaftaran_id' => $pendaftaran->id ?? 'N/A',
+                'trace' => $postEx->getTraceAsString()
+            ]);
+
+            // Return error response with specific message
+            // The main data was saved successfully, but PDF generation failed
+            return response()->json([
+                'success' => false,
+                'message' => 'Data surat kuasa berhasil disimpan, tetapi gagal membuat file barcode: ' . $postEx->getMessage()
+            ], 500);
         }
 
         // Record audit trail

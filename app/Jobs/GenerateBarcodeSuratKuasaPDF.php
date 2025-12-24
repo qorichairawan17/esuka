@@ -38,10 +38,27 @@ class GenerateBarcodeSuratKuasaPDF implements ShouldQueue
             $register = RegisterSuratKuasaModel::with(['pendaftaran.pihak', 'panitera'])->findOrFail($this->register->id);
 
             $pendaftaran = $register->pendaftaran;
+
+            // Validate that pendaftaran exists
+            if (!$pendaftaran) {
+                throw new \Exception("Pendaftaran not found for register ID: {$register->id}");
+            }
+
+            // Validate that panitera exists
+            if (!$register->panitera) {
+                throw new \Exception("Panitera not found for register ID: {$register->id}");
+            }
+
             $infoApp = AplikasiModel::first(); //Get application setting
+
+            // Validate that infoApp exists
+            if (!$infoApp) {
+                throw new \Exception("Application settings not found");
+            }
 
             // Generate URL QR Code base on UUID
             $qrCodeUrl = route('app.surat-kuasa.verify', ['uuid' => $register->uuid]);
+
             // Generate QR Code as base64 string for embedding in PDF
             $qrCode = base64_encode(QrCode::format('svg')->size(80)->generate($qrCodeUrl));
 
@@ -58,12 +75,23 @@ class GenerateBarcodeSuratKuasaPDF implements ShouldQueue
             // Generate PDF from view
             $pdf = Pdf::loadView('admin.template.pdf-barcode', $data);
 
-            // Generate file name
-            $fileName = 'barcode-surat-kuasa-' . str_replace('#', '', $pendaftaran->id_daftar) . '.pdf';
+            // Generate file name - add random string to prevent duplicate filename issues
+            $randomSuffix = strtoupper(substr(uniqid(), -4));
+            $fileName = 'barcode-surat-kuasa-' . str_replace('#', '', $pendaftaran->id_daftar) . '-' . $randomSuffix . '.pdf';
             $filePath = 'barcode/' . date('Y') . '/' . date('m') . '/' . $fileName;
 
+            // Ensure directory exists
+            $directory = dirname($filePath);
+            if (!Storage::disk('local')->exists($directory)) {
+                Storage::disk('local')->makeDirectory($directory);
+            }
+
             // Save PDF to storage
-            Storage::disk('local')->put($filePath, $pdf->output());
+            $saved = Storage::disk('local')->put($filePath, $pdf->output());
+
+            if (!$saved) {
+                throw new \Exception("Failed to save PDF file to storage: {$filePath}");
+            }
 
             // Update path_file di database
             $register->update(['path_file' => $filePath]);
@@ -75,6 +103,9 @@ class GenerateBarcodeSuratKuasaPDF implements ShouldQueue
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
+
+            // Re-throw the exception so it can be caught by the caller when using dispatchSync
+            throw $e;
         }
     }
 }

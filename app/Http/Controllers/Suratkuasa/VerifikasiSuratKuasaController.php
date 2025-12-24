@@ -48,6 +48,7 @@ class VerifikasiSuratKuasaController extends Controller
 
             // Check if the power of attorney has already been registered
             if ($pendaftaran->register) {
+                DB::rollBack();
                 return response()->json(['success' => false, 'message' => 'Surat kuasa ini sudah diregistrasi sebelumnya.'], 409);
             }
 
@@ -58,6 +59,7 @@ class VerifikasiSuratKuasaController extends Controller
                 ->exists();
 
             if ($isDuplicate) {
+                DB::rollBack();
                 return response()->json(['success' => false, 'message' => 'Nomor surat kuasa sudah digunakan tahun ini. Silakan gunakan nomor lain.'], 409);
             }
 
@@ -88,6 +90,20 @@ class VerifikasiSuratKuasaController extends Controller
                 'keterangan' => $newData['keterangan']
             ]);
 
+            // Commit the transaction first before generating PDF
+            DB::commit();
+        } catch (\Exception $e) {
+            // Rollback the transaction
+            DB::rollBack();
+            // Log the error
+            Log::error('Failed approve power of attorney (transaction): ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            // Return the error response
+            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan pada server saat menyimpan data.'], 500);
+        }
+
+        // Post-commit operations (generate PDF, send notifications)
+        // These are done after commit to ensure the database records are available
+        try {
             // Dispatch jobs synchronously to generate PDFs so that the file path is immediately available.
             GenerateBarcodeSuratKuasaPDF::dispatchSync($register);
 
@@ -95,39 +111,33 @@ class VerifikasiSuratKuasaController extends Controller
             $register->refresh();
 
             // Send email notification to user with attached PDF.
-            // Email wil be processed in the background because Mailable implements ShouldQueue.
+            // Email will be processed in the background because Mailable implements ShouldQueue.
             Mail::to($pendaftaran->user->email)->queue(new ApproveSuratKuasaMail($pendaftaran, $register->path_file));
 
             // Send notification to user
             $title = 'Pendaftaran Disetujui';
             $message = "Pendaftaran surat kuasa {$pendaftaran->id_daftar} telah disetujui.";
             $pendaftaran->user->notify(new SuratKuasaStatusNotification($pendaftaran, $title, $message));
-
-            // Commit the transaction
-            DB::commit();
-
-            // Record audit trail
-            $context = [
-                'old' => $oldData,
-                'new' => $newData,
-            ];
-            AuditTrailService::record('telah menyetujui pendaftaran surat kuasa ' . $pendaftaran->id_daftar, $context);
-
-            // Invalidate cache chart to get new data
-            $cacheKey = "chart_data_" . Carbon::now()->year;
-            Cache::forget($cacheKey);
-
-            // Log the action
-            Log::info('Power of attorney approved and registered: ', ['id' => $pendaftaran->id, 'nomor' => $validated['nomor_surat_kuasa']]);
-            return response()->json(['success' => true, 'message' => 'Surat kuasa berhasil disetujui dan diregistrasi.']);
-        } catch (\Exception $e) {
-            // Rollback the transaction
-            DB::rollBack();
-            // Log the error
-            Log::error('Failde approve power of attorney: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            // Return the error response
-            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan pada server.'], 500);
+        } catch (\Exception $postEx) {
+            // Log the error but don't fail the request since the main transaction was successful
+            Log::error('Failed post-approve operations (PDF/notification): ' . $postEx->getMessage(), ['trace' => $postEx->getTraceAsString()]);
+            // Continue with remaining operations
         }
+
+        // Record audit trail
+        $context = [
+            'old' => $oldData,
+            'new' => $newData,
+        ];
+        AuditTrailService::record('telah menyetujui pendaftaran surat kuasa ' . $pendaftaran->id_daftar, $context);
+
+        // Invalidate cache chart to get new data
+        $cacheKey = "chart_data_" . Carbon::now()->year;
+        Cache::forget($cacheKey);
+
+        // Log the action
+        Log::info('Power of attorney approved and registered: ', ['id' => $pendaftaran->id, 'nomor' => $validated['nomor_surat_kuasa']]);
+        return response()->json(['success' => true, 'message' => 'Surat kuasa berhasil disetujui dan diregistrasi.']);
     }
 
     /**

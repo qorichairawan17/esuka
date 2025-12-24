@@ -86,6 +86,7 @@
                                         <div class="col-lg-12">
                                             <div class="d-grid">
                                                 <button type="submit" class="btn btn-primary">Kirim Tautan Reset</button>
+                                                <a href="{{ url()->previous() }}" class="btn btn-primary">Kembali</a>
                                             </div>
                                         </div>
                                         @if (!Auth::user())

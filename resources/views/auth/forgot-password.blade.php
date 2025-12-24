@@ -57,7 +57,7 @@
                                                 <button type="submit" class="btn btn-primary">Simpan Password Baru</button>
                                             </div>
                                         </div>
-                                        @if (Auth::user())
+                                        @if (!Auth::user())
                                             <div class="mx-auto">
                                                 <p class="mb-0 mt-3"><small class="text-dark me-2">Ingat password Kamu?</small> <a href="{{ route('app.signin') }}" class="text-dark fw-bold">Masuk</a>
                                                 </p>
@@ -88,10 +88,13 @@
                                                 <button type="submit" class="btn btn-primary">Kirim Tautan Reset</button>
                                             </div>
                                         </div>
-                                        <div class="mx-auto">
-                                            <p class="mb-0 mt-3"><small class="text-dark me-2">Ingat password Kamu?</small> <a href="{{ route('app.signin') }}" class="text-dark fw-bold">Masuk</a>
-                                            </p>
-                                        </div>
+                                        @if (!Auth::user())
+                                            <div class="mx-auto">
+                                                <p class="mb-0 mt-3">
+                                                    <small class="text-dark me-2">Ingat password Kamu?</small> <a href="{{ route('app.signin') }}" class="text-dark fw-bold">Masuk</a>
+                                                </p>
+                                            </div>
+                                        @endif
                                     </div>
                                 </form>
                             @endif

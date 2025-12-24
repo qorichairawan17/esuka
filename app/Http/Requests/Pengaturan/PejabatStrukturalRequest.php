@@ -51,6 +51,7 @@ class PejabatStrukturalRequest extends FormRequest
             'foto_ketua.mimes' => 'Format Foto Ketua harus jpeg, png, jpg, atau gif.',
             'foto_ketua.max' => 'Ukuran Foto Ketua tidak boleh lebih dari 5MB.',
             'foto_ketua.file' => 'Foto Ketua harus berupa file.',
+            'foto_ketua.uploaded' => 'Foto Ketua gagal diunggah. Pastikan ukuran file tidak melebihi batas maksimum.',
 
             'wakil_ketua.required' => 'Nama Wakil Ketua harus diisi.',
             'wakil_ketua.string' => 'Nama Wakil Ketua harus berupa teks.',
@@ -61,6 +62,7 @@ class PejabatStrukturalRequest extends FormRequest
             'foto_wakil_ketua.mimes' => 'Format Foto Wakil Ketua harus jpeg, png, jpg, atau gif.',
             'foto_wakil_ketua.max' => 'Ukuran Foto Wakil Ketua tidak boleh lebih dari 5MB.',
             'foto_wakil_ketua.file' => 'Foto Wakil Ketua harus berupa file.',
+            'foto_wakil_ketua.uploaded' => 'Foto Wakil Ketua gagal diunggah. Pastikan ukuran file tidak melebihi batas maksimum.',
 
             'panitera.required' => 'Nama Panitera harus diisi.',
             'panitera.string' => 'Nama Panitera harus berupa teks.',
@@ -71,6 +73,7 @@ class PejabatStrukturalRequest extends FormRequest
             'foto_panitera.mimes' => 'Format Foto Panitera harus jpeg, png, jpg, atau gif.',
             'foto_panitera.max' => 'Ukuran Foto Panitera tidak boleh lebih dari 5MB.',
             'foto_panitera.file' => 'Foto Panitera harus berupa file.',
+            'foto_panitera.uploaded' => 'Foto Panitera gagal diunggah. Pastikan ukuran file tidak melebihi batas maksimum.',
 
             'sekretaris.required' => 'Nama Sekretaris harus diisi.',
             'sekretaris.string' => 'Nama Sekretaris harus berupa teks.',
@@ -81,6 +84,7 @@ class PejabatStrukturalRequest extends FormRequest
             'foto_sekretaris.mimes' => 'Format Foto Sekretaris harus jpeg, png, jpg, atau gif.',
             'foto_sekretaris.max' => 'Ukuran Foto Sekretaris tidak boleh lebih dari 5MB.',
             'foto_sekretaris.file' => 'Foto Sekretaris harus berupa file.',
+            'foto_sekretaris.uploaded' => 'Foto Sekretaris gagal diunggah. Pastikan ukuran file tidak melebihi batas maksimum.',
         ];
     }
 }

@@ -17,7 +17,7 @@
                             <h6 class="card-title mb-0 text-dark">Staging Synchronize Surat Kuasa</h6>
                         </div>
                         <div class="card-body">
-                            <div class="row mb-3">
+                            <div class="row">
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <label for="sinkronisasi">Sinkronisasi Staging Database Surat Kuasa Lama</label>
                                     <select class="form-select form-select-sm w-100" id="sinkronisasi" aria-label="Sinkronisasi">
@@ -25,8 +25,6 @@
                                         <option value="{{ \App\Enum\SuratKuasaEnum::Advokat->value }}">Sinkronisasi Surat Kuasa Advokat</option>
                                         <option value="{{ \App\Enum\SuratKuasaEnum::NonAdvokat->value }}">Sinkronisasi Surat Kuasa Non Advokat</option>
                                     </select>
-                                    <button type="button" class="btn btn-sm btn-soft-danger mt-2" id="deleteSinkronisasi">Hapus Data Sinkronisasi</button>
-                                    <button type="button" class="btn btn-sm btn-success mt-2" id="migrasi">Migrasi Data Surat Kuasa</button>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <label for="klasifikasiFilter">Filter Pencarian</label>
@@ -35,6 +33,13 @@
                                         <option value="{{ \App\Enum\SuratKuasaEnum::Advokat->value }}">Advokat</option>
                                         <option value="{{ \App\Enum\SuratKuasaEnum::NonAdvokat->value }}">Non Advokat</option>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 col-md-6 col-sm-12">
+                                    <button type="button" class="btn btn-sm btn-soft-danger mt-2" id="deleteSinkronisasi">Hapus Data Sinkronisasi</button>
+                                    <button type="button" class="btn btn-sm btn-primary mt-2" id="migrasi">Migrasi Data Surat Kuasa</button>
+                                    <button type="button" class="btn btn-sm btn-success mt-2" id="testConnection">Tes Koneksi Database</button>
                                 </div>
                             </div>
 
@@ -212,7 +217,62 @@
                 });
             });
 
-            // 2. Handle Filter
+            // 4. Handle Test Connection Database Staging
+            $('#testConnection').on('click', function() {
+                const btn = $(this);
+                const originalText = btn.html();
+
+                // Disable button and show loading
+                btn.prop('disabled', true);
+                btn.html('<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Testing...');
+
+                $.ajax({
+                    url: '{{ route('sync.test-connection') }}',
+                    type: 'GET',
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Koneksi Berhasil!',
+                                html: `
+                                    <div class="text-start">
+                                        <table class="table table-sm table-bordered mb-0">
+                                            <tr><th width="40%">Host</th><td>${response.data.host}</td></tr>
+                                            <tr><th>Port</th><td>${response.data.port}</td></tr>
+                                            <tr><th>Database</th><td>${response.data.database}</td></tr>
+                                            <tr><th>Server Version</th><td>${response.data.server_version}</td></tr>
+                                            <tr><th>Status</th><td><span class="badge bg-success">${response.data.connection_status}</span></td></tr>
+                                            <tr><th>Tested At</th><td>${response.data.tested_at}</td></tr>
+                                        </table>
+                                    </div>
+                                `,
+                                confirmButtonColor: '#28a745'
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        const errorResponse = xhr.responseJSON || {};
+                        const errorMsg = errorResponse.message || 'Terjadi kesalahan saat testing koneksi.';
+                        const errorDetail = errorResponse.error || '';
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Koneksi Gagal!',
+                            html: `
+                                <p>${errorMsg}</p>
+                                ${errorDetail ? `<div class="alert alert-danger text-start" style="font-size: 12px;"><strong>Error:</strong> ${errorDetail}</div>` : ''}
+                            `,
+                            confirmButtonColor: '#dc3545'
+                        });
+                    },
+                    complete: function() {
+                        btn.prop('disabled', false);
+                        btn.html(originalText);
+                    }
+                });
+            });
+
+            // 5. Handle Filter
             $('#klasifikasiFilter').on('change', function() {
                 const filterValue = $(this).val();
                 table.column('klasifikasi:name').search(filterValue).draw();

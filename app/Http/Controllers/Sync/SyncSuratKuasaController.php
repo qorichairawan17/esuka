@@ -77,4 +77,14 @@ class SyncSuratKuasaController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Test connection to staging database.
+     *
+     * @return JsonResponse
+     */
+    public function testConnection(): JsonResponse
+    {
+        return $this->syncService->testConnection();
+    }
 }

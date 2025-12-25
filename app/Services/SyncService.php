@@ -26,16 +26,83 @@ use App\Models\Suratkuasa\RegisterSuratKuasaModel;
 use App\Models\Suratkuasa\PembayaranSuratKuasaModel;
 use App\Models\Suratkuasa\PendaftaranSuratKuasaModel;
 use Illuminate\Support\Facades\Hash;
+use App\Jobs\MigrateStagingRecordJob;
 
-use App\Jobs\MigrateStagingRecordJob; // Asumsi Job akan dibuat
 class SyncService
 {
     private $infoApp;
     public function __construct()
     {
-        $this->infoApp = Cache::memo()->remember('infoApp', 60, function () {
+        $this->infoApp = Cache::memo()->remember('infoApp', 3600, function () {
             return AplikasiModel::first();
         });
+    }
+
+    /**
+     * Test connection to staging database.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function testConnection()
+    {
+        try {
+            // Test the connection by running a simple query
+            $connection = DB::connection('sync_staging');
+            $pdo = $connection->getPdo();
+
+            // Get server info
+            $serverVersion = $pdo->getAttribute(\PDO::ATTR_SERVER_VERSION);
+            $serverInfo = $pdo->getAttribute(\PDO::ATTR_SERVER_INFO) ?? 'N/A';
+
+            // Get connection details (masked for security)
+            $host = config('database.connections.sync_staging.host');
+            $port = config('database.connections.sync_staging.port');
+            $database = config('database.connections.sync_staging.database');
+
+            // Run a test query to verify actual connectivity
+            $testQuery = $connection->select('SELECT 1 as test');
+
+            Log::info('Staging database connection test successful.', [
+                'host' => $host,
+                'database' => $database,
+                'server_version' => $serverVersion
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Koneksi ke database staging berhasil!',
+                'data' => [
+                    'host' => $host,
+                    'port' => $port,
+                    'database' => $database,
+                    'server_version' => $serverVersion,
+                    'connection_status' => 'Connected',
+                    'tested_at' => now()->format('Y-m-d H:i:s')
+                ]
+            ]);
+        } catch (\PDOException $e) {
+            Log::error('Staging database connection test failed (PDO Error).', [
+                'error' => $e->getMessage(),
+                'code' => $e->getCode()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal terhubung ke database staging.',
+                'error' => $e->getMessage(),
+                'error_code' => $e->getCode()
+            ], 500);
+        } catch (\Exception $e) {
+            Log::error('Staging database connection test failed.', [
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat mengetes koneksi database staging.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function fetchData($klasifikasi)

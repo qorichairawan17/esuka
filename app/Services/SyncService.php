@@ -126,7 +126,7 @@ class SyncService
                     ['source_id' => $item->surat_kuasa_id],
                     [
                         'user_id' => $item->user_id,
-                        'tanggal_daftar' => $item->tanggal_daftar,
+                        'tanggal_daftar' => $item->tanggal_disetujui,
                         'email' => $item->email,
                         'nama_lengkap' => $item->nama_lengkap,
                         'perihal' => $item->perihal,

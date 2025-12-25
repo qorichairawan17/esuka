@@ -237,7 +237,7 @@ class SyncService
             return null;
         }
 
-        $groupByClause = " GROUP BY sk.id, sk.created_at, u.id, u.email, p.nama_lengkap, sk.perihal, sk.jenis, sk.ktp, sk.kartu_advokat, sk.kartu_tanda_pegawai, sk.ba_sumpah, sk.surat_tugas, sk.surat_kuasa, byr.photo_bukti, byr.created_at, byr.pesan, statusbyr.keterangan, register.panitera, register.no_pendaftaran, register.created_at";
+        $groupByClause = " GROUP BY sk.id, sk.id_pengguna, sk.created_at, u.id, u.email, p.nama_lengkap, sk.perihal, sk.jenis, sk.ktp, sk.kartu_advokat, sk.kartu_tanda_pegawai, sk.ba_sumpah, sk.surat_tugas, sk.surat_kuasa, byr.photo_bukti, byr.created_at, byr.pesan, statusbyr.keterangan, register.panitera, register.no_pendaftaran, register.created_at";
 
         return $baseQuery . $whereClause . $groupByClause;
     }

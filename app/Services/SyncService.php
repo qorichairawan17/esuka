@@ -374,32 +374,8 @@ class SyncService
             $currentMonth = Carbon::now()->month;
             $uploadBaseDir = "migrated_edocs/{$currentYear}/{$currentMonth}/{$item->source_id}";
 
-            // 1. Find or Create User
-            $userEmail = Str::lower($item->email);
-            $user = User::where('email', $userEmail)->first();
-
-            if (!$user) {
-                // Create Profile first to get the ID
-                $nameParts = explode(' ', trim($item->nama_lengkap ?? $item->email), 2);
-                $profile = ProfileModel::create([
-                    'nama_depan' => $nameParts[0] ?: '-',
-                    'nama_belakang' => $nameParts[1] ?? '-',
-                ]);
-
-                // Now create the User with the profile_id
-                $user = User::create([
-                    'email' => $userEmail,
-                    'name' => $item->nama_lengkap ?? $item->email,
-                    'password' => Hash::make(Str::random(8)),
-                    'email_verified_at' => Carbon::now(),
-                    'reactivation' => '1',
-                    'role' => RoleEnum::User->value,
-                    'profile_status' => '0',
-                    'profile_id' => $profile->id,
-                    'privacy_policy_agreed_at' => Carbon::now(),
-                ]);
-                Log::info("Created new user with profile during migration: {$user->email}");
-            }
+            // 1. Find or Create User (with race condition handling)
+            $user = $this->findOrCreateUser($item);
 
             // 2. Move and encrypt files
             $filePaths = $this->migrateFiles($item, $uploadBaseDir);
@@ -447,6 +423,88 @@ class SyncService
             if ($uploadBaseDir && Storage::disk('local')->exists($uploadBaseDir)) {
                 Storage::disk('local')->deleteDirectory($uploadBaseDir);
             }
+        }
+    }
+
+    /**
+     * Find existing user or create new user with race condition handling.
+     * This method handles the case where multiple staging records have the same email
+     * and are being processed concurrently.
+     *
+     * @param StagingSyncSuratKuasaModel $item The staging record containing user info.
+     * @return User The found or created user.
+     * @throws \Exception If user cannot be found or created after retries.
+     */
+    private function findOrCreateUser(StagingSyncSuratKuasaModel $item): User
+    {
+        $userEmail = Str::lower(trim($item->email));
+
+        // First, try to find existing user
+        $user = User::where('email', $userEmail)->first();
+
+        if ($user) {
+            Log::info("Found existing user during migration: {$user->email}");
+            return $user;
+        }
+
+        // User doesn't exist, try to create with race condition handling
+        try {
+            // Use database lock to prevent race condition
+            return DB::transaction(function () use ($userEmail, $item) {
+                // Double-check inside transaction (in case another process created it)
+                $user = User::where('email', $userEmail)->lockForUpdate()->first();
+
+                if ($user) {
+                    Log::info("Found existing user (after lock) during migration: {$user->email}");
+                    return $user;
+                }
+
+                // Create Profile first
+                $nameParts = explode(' ', trim($item->nama_lengkap ?? $item->email), 2);
+                $profile = ProfileModel::create([
+                    'nama_depan' => $nameParts[0] ?: '-',
+                    'nama_belakang' => $nameParts[1] ?? '-',
+                ]);
+
+                // Create the User with the profile_id
+                $user = User::create([
+                    'email' => $userEmail,
+                    'name' => $item->nama_lengkap ?? $item->email,
+                    'password' => Hash::make(Str::random(8)),
+                    'email_verified_at' => Carbon::now(),
+                    'reactivation' => '1',
+                    'role' => RoleEnum::User->value,
+                    'profile_status' => '0',
+                    'profile_id' => $profile->id,
+                    'privacy_policy_agreed_at' => Carbon::now(),
+                ]);
+
+                Log::info("Created new user with profile during migration: {$user->email}");
+                return $user;
+            });
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Check if it's a duplicate entry error (MySQL error code 1062)
+            if ($e->errorInfo[1] === 1062 || str_contains($e->getMessage(), 'Duplicate entry')) {
+                Log::warning("Duplicate entry detected for email: {$userEmail}. Attempting to fetch existing user.", [
+                    'source_id' => $item->source_id,
+                    'error' => $e->getMessage()
+                ]);
+
+                // Race condition occurred - another process created the user
+                // Try to fetch the user that was just created by another process
+                $user = User::where('email', $userEmail)->first();
+
+                if ($user) {
+                    Log::info("Successfully recovered from duplicate entry - found user: {$user->email}");
+                    return $user;
+                }
+
+                // If still not found, throw exception
+                throw new \Exception("Failed to find or create user with email: {$userEmail} after duplicate entry error.");
+            }
+
+            // Re-throw if it's a different database error
+            throw $e;
         }
     }
 

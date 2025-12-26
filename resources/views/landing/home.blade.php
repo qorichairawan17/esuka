@@ -182,9 +182,11 @@
                 <div class="col-lg-3 col-md-6 mt-4 pt-2">
                     <div class="card team team-primary text-center bg-transparent border-0">
                         <div class="card-body p-0">
-                            <div class="position-relative">
-                                <img src="{{ $pejabatStruktural ? asset('storage/' . $pejabatStruktural->foto_ketua) : asset('assets/images/user/user-none.png') }}"
-                                    class="img-fluid avatar avatar-ex-large rounded-circle" alt="">
+                            <div class="position-relative d-flex justify-content-center">
+                                <div class="pejabat-foto-wrapper" style="width: 180px; height: 180px; border-radius: 50%; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.15);">
+                                    <img src="{{ $pejabatStruktural ? asset('storage/' . $pejabatStruktural->foto_ketua) : asset('assets/images/user/user-none.png') }}"
+                                        style="width: 100%; height: 100%; object-fit: cover; object-position: center top;" alt="Foto Ketua">
+                                </div>
                             </div>
                             <div class="content pt-3 pb-3">
                                 <h5 class="mb-0">
@@ -201,9 +203,11 @@
                 <div class="col-lg-3 col-md-6 mt-4 pt-2">
                     <div class="card team team-primary text-center bg-transparent border-0">
                         <div class="card-body p-0">
-                            <div class="position-relative">
-                                <img src="{{ $pejabatStruktural ? asset('storage/' . $pejabatStruktural->foto_wakil_ketua) : asset('assets/images/user/user-none.png') }}"
-                                    class="img-fluid avatar avatar-ex-large rounded-circle" alt="">
+                            <div class="position-relative d-flex justify-content-center">
+                                <div class="pejabat-foto-wrapper" style="width: 180px; height: 180px; border-radius: 50%; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.15);">
+                                    <img src="{{ $pejabatStruktural ? asset('storage/' . $pejabatStruktural->foto_wakil_ketua) : asset('assets/images/user/user-none.png') }}"
+                                        style="width: 100%; height: 100%; object-fit: cover; object-position: center top;" alt="Foto Wakil Ketua">
+                                </div>
                             </div>
                             <div class="content pt-3 pb-3">
                                 <h5 class="mb-0">
@@ -220,9 +224,11 @@
                 <div class="col-lg-3 col-md-6 mt-4 pt-2">
                     <div class="card team team-primary text-center bg-transparent border-0">
                         <div class="card-body p-0">
-                            <div class="position-relative">
-                                <img src="{{ $pejabatStruktural ? asset('storage/' . $pejabatStruktural->foto_panitera) : asset('assets/images/user/user-none.png') }}"
-                                    class="img-fluid avatar avatar-ex-large rounded-circle" alt="">
+                            <div class="position-relative d-flex justify-content-center">
+                                <div class="pejabat-foto-wrapper" style="width: 180px; height: 180px; border-radius: 50%; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.15);">
+                                    <img src="{{ $pejabatStruktural ? asset('storage/' . $pejabatStruktural->foto_panitera) : asset('assets/images/user/user-none.png') }}"
+                                        style="width: 100%; height: 100%; object-fit: cover; object-position: center top;" alt="Foto Panitera">
+                                </div>
                             </div>
                             <div class="content pt-3 pb-3">
                                 <h5 class="mb-0">
@@ -239,9 +245,11 @@
                 <div class="col-lg-3 col-md-6 mt-4 pt-2">
                     <div class="card team team-primary text-center bg-transparent border-0">
                         <div class="card-body p-0">
-                            <div class="position-relative">
-                                <img src="{{ $pejabatStruktural ? asset('storage/' . $pejabatStruktural->foto_sekretaris) : asset('assets/images/user/user-none.png') }}"
-                                    class="img-fluid avatar avatar-ex-large rounded-circle" alt="">
+                            <div class="position-relative d-flex justify-content-center">
+                                <div class="pejabat-foto-wrapper" style="width: 180px; height: 180px; border-radius: 50%; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.15);">
+                                    <img src="{{ $pejabatStruktural ? asset('storage/' . $pejabatStruktural->foto_sekretaris) : asset('assets/images/user/user-none.png') }}"
+                                        style="width: 100%; height: 100%; object-fit: cover; object-position: center top;" alt="Foto Sekretaris">
+                                </div>
                             </div>
                             <div class="content pt-3 pb-3">
                                 <h5 class="mb-0">

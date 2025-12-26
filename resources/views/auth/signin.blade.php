@@ -92,6 +92,29 @@
                 </div>
             </div>
         </div>
+        <!-- Notification Modal -->
+        <div class="modal fade" id="notifikasi" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded shadow border-0">
+                    <div class="modal-body py-5">
+                        <div class="text-center">
+                            <div class="icon d-flex align-items-center justify-content-center bg-soft-warning rounded-circle mx-auto" style="height: 95px; width:95px;">
+                                <h1 class="mb-0"><i class="uil uil-user align-middle"></i></h1>
+                            </div>
+                            <div class="mt-4">
+                                <h4>Aktivasi Ulang Akun</h4>
+                                <p class="text-dark">
+                                    Bagi pengguna yang sudah terdaftar di {{ config('app.name') }} versi lama, Silahkan aktivasi akun kembali dengan cara login dengan email sebelumnya dan melihat
+                                    pesan masuk
+                                    pada email untuk aktivasi akun kembali !
+                                </p>
+                                <button class="btn btn-primary btn-md" data-bs-dismiss="modal">Tutup</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
     <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
@@ -99,25 +122,23 @@
     <script src="{{ asset('assets/libs/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins.init.js') }}"></script>
     <script src="{{ asset('assets/js/app.js') }}"></script>
-    @if (session()->has('success'))
+    @if (session()->has('success') || session()->has('error'))
         <script>
             Swal.fire({
                 position: 'center',
-                icon: 'success',
-                title: 'Notifikasi',
-                text: '{{ session()->get('success') }}',
-            })
-        </script>
-    @elseif (session()->has('error'))
-        <script>
-            Swal.fire({
-                position: 'center',
-                icon: 'error',
-                title: 'Oops...',
-                text: '{{ session()->get('error') }}',
+                icon: '{{ session()->has('success') ? 'success' : 'error' }}',
+                title: '{{ session()->has('success') ? 'Notifikasi' : 'Oops...' }}',
+                text: '{{ session()->get('success') ?? session()->get('error') }}',
             })
         </script>
     @endif
+    <script>
+        window.addEventListener('load', function() {
+            const modalElement = document.getElementById('notifikasi');
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+        });
+    </script>
     @include('auth.scripts.handleAuth')
 </body>
 

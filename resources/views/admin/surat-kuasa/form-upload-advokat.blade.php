@@ -2,7 +2,7 @@
     <div class="col-lg-6">
         <div class="form-group mb-3">
             <label for="ktp" class="form-label">
-                KTP (Kartu Tanda Penduduk) <span class="text-danger">*</span>
+                File PDF KTP (Kartu Tanda Penduduk) <span class="text-danger">*</span>
             </label>
             <input type="file" class="form-control @error('ktp') is-invalid @enderror" id="ktp" name="ktp" {{ !$isEditMode ? 'required' : '' }}>
             @if ($isEditMode && $suratKuasa->edoc_kartu_tanda_penduduk)
@@ -19,7 +19,7 @@
     <div class="col-lg-6">
         <div class="form-group mb-3">
             <label for="kta" class="form-label">
-                KTA (Kartu Tanda Anggota) <span class="text-danger">*</span>
+                File PDF KTA (Kartu Tanda Anggota) <span class="text-danger">*</span>
             </label>
             <input type="file" class="form-control @error('kta') is-invalid @enderror" id="kta" name="kta" {{ !$isEditMode ? 'required' : '' }}>
             @if ($isEditMode && $suratKuasa->edoc_kartu_tanda_anggota)
@@ -38,7 +38,7 @@
     <div class="col-lg-6">
         <div class="form-group mb-3">
             <label for="bas" class="form-label">
-                BAS (Berita Acara Sumpah) <span class="text-danger">*</span>
+                File PDF BAS (Berita Acara Sumpah) <span class="text-danger">*</span>
             </label>
             <input type="file" class="form-control @error('bas') is-invalid @enderror" id="bas" name="bas" {{ !$isEditMode ? 'required' : '' }}>
             @if ($isEditMode && $suratKuasa->edoc_berita_acara_sumpah)
@@ -55,7 +55,7 @@
     <div class="col-lg-6">
         <div class="form-group mb-3">
             <label for="suratKuasa" class="form-label">
-                Surat Kuasa <span class="text-danger">*</span>
+                File PDF Surat Kuasa <span class="text-danger">*</span>
             </label>
             <input type="file" class="form-control @error('suratKuasa') is-invalid @enderror" id="suratKuasa" name="suratKuasa" {{ !$isEditMode ? 'required' : '' }}>
             @if ($isEditMode && $suratKuasa->edoc_surat_kuasa)

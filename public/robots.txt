@@ -8,6 +8,7 @@ Allow: /index/about
 Allow: /index/contact
 Allow: /index/signin
 Allow: /index/signup
+Allow: /panduan
 
 # Block sensitive areas
 Disallow: /admin/
@@ -23,4 +24,4 @@ Disallow: /*.json
 Disallow: /*.log
 
 # Sitemap location
-Sitemap: https://esuka.example.com/sitemap.xml
+Sitemap: https://e-suka.pn-lubukpakam.go.id/sitemap.xml

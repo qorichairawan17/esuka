@@ -12,7 +12,7 @@
     <link href="{{ asset('admin/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('admin/assets/libs/@iconscout/unicons/css/line.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('admin/assets/css/style.min.css') }}" class="theme-opt" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('admin/assets/css/custom.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/assets/css/error-custome.css') }}" rel="stylesheet">
 </head>
 
 <body>

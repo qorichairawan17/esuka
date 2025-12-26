@@ -1,0 +1,320 @@
+/* ===================================
+   E-SUKA Error Page - Clean & Modern Design
+   Primary Color: #2F55D4
+   =================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* Keyframe Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes gentleFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% center;
+    }
+    100% {
+        background-position: 200% center;
+    }
+}
+
+/* Main Wrapper */
+.error-page-wrapper {
+    min-height: 100vh;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle Background Pattern */
+.error-page-wrapper::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(47, 85, 212, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(47, 85, 212, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Error Card */
+.error-card {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 3.5rem 3rem;
+    max-width: 480px;
+    width: 100%;
+    position: relative;
+    animation: fadeIn 0.6s ease-out;
+    border: 1px solid rgba(47, 85, 212, 0.08);
+    box-shadow: 
+        0 4px 6px -1px rgba(47, 85, 212, 0.04),
+        0 10px 15px -3px rgba(47, 85, 212, 0.06),
+        0 20px 25px -5px rgba(47, 85, 212, 0.04);
+}
+
+/* Logo */
+.error-logo {
+    max-width: 180px;
+    height: auto;
+    margin-bottom: 2.5rem;
+    animation: scaleIn 0.5s ease-out 0.1s both;
+}
+
+/* Error Icon Container */
+.error-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #2F55D4 0%, #4169E1 100%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.75rem;
+    animation: gentleFloat 3s ease-in-out infinite, scaleIn 0.5s ease-out 0.2s both;
+    box-shadow: 0 10px 30px rgba(47, 85, 212, 0.25);
+}
+
+.error-icon i {
+    font-size: 2rem;
+    color: #ffffff;
+}
+
+/* Error Code */
+.error-code {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2F55D4;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.5px;
+    animation: fadeIn 0.5s ease-out 0.3s both;
+}
+
+/* Error Message */
+.error-message {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #64748b;
+    margin-bottom: 2.5rem;
+    line-height: 1.7;
+    max-width: 360px;
+    margin-left: auto;
+    margin-right: auto;
+    animation: fadeIn 0.5s ease-out 0.4s both;
+}
+
+/* Action Buttons Container */
+.error-actions {
+    display: flex;
+    gap: 0.875rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeIn 0.5s ease-out 0.5s both;
+}
+
+/* Base Button Styles */
+.btn-error {
+    padding: 0.875rem 1.75rem;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 0.9375rem;
+    text-decoration: none;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: none;
+    cursor: pointer;
+    min-width: 140px;
+}
+
+.btn-error i {
+    font-size: 1.125rem;
+}
+
+/* Primary Button */
+.btn-primary-gradient {
+    background: #2F55D4;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(47, 85, 212, 0.35);
+}
+
+.btn-primary-gradient:hover {
+    background: #2448B8;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(47, 85, 212, 0.4);
+    color: #ffffff;
+}
+
+.btn-primary-gradient:active {
+    transform: translateY(0);
+}
+
+/* Outline Button */
+.btn-outline-custom {
+    background: transparent;
+    color: #2F55D4;
+    border: 1.5px solid rgba(47, 85, 212, 0.3);
+}
+
+.btn-outline-custom:hover {
+    background: rgba(47, 85, 212, 0.06);
+    border-color: #2F55D4;
+    color: #2F55D4;
+    transform: translateY(-2px);
+}
+
+.btn-outline-custom:active {
+    transform: translateY(0);
+}
+
+/* Decorative Elements - Now Minimal */
+.error-decorations {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    overflow: hidden;
+    border-radius: 24px;
+}
+
+.decoration-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(47, 85, 212, 0.04);
+}
+
+.decoration-circle-1 {
+    width: 120px;
+    height: 120px;
+    top: -40px;
+    right: -40px;
+}
+
+.decoration-circle-2 {
+    width: 80px;
+    height: 80px;
+    bottom: -25px;
+    left: -25px;
+}
+
+/* Divider Line (optional for visual separation) */
+.error-divider {
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #2F55D4, #4169E1);
+    border-radius: 2px;
+    margin: 0 auto 1.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+    .error-page-wrapper {
+        padding: 1.5rem 1rem;
+    }
+
+    .error-card {
+        padding: 2.5rem 1.75rem;
+        border-radius: 20px;
+    }
+
+    .error-logo {
+        max-width: 150px;
+        margin-bottom: 2rem;
+    }
+
+    .error-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        margin-bottom: 1.5rem;
+    }
+
+    .error-icon i {
+        font-size: 1.5rem;
+    }
+
+    .error-code {
+        font-size: 1.25rem;
+    }
+
+    .error-message {
+        font-size: 0.9375rem;
+        margin-bottom: 2rem;
+    }
+
+    .btn-error {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.875rem;
+        min-width: 120px;
+    }
+
+    .error-actions {
+        gap: 0.75rem;
+    }
+
+    .decoration-circle-1 {
+        width: 80px;
+        height: 80px;
+        top: -30px;
+        right: -30px;
+    }
+
+    .decoration-circle-2 {
+        width: 60px;
+        height: 60px;
+        bottom: -20px;
+        left: -20px;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 375px) {
+    .error-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn-error {
+        width: 100%;
+    }
+}

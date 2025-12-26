@@ -2,14 +2,13 @@
 @section('title', $title)
 @section('content')
 
-    <section class="bg-half-170 d-table w-100">
-        <div class="bg-overlay bg-gradient-primary"></div>
+    <section class="bg-half-170 d-table w-100" style="background: #2F55D4;">
         <div class="container">
             <div class="row mt-5 justify-content-center">
                 <div class="col-12">
                     <div class="title-heading text-center">
-                        <h1 class="fw-bold text-white title-dark">Verifikasi Surat Kuasa</h1>
-                        <p class="text-white-50 para-desc mx-auto mb-0">
+                        <h1 class="fw-bold title-dark" style="color: #FFFFFF;">Verifikasi Surat Kuasa</h1>
+                        <p class="para-desc mx-auto mb-0" style="color: rgba(255, 255, 255, 0.7);">
                             Detail keabsahan pendaftaran surat kuasa pada sistem aplikasi {{ config('app.name') }}.
                         </p>
                     </div>
@@ -19,7 +18,7 @@
     </section>
 
     <div class="position-relative">
-        <div class="shape overflow-hidden text-white">
+        <div class="shape overflow-hidden" style="color: #FFFFFF;">
             <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
             </svg>

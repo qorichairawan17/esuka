@@ -7,6 +7,7 @@
 
     @include('miscellaneous.meta')
 
+    <meta name="google-site-verification" content="3otjX6MrJ6ibgCr4QjYjVabahpCiXyBlo_nhvGXH-rQ" />
     <link href="{{ asset('assets/libs/tiny-slider/tiny-slider.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/libs/tobii/css/tobii.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/libs/animate.css/animate.min.css') }}" rel="stylesheet">

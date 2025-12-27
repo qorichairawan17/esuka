@@ -54,7 +54,7 @@ class PaniteraDataTable extends DataTable
      */
     public function query(PaniteraModel $model): QueryBuilder
     {
-        return $model->newQuery();
+        return $model->orderBy('updated_at', 'desc')->newQuery();
     }
 
     /**

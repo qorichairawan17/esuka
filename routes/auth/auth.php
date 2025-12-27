@@ -24,7 +24,7 @@ Route::get('/activate-account/{token}', [ActivationController::class, 'activate'
 
 Route::controller(ResetPasswordController::class)->group(function () {
     Route::get('app/forgot-password', 'index')->name('auth.forgot-password');
-    Route::post('/send', 'send')->name('auth.forgot-password.send');
+    Route::post('/send', 'send')->name('auth.forgot-password.send')->middleware('throttle:5,1');
     Route::post('/save', 'save')->name('auth.forgot-password.save');
     Route::get('/reset-password/{token}', 'reset')->name('auth.forgot-password.reset');
 });

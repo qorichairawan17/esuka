@@ -35,7 +35,7 @@
                                                 <i data-feather="user" class="fea icon-sm icons"></i>
                                                 <input type="email" class="form-control @error('email') is-invalid @enderror ps-5" placeholder="Email" id="email" name="email" required
                                                     value="{{ old('email') }}">
-                                                <small class="text-danger mt-2" id="emailError"></small>
+                                                <div class="invalid-feedback mt-2" id="emailError"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -49,7 +49,7 @@
                                                 <i data-feather="key" class="fea icon-sm icons"></i>
                                                 <input type="password" class="form-control @error('password') is-invalid @enderror ps-5" placeholder="Password" id="password" name="password" required
                                                     value="{{ old('password') }}">
-                                                <small class="text-danger mt-2" id="passwordError"></small>
+                                                <div class="invalid-feedback mt-2" id="passwordError"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -57,8 +57,8 @@
                                     <div class="col-lg-12 mb-0">
                                         <div class="mb-3">
                                             <img title="Klik Untuk Refresh" class="img-fluid" src="{{ captcha_src('flat') }}" alt="captcha" id="captcha-img">
-                                            <input class="form-control mt-2" type="text" name="captcha" id="captcha" placeholder="Masukkan captcha" required>
-                                            <small class="text-danger mt-2" id="captchaError"></small>
+                                            <input class="form-control mt-2" type="text" name="captcha" id="captcha" placeholder="Masukkan kode captcha diatas" required>
+                                            <div class="invalid-feedback mt-2" id="captchaError"></div>
                                         </div>
                                         <p class="forgot-pass mb-0">
                                             <a href="{{ route('auth.forgot-password') }}" class="text-dark fw-bold">

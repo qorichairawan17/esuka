@@ -56,7 +56,7 @@ class AdvokatDataTable extends DataTable
      */
     public function query(User $model): QueryBuilder
     {
-        return $model->where('role',  'User')->newQuery();
+        return $model->where('role',  'User')->orderBy('updated_at', 'desc')->newQuery();
     }
 
     /**

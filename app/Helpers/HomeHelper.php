@@ -60,11 +60,11 @@ class HomeHelper
             $monthlyCounts = array_fill(0, 12, 0);
 
             $results = PendaftaranSuratKuasaModel::select(
-                DB::raw('MONTH(created_at) as month'),
+                DB::raw('MONTH(tanggal_daftar) as month'),
                 DB::raw('count(*) as count')
             )
                 ->where('status', \App\Enum\StatusSuratKuasaEnum::Disetujui->value)
-                ->whereYear('created_at', $currentYear)
+                ->whereYear('tanggal_daftar', $currentYear)
                 ->groupBy('month')
                 ->get();
 

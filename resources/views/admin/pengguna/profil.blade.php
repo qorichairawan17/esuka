@@ -288,6 +288,7 @@
                 const fotoInput = $('#foto');
                 const foto = $('#foto')[0].files[0];
                 const errorDiv = $('#foto-error');
+                let isSuccess = false;
 
                 // Clear previous errors
                 fotoInput.removeClass('is-invalid');
@@ -334,6 +335,7 @@
                                 text: body.message || 'Periksa kembali file Anda.',
                             });
                         } else if (status >= 200 && status < 300) {
+                            isSuccess = true;
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil!',
@@ -342,6 +344,7 @@
                                 location.reload();
                             });
                         } else {
+                            // Handle 400, 404, 500 and other errors
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Terjadi Kesalahan',
@@ -358,9 +361,8 @@
                         });
                     })
                     .finally(() => {
-                        // Re-enable button if the request failed
-                        const swalIcon = Swal.getIcon();
-                        if (!swalIcon || swalIcon !== 'success') {
+                        // Re-enable button only if the request failed
+                        if (!isSuccess) {
                             button.html(originalButtonText).prop('disabled', false);
                         }
                     });

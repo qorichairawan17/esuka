@@ -22,7 +22,7 @@ class UpdatePhotoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'foto' => 'required|image|mimes:jpeg,png,jpg|max:2048|file',
+            'foto' => 'required|image|mimes:jpeg,png,jpg|max:5120|file',
         ];
     }
 
@@ -32,8 +32,20 @@ class UpdatePhotoRequest extends FormRequest
             'foto.required' => 'Foto wajib diisi.',
             'foto.image' => 'File yang diunggah harus berupa gambar.',
             'foto.mimes' => 'Format foto harus jpeg, png, atau jpg.',
-            'foto.max' => 'Ukuran foto maksimal adalah 2MB.',
+            'foto.max' => 'Ukuran foto maksimal adalah 5MB.',
             'foto.file' => 'Foto yang diunggah harus berupa file.',
+        ];
+    }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'foto' => 'Foto Profil',
         ];
     }
 }

@@ -74,9 +74,6 @@ class ProfileService
         $request->validated();
         DB::beginTransaction();
         try {
-            // Generate photo path user/profile/08/2025
-            $fotoPath = 'user/profile/' . date('m') . '/' . date('Y');
-
             $file = $request->file('foto');
             $user = User::with('profile')->find(Auth::user()->id);
 
@@ -84,26 +81,31 @@ class ProfileService
                 Log::error('User not found when updating profile photo.', ['user_id' => Auth::user()->id]);
                 return response()->json(['message' => 'Data pengguna tidak ditemukan.'], 404);
             }
+
+            // Ensure profile exists before uploading photo (check BEFORE storing file)
+            if (!$user->profile) {
+                return response()->json(['message' => 'Silakan lengkapi profil Anda terlebih dahulu sebelum mengunggah foto.'], 400);
+            }
+
             // 1. Capture old data
             $oldPhotoPath = $user->profile->foto ?? null;
 
-            // 2. Update photo
+            // 2. Delete old photo if exists
             if ($oldPhotoPath && Storage::disk('public')->exists($oldPhotoPath)) {
                 Storage::disk('public')->delete($oldPhotoPath);
             }
 
+            // 3. Store new photo - Generate photo path user/profile/12/2025
+            $fotoPath = 'user/profile/' . date('m') . '/' . date('Y');
             $newPhotoPath = $file->store($fotoPath, 'public');
 
-            // Check existing foto on profile
-            if ($user->profile && $user->profile->foto != null && $user->profile_status == 0) {
+            // 4. Check and update profile_status if needed
+            if ($user->profile_status == 0) {
                 $user->update(['profile_status' => 1]);
             }
 
-            // Ensure profile exists before updating
-            $user->profile()->updateOrCreate(
-                ['id' => $user->id],
-                ['foto' => $newPhotoPath]
-            );
+            // 5. Update the photo on existing profile (use model instance, not relationship builder)
+            $user->profile->update(['foto' => $newPhotoPath]);
             DB::commit();
 
             // 3. Record detailed audit trail

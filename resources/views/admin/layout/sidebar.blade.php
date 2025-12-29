@@ -37,17 +37,23 @@
                     </ul>
                 </div>
             </li>
-            @if (Auth::user()->role == \App\Enum\RoleEnum::Superadmin->value)
+            @if (Auth::user()->role != \App\Enum\RoleEnum::User->value)
                 <li class="sidebar-dropdown">
                     <a href="javascript:void(0)"><i class="ti ti-users me-2"></i>Pengguna</a>
                     <div class="sidebar-submenu">
                         <ul>
-                            <li><a href="{{ route('panitera.index') }}">Panitera</a></li>
-                            <li><a href="{{ route('administrator.index') }}">Administrator</a></li>
-                            <li><a href="{{ route('advokat.index') }}">Advokat/Non Advokat</a></li>
+                            @if (Auth::user()->role == \App\Enum\RoleEnum::Superadmin->value)
+                                <li><a href="{{ route('panitera.index') }}">Panitera</a></li>
+                                <li><a href="{{ route('administrator.index') }}">Administrator</a></li>
+                                <li><a href="{{ route('advokat.index') }}">Advokat/Non Advokat</a></li>
+                            @elseif (Auth::user()->role == \App\Enum\RoleEnum::Administrator->value)
+                                <li><a href="{{ route('advokat.index') }}">Advokat/Non Advokat</a></li>
+                            @endif
                         </ul>
                     </div>
                 </li>
+            @endif
+            @if (Auth::user()->role == \App\Enum\RoleEnum::Superadmin->value)
                 <li class="sidebar-dropdown">
                     <a href="javascript:void(0)"><i class="ti ti-settings me-2"></i>Pengaturan</a>
                     <div class="sidebar-submenu">

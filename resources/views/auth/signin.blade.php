@@ -57,7 +57,8 @@
                                     <div class="col-lg-12 mb-0">
                                         <div class="mb-3">
                                             <img title="Klik Untuk Refresh" class="img-fluid" src="{{ captcha_src('flat') }}" alt="captcha" id="captcha-img">
-                                            <input class="form-control mt-2" type="text" name="captcha" id="captcha" placeholder="Masukkan kode captcha diatas" required>
+                                            <input class="form-control @error('captcha') is-invalid @enderror  mt-2" type="text" name="captcha" id="captcha"
+                                                placeholder="Masukkan kode captcha diatas" required>
                                             <div class="invalid-feedback mt-2" id="captchaError"></div>
                                         </div>
                                         <p class="forgot-pass mb-0">

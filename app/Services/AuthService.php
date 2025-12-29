@@ -53,8 +53,9 @@ class AuthService
             Log::info('User registered successfully. Reactivation email sent.', ['user_id' => $user->id, 'email' => $user->email]);
 
             return response()->json([
-                'success' => false,
+                'success' => true,
                 'message' => 'Email Kamu terdaftar. Silakan aktifkan kembali akun Kamu!',
+                'redirect' => route('app.signin')
             ]);
         }
 

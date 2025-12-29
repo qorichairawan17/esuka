@@ -8,9 +8,13 @@
 
         // Clear previous errors
         const clearErrors = () => {
-            document.getElementById('emailError').innerText = '';
-            document.getElementById('passwordError').innerText = '';
-            document.getElementById('captchaError').innerText = '';
+            const fields = ["email", "password", "captcha"];
+            fields.forEach(field => {
+                const inputElement = document.getElementById(field);
+                const errorElement = document.getElementById(field + "Error");
+                if (inputElement) inputElement.classList.remove('is-invalid');
+                if (errorElement) errorElement.innerText = '';
+            });
         };
 
         clearErrors();
@@ -55,8 +59,10 @@
                     // Handle validation errors
                     const fields = ["email", "password", "captcha"];
                     fields.forEach(field => {
+                        const inputElement = document.getElementById(field);
                         const errorElement = document.getElementById(field + "Error");
                         if (result.errors[field] && errorElement) {
+                            if (inputElement) inputElement.classList.add('is-invalid');
                             errorElement.innerText = "*" + result.errors[field][0] ?? '';
                         }
                     });

@@ -22,7 +22,7 @@ class ActivationController extends Controller
         if ($activation->expires_at < now()) {
             // The token is expired. We should delete it and inform the user.
             $activation->delete();
-            return redirect()->route('app.signin')->with('error', 'Token aktivasi sudah kedaluwarsa. Silakan minta link baru.');
+            return redirect()->route('app.signin')->with('error', 'Token aktivasi sudah kedaluwarsa. Silakan login kembali untuk akvitasi ulang');
         }
 
         // Wrap database mutations in a transaction for atomicity.

@@ -248,7 +248,7 @@
                                 <div class="form-group">
                                     <input type="file" name="foto" class="form-control" id="foto" required accept="image/png, image/jpeg, image/jpg">
                                     <div class="invalid-feedback" id="foto-error"></div>
-                                    <small class="text-muted">* Tipe file: .jpg, .jpeg, .png. Maks 2MB.</small>
+                                    <small class="text-muted">* Tipe file: .jpg, .jpeg, .png. Maks 5Mb.</small>
                                 </div>
                             </div>
                             <div class="modal-footer">

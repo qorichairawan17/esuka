@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Profile\ProfileModel;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -37,12 +38,16 @@ class ProfileService
 
             // Check existing foto on profile
             if ($user->profile && $user->profile->foto != null && $user->profile_status == 0) {
+                $user->name = $validated['namaDepan'] . ' ' . $validated['namaBelakang'];
                 $user->profile_status = 1;
             }
             $user->save();
 
-            // Update the profile table, create if it doesn't exist
-            $user->profile()->updateOrCreate(['id' => $user->id], [
+            $profile = ProfileModel::find($user->profile_id);
+            if (!$profile) {
+                return response()->json(['success' => false, 'message' => 'Data profil tidak ditemukan.'], 404);
+            }
+            $profile->update([
                 'nama_depan' => $validated['namaDepan'],
                 'nama_belakang' => $validated['namaBelakang'],
                 'kontak' => $validated['kontak'],
